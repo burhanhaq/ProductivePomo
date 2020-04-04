@@ -1,52 +1,118 @@
 import 'package:flutter/material.dart';
 
 import 'constants.dart';
+import 'countdown_timer.dart';
+import 'models/card_model.dart';
 
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
-  List<String> x = ['Work', 'Flutter', 'Water', 'Food'];
+class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
+  List<CardModel> cardModels = [
+    CardModel(text: 'Work', type: CardType.Session),
+    CardModel(text: 'Flutter', type: CardType.Session),
+    CardModel(text: 'Quran', type: CardType.Session),
+    CardModel(text: 'Water', type: CardType.Counter),
+    CardModel(text: 'Exercise', type: CardType.Counter),
+    CardModel(text: 'Food', type: CardType.Counter),
+  ];
+  AnimationController controller;
   @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Container(
-          color: Theme.of(context).accentColor,
-          child: GridView.count(
-            crossAxisCount: 2,
-            children: List.generate(x.length, (index) {
-              return CustomCard(title: x[index]);
-            }),
-          )
-//        child: Wrap(
-////          spacing: 10.0,
-//          runSpacing: 18.0,
-//          direction: Axis.horizontal,
-//          alignment: WrapAlignment.spaceEvenly,
-////          crossAxisAlignment: WrapCrossAlignment.end,
-//          children: <Widget>[
-//            Card(),
-//            Card(),
-//            Card(),
-//            Card(),
-//            Card(),
-//            Card(),
-//            Card(),
-//          ],
-//        ),
-          ),
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 5),
     );
   }
-}
 
-class SomeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 10.0,
-      child: Text('fdsa', style: kLabel),
+    IconData buttonIcon = Icons.play_arrow;
+    var buttonText = "Start";
+
+    return SafeArea(
+      child: Container(
+        color: Theme.of(context).accentColor,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Expanded(
+              child: GridView.count(
+                crossAxisCount: 2,
+                children: List.generate(cardModels.length, (index) {
+                  return CustomCard(title: cardModels[index].text);
+                }),
+              ),
+            ),
+            Container(
+              color: Color(0xFF141414),
+              child: SizedBox(
+                height: 150,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: <Widget>[
+                    Transform.translate(
+                      offset: Offset(0.0, 30.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          AnimatedBuilder(
+                            animation: controller,
+                            builder: (context, child) {
+                              return FlatButton(
+                                child: Row(
+                                  children: <Widget>[
+                                    Icon(buttonIcon),
+                                    SizedBox(width: 8.0),
+                                    Text(buttonText,
+                                        style: TextStyle(fontSize: 20.0)),
+                                  ],
+                                ),
+                                color: Theme.of(context).primaryColor,
+                                onPressed: () {
+                                  print('Button pressed');
+                                  setState(() {
+                                    if (controller.isAnimating) {
+                                      controller.stop();
+                                      buttonIcon = Icons.pause;
+                                      buttonText = 'Pause';
+                                    } else {
+                                      controller.reverse(
+                                          from: controller.value == 0.0
+                                              ? 1.0
+                                              : controller.value);
+                                      buttonIcon = Icons.play_arrow;
+                                      buttonText = 'Play';
+                                    }
+                                  });
+                                },
+                              );
+                            },
+                          ),
+//                        Text('Two'),
+//                        Text('Two'),
+                        ],
+                      ),
+                    ),
+                    Transform.translate(
+                      offset: Offset(-0, -80),
+                      child: Container(
+                        height: 150,
+                        width: 150,
+//                        color: Colors.white,
+                        child: CountdownTimer(),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -54,20 +120,33 @@ class SomeCard extends StatelessWidget {
 class CustomCard extends StatefulWidget {
   final String title;
   CustomCard({@required this.title});
-
   @override
   _CustomCardState createState() => _CustomCardState();
 }
 
+enum Position { None, Left, Right }
+
 class _CustomCardState extends State<CustomCard> {
   int count = 0;
+  Position pos = Position.None;
   @override
   Widget build(BuildContext context) {
     final boxWidth = MediaQuery.of(context).size.width / 2 - 30;
     return GestureDetector(
-      onHorizontalDragStart: (DragStartDetails details) {
+      onHorizontalDragUpdate: (DragUpdateDetails details) {
+        if (details.primaryDelta < 0)
+          pos = Position.Left;
+        else
+          pos = Position.Right;
+      },
+      onHorizontalDragEnd: (DragEndDetails details) {
         setState(() {
-          if (count > 0) count--;
+          if (pos == Position.Left) if (count > 0) count--;
+        });
+      },
+      onTap: () {
+        setState(() {
+          count++;
         });
       },
       child: Container(
@@ -81,14 +160,6 @@ class _CustomCardState extends State<CustomCard> {
             color: Colors.black,
             width: 1.0,
           ),
-//        boxShadow: [
-//          BoxShadow(
-//            color: Colors.white,
-//            blurRadius: 2.0,
-//            spreadRadius: 0,
-//            offset: Offset(2.0, 2.0),
-//          )
-//        ],
         ),
         child: Column(
           children: <Widget>[

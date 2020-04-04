@@ -7,3 +7,5 @@ const kLabel = TextStyle(
   decoration: TextDecoration.none,
   letterSpacing: 5.0,
 );
+
+enum CardType { Counter, Session }
