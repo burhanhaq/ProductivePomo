@@ -2,16 +2,21 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-class CountdownTimer extends StatefulWidget {
+class BottomBar extends StatefulWidget {
 //  AnimationController controller;
 //  CountdownTimer(this.controller);
   @override
-  _CountdownTimerState createState() => _CountdownTimerState();
+  _BottomBarState createState() => _BottomBarState();
 }
 
-class _CountdownTimerState extends State<CountdownTimer>
+class _BottomBarState extends State<BottomBar>
     with SingleTickerProviderStateMixin {
   AnimationController controller;
+
+  String get timerString {
+    Duration duration = controller.duration * (1 - controller.value);
+    return '${duration.inMinutes}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}';
+  }
 
   @override
   void initState() {
@@ -33,7 +38,7 @@ class _CountdownTimerState extends State<CountdownTimer>
           alignment: Alignment.center,
           children: <Widget>[
             Transform.translate(
-              offset: Offset(0.0, 0.0),
+              offset: Offset(-MediaQuery.of(context).size.width / 4, 0.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -43,7 +48,8 @@ class _CountdownTimerState extends State<CountdownTimer>
                       return FlatButton(
                         child: Row(
                           children: <Widget>[
-                            Icon(playIcon, size: 50),
+                            Icon(playIcon, size: 60),
+                            Text(timerString, style: TextStyle(fontSize: 40.0)),
                           ],
                         ),
                         color: Theme.of(context).primaryColor,
@@ -52,38 +58,38 @@ class _CountdownTimerState extends State<CountdownTimer>
                           setState(() {
                             if (controller.isAnimating) {
                               controller.stop();
-                              playIcon = Icons.pause;
-                            } else {
-                              controller.reverse(
-                                  from: controller.value == 0.0
-                                      ? 1.0
-                                      : controller.value);
                               playIcon = Icons.play_arrow;
+                            } else {
+                              controller.forward(
+                                  from: controller.value == 1.0
+                                      ? 0.0
+                                      : controller.value);
+                              playIcon = Icons.pause;
                             }
                           });
                         },
                       );
                     },
                   ),
-                  Text('Two'),
-//                        Text('Two'),
+//                  Text(timerString),
+//                  Text('Two'),
                 ],
               ),
             ),
             Transform.translate(
-              offset: Offset(MediaQuery.of(context).size.width / 4, -80),
+              offset: Offset(MediaQuery.of(context).size.width / 4, -100),
               child: Container(
                 height: 150,
                 width: 150,
-//                        color: Colors.white,
+//                color: Colors.white,
                 child: AnimatedBuilder(
                   animation: controller,
                   builder: (BuildContext context, Widget child) {
                     return CustomPaint(
                         painter: CustomTimerPainter(
                       animation: controller,
-                      backgroundColor: Colors.white,
-                      color: Colors.yellow,
+                      backgroundColor: Colors.green,
+                      color: Colors.white,
                     ));
                   },
                 ),
@@ -112,7 +118,7 @@ class CustomTimerPainter extends CustomPainter {
 
     canvas.drawCircle(size.center(Offset.zero), size.width / 2.0, paint);
     paint.color = color;
-    double progress = (1.0 - animation.value) * 2 * math.pi;
+    double progress = (1 - animation.value) * 2 * math.pi;
     canvas.drawArc(Offset.zero & size, math.pi * 1.5, -progress, false, paint);
   }
 
