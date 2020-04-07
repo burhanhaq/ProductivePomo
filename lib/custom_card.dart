@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 
 import 'constants.dart';
@@ -40,65 +38,46 @@ class _CustomCardState extends State<CustomCard>
 
   @override
   Widget build(BuildContext context) {
-    return Transform(
-      alignment: FractionalOffset.center,
-      transform: Matrix4.identity()
-        ..setEntry(3, 2, 0.002)
-        ..setEntry(1, 1, 1 + flipCardAnimation.value)
-        ..rotateX(math.pi * flipCardAnimation.value),
-      child: GestureDetector(
-        onPanUpdate: (details) {
-          setState(() {
-//            y = y - details.delta.dx / 100;
-//            x = x - details.delta.dy / 100;
-          });
-        },
-        onTap: () {
-          setState(() {
-            if (flipCardStatus == AnimationStatus.dismissed) {
-              flipCardController.forward();
-            } else {
-              flipCardController.reverse();
-            }
-          });
-        },
-        child: Container(
-          padding: EdgeInsets.only(top: 10.0, left: 10.0, right: 0.0),
-          margin: EdgeInsets.fromLTRB(30.0, 30.0, 0.0, 0.0),
-          width: double.infinity,
-          height: 100,
-          decoration: BoxDecoration(
-            color: Theme.of(context).primaryColor,
-//            borderRadius: BorderRadius.only(
-//              topLeft: Radius.circular(20),
-//              bottomLeft: Radius.circular(20),
-//            ),
-            border: Border.all(
-              color: Colors.black,
-              width: 1.0,
+    return Transform.translate(
+      offset: Offset(30, 0),
+      child: Container(
+        margin: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
+        width: double.infinity,
+        height: 100,
+        decoration: BoxDecoration(
+          color: Theme.of(context).primaryColor,
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(10),
+            topLeft: Radius.circular(10),
+          ),
+//          border: Border.all(
+//            color: Colors.black,
+//            width: 1.0,
+//          ),
+        ),
+        child: Row(
+          children: <Widget>[
+            Icon(Icons.chevron_left,
+                size: 60, color: Theme.of(context).accentColor),
+            Text(count.toString(), style: kLabel.copyWith(fontSize: 40)),
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Flexible(
+                    child: Text(
+                      widget.title.length > 9
+                          ? widget.title.substring(0, 9) + '..'
+                          : widget.title,
+                      maxLines: 2,
+                      style: kLabel,
+                    ),
+                  ),
+                  SizedBox(width: 50.0),
+                ],
+              ),
             ),
-          ),
-          child: Row(
-            children: <Widget>[
-              Material(
-                color: Theme.of(context).primaryColor,
-                child: IconButton(
-                    icon: Icon(Icons.chevron_left),
-                    iconSize: 60,
-                    onPressed: () {
-                      setState(() {
-                        count++;
-                      });
-                    },
-                    color: Theme.of(context).accentColor),
-              ),
-              Text(count.toString(), style: kLabel.copyWith(fontSize: 40)),
-              Expanded(
-                child: Text(''),
-              ),
-              Text(widget.title, style: kLabel),
-            ],
-          ),
+          ],
         ),
       ),
     );

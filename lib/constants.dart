@@ -14,7 +14,11 @@ enum CardType { Counter, Session }
 
 List<CardModel> cardModels = [
   CardModel(text: 'Work', type: CardType.Session),
-  CardModel(text: 'Flutr', type: CardType.Session),
+  CardModel(text: 'Flutter', type: CardType.Session),
+  CardModel(text: 'Exercise', type: CardType.Session),
+  CardModel(text: 'Empty', type: CardType.Session),
+  CardModel(text: 'Flute', type: CardType.Session),
+  CardModel(text: 'Sit updslkafjsakljfsdffds', type: CardType.Session),
   CardModel(text: 'Quran', type: CardType.Session),
   CardModel(text: 'Water', type: CardType.Counter),
 ];

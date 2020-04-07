@@ -37,15 +37,31 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            Expanded(
-              child: ListView.builder(
-                itemCount: cardModels.length,
-//                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return CustomCard(
-                    title: cardModels[index].text,
-                  );
-                },
+            Flexible(
+              child: PageView(
+                physics: BouncingScrollPhysics(),
+                children: <Widget>[
+                  Stack(
+                    alignment: Alignment.centerRight,
+                    children: <Widget>[
+                      Container(
+                          height: double.infinity,
+                          width: MediaQuery.of(context).size.width * 0.03,
+                          color: Theme.of(context).primaryColor),
+                      ListWheelScrollView(
+                        diameterRatio: 1000,
+                        offAxisFraction: -0.2,
+                        itemExtent: 120,
+                        children: List.generate(cardModels.length, (index) {
+//                  return (Container(
+//                      height: 20, width: 300, color: Colors.orange));
+                          return CustomCard(title: cardModels[index].text);
+                        }),
+                      ),
+                    ],
+                  ),
+                  Container(color: Theme.of(context).accentColor),
+                ],
               ),
             ),
             BottomBar(),
