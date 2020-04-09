@@ -38,46 +38,51 @@ class _CustomCardState extends State<CustomCard>
 
   @override
   Widget build(BuildContext context) {
-    return Transform.translate(
-      offset: Offset(30, 0),
-      child: Container(
-        margin: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
-        width: double.infinity,
-        height: 100,
-        decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor,
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(10),
-            topLeft: Radius.circular(10),
-          ),
+    return GestureDetector(
+      onTap: () {
+        print('please');
+      },
+      child: Transform.translate(
+        offset: Offset(30, 0),
+        child: Container(
+          margin: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
+          width: double.infinity,
+          height: 100,
+          decoration: BoxDecoration(
+            color: Theme.of(context).primaryColor,
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(10),
+              topLeft: Radius.circular(10),
+            ),
 //          border: Border.all(
 //            color: Colors.black,
 //            width: 1.0,
 //          ),
-        ),
-        child: Row(
-          children: <Widget>[
-            Icon(Icons.chevron_left,
-                size: 60, color: Theme.of(context).accentColor),
-            Text(count.toString(), style: kLabel.copyWith(fontSize: 40)),
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  Flexible(
-                    child: Text(
-                      widget.title.length > 9
-                          ? widget.title.substring(0, 9) + '..'
-                          : widget.title,
-                      maxLines: 2,
-                      style: kLabel,
+          ),
+          child: Row(
+            children: <Widget>[
+              Icon(Icons.chevron_left,
+                  size: 60, color: Theme.of(context).accentColor),
+              Text(count.toString(), style: kLabel.copyWith(fontSize: 40)),
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    Flexible(
+                      child: Text(
+                        widget.title.length > 9
+                            ? widget.title.substring(0, 9) + '..'
+                            : widget.title,
+                        maxLines: 2,
+                        style: kLabel,
+                      ),
                     ),
-                  ),
-                  SizedBox(width: 50.0),
-                ],
+                    SizedBox(width: 50.0),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -48,10 +48,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           height: double.infinity,
                           width: MediaQuery.of(context).size.width * 0.03,
                           color: Theme.of(context).primaryColor),
-                      ListWheelScrollView(
-                        diameterRatio: 1000,
-                        offAxisFraction: -0.2,
-                        itemExtent: 120,
+                      ListView(
                         children: List.generate(cardModels.length, (index) {
 //                  return (Container(
 //                      height: 20, width: 300, color: Colors.orange));
@@ -60,11 +57,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                       ),
                     ],
                   ),
-                  Container(color: Theme.of(context).accentColor),
+//                  Container(color: Theme.of(context).accentColor),
                 ],
               ),
             ),
-            BottomBar(),
+//            BottomBar(),
           ],
         ),
       ),
