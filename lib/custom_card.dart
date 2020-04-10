@@ -6,10 +6,19 @@ import 'card_state.dart';
 
 class CustomCard extends StatefulWidget {
   final String title;
-  final AnimationController otherController;
+  final int score;
+  final int goal;
+  final Duration duration;
+
+//  final AnimationController otherController;
 //
-  CustomCard({@required this.title, this.otherController});
-//  CustomCard({@required this.title});
+  CustomCard({
+    @required this.title,
+    @required this.score,
+    @required this.goal,
+    @required this.duration,
+//    this.otherController,
+  });
 
   @override
   _CustomCardState createState() => _CustomCardState();
@@ -17,11 +26,10 @@ class CustomCard extends StatefulWidget {
 
 enum Position { None, Left, Right }
 
-class _CustomCardState extends State<CustomCard>
-    with TickerProviderStateMixin {
-  int count = 0;
+class _CustomCardState extends State<CustomCard> with TickerProviderStateMixin {
   AnimationController screenChangeController;
   Animation screenChangeAnimation;
+
 //  AnimationStatus screenChangeStatus = AnimationStatus.completed;
 
   @override
@@ -49,21 +57,32 @@ class _CustomCardState extends State<CustomCard>
         setState(() {
           if (details.primaryDelta < 0) {
             screenChangeController.forward();
-            widget.otherController.forward();
+//            widget.otherController.forward();
           } else {
             screenChangeController.reverse();
-            widget.otherController.reverse();
+//            widget.otherController.reverse();
           }
         });
       },
       onTap: () {
         setState(() {
           print('Tapped: ${widget.title}');
-          Navigator.pushNamed(context, SecondScreen.id);
+//          Navigator.pushNamed(context, SecondScreen.id);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SecondScreen(
+                  title: widget.title,
+                  score: widget.score,
+                  goal: widget.goal,
+                  duration: widget.duration,
+                ),
+              ));
         });
       },
       child: Transform.translate(
-        offset: Offset(kEndSpacing - (screenChangeAnimation.value * screenWidth), 0),
+        offset: Offset(
+            kEndSpacing - (screenChangeAnimation.value * screenWidth), 0),
         child: Container(
           margin: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
           width: double.infinity,
@@ -79,7 +98,8 @@ class _CustomCardState extends State<CustomCard>
             children: <Widget>[
               Icon(Icons.chevron_left,
                   size: 60, color: Theme.of(context).accentColor),
-              Text(count.toString(), style: kLabel.copyWith(fontSize: 40)),
+              Text(widget.score.toString(),
+                  style: kLabel.copyWith(fontSize: 40)),
               Expanded(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,

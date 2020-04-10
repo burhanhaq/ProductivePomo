@@ -6,6 +6,18 @@ import 'clock.dart';
 
 class SecondScreen extends StatelessWidget {
   static final id = 'SecondScreen';
+  final String title;
+  final int score;
+  final int goal;
+  final Duration duration;
+
+  SecondScreen({
+    @required this.title,
+    @required this.score,
+    @required this.goal,
+    @required this.duration,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -26,13 +38,6 @@ class SecondScreen extends StatelessWidget {
                     topLeft: Radius.circular(100),
                     bottomLeft: Radius.circular(100),
                   ),
-//                  boxShadow: [
-//                    BoxShadow(
-//                      color: red1,
-//                      offset: Offset(1.0, 2.0), //(x,y)
-//                      blurRadius: 20.0,
-//                    ),
-//                  ],
                 ),
                 width: MediaQuery.of(context).size.width * 0.6,
                 height: MediaQuery.of(context).size.height * 0.9,
@@ -42,7 +47,7 @@ class SecondScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
                       Text(
-                        'Flutter Dev'.toUpperCase(),
+                        title.toUpperCase(),
                         textAlign: TextAlign.end,
                         maxLines: 2,
                         style: TextStyle(
@@ -60,7 +65,7 @@ class SecondScreen extends StatelessWidget {
                           color: red3,
                           shape: BoxShape.circle,
                         ),
-                        child: Clock(),
+                        child: Clock(duration: duration),
                       ),
                     ],
                   ),
@@ -114,7 +119,7 @@ class SecondScreen extends StatelessWidget {
                 Column(
                   children: [
                     Text(
-                      '0',
+                      score.toString(),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 100,
@@ -123,7 +128,7 @@ class SecondScreen extends StatelessWidget {
                     ),
                     Container(height: 10, width: 80, color: Colors.white),
                     Text(
-                      '8',
+                      goal.toString(),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 50,

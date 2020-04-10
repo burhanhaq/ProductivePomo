@@ -8,6 +8,7 @@ import 'second_screen.dart';
 
 class Home extends StatefulWidget {
   static final id = 'Home';
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -56,24 +57,16 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                     children: List.generate(cardModels.length, (index) {
                       return CustomCard(
                         title: cardModels[index].text,
-                        otherController: controller,
+                        score: cardModels[index].score,
+                        goal: cardModels[index].goal,
+                        duration: cardModels[index].duration,
+//                        otherController: controller,
                       );
                     }),
                   ),
-//                  GestureDetector(
-//                    onTap: () {
-//                      setState(() {});
-//                    },
-//                    child: Transform.translate(
-//                      offset: Offset(
-//                          MediaQuery.of(context).size.width * 1, 0.0),
-//                      child: SecondScreen(),
-//                    ),
-//                  ),
                 ],
               ),
             ),
-//            BottomBar(),
           ],
         ),
       ),

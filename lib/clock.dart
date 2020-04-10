@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'constants.dart';
 
 class Clock extends StatefulWidget {
+  final Duration duration;
+  Clock({@required this.duration});
   @override
   _ClockState createState() => _ClockState();
 }
@@ -12,7 +14,7 @@ class _ClockState extends State<Clock> with SingleTickerProviderStateMixin {
   AnimationController controller;
 
   String get timerString {
-    Duration duration = controller.duration * (1 - controller.value);
+    Duration duration = widget.duration * (1 - controller.value);
     return '${duration.inMinutes}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}';
   }
 
@@ -21,7 +23,7 @@ class _ClockState extends State<Clock> with SingleTickerProviderStateMixin {
     super.initState();
     controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 5),
+      duration: widget.duration,
     );
   }
 
@@ -79,6 +81,11 @@ class _ClockState extends State<Clock> with SingleTickerProviderStateMixin {
         ),
       ],
     );
+  }
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 }
 
