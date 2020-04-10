@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'home.dart';
 import 'constants.dart';
+import 'second_screen.dart';
 
 void main() => runApp(App());
 
@@ -15,7 +16,12 @@ class App extends StatelessWidget {
         accentColor: grey,
 //        scaffoldBackgroundColor: Color(0xFF0A0E21),
       ),
-      home: Home(),
+//      home: Home(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => Home(),
+        '/second': (context) => SecondScreen(),
+      },
     );
   }
 }

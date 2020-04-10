@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'constants.dart';
+import 'clock.dart';
 
 class SecondScreen extends StatelessWidget {
   @override
@@ -9,7 +11,6 @@ class SecondScreen extends StatelessWidget {
         child: Row(
       children: <Widget>[
         Container(
-          color: blue,
           width: MediaQuery.of(context).size.width * 0.75,
           child: Stack(
             alignment: Alignment.center,
@@ -19,37 +20,47 @@ class SecondScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: red2,
                   borderRadius: BorderRadius.only(
-//                    topRight: Radius.circular(50),
-//                    bottomRight: Radius.circular(50),
-//                    topLeft: Radius.circular(50),
+//                    topRight: Radius.circular(100),
+                    bottomRight: Radius.circular(100),
+                    topLeft: Radius.circular(100),
                     bottomLeft: Radius.circular(100),
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: red1,
+//                      offset: Offset(1.0, 2.0), //(x,y)
+                      blurRadius: 20.0,
+                    ),
+                  ],
                 ),
                 width: MediaQuery.of(context).size.width * 0.6,
                 height: MediaQuery.of(context).size.height * 0.9,
                 child: Padding(
-                  padding: EdgeInsets.all(20),
+                  padding: EdgeInsets.all(20.0),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
                       Text(
-                        'Flutter Dev',
+                        'Flutter Dev'.toUpperCase(),
+                        textAlign: TextAlign.end,
                         maxLines: 2,
                         style: TextStyle(
+                          letterSpacing: 2,
                           fontSize: 35,
                           color: Colors.white,
                           decoration: TextDecoration.none,
                         ),
                       ),
+                      Expanded(child: Container()),
                       Container(
-                        width: MediaQuery.of(context).size.width * 0.75,
-                        height: MediaQuery.of(context).size.width * 0.75,
+                        width: MediaQuery.of(context).size.width * 0.5,
+                        height: MediaQuery.of(context).size.width * 0.5,
                         decoration: BoxDecoration(
                           color: red3,
                           shape: BoxShape.circle,
                         ),
+                        child: Clock(),
                       ),
-                      Expanded(child: Container()),
                     ],
                   ),
                 ),
@@ -60,22 +71,27 @@ class SecondScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      Container(
-                        height: 50,
-                        width: 50,
-                        decoration: BoxDecoration(
-                          color: yellow,
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(40)),
+                      Opacity(
+                        opacity: 1.0,
+                        child: Container(
+                          height: 50,
+                          width: 50,
+                          decoration: BoxDecoration(
+//                            color: yellow,
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(40)),
 //                          shape: BoxShape.circle,
 //                                      color: Colors.white,
-                        ),
-                        child: Transform.translate(
-                          offset: Offset(-5, 5),
-                          child: Icon(
-                            Icons.arrow_back_ios,
-                            size: 40,
-                            color: Colors.black,
+                          ),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Icon(
+                              Icons.arrow_back,
+                              size: 40,
+                              color: yellow,
+                            ),
                           ),
                         ),
                       ),
@@ -106,7 +122,7 @@ class SecondScreen extends StatelessWidget {
                     ),
                     Container(height: 10, width: 80, color: Colors.white),
                     Text(
-                      '0',
+                      '8',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 50,

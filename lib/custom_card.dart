@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pomodoro_app/second_screen.dart';
 
 import 'constants.dart';
 import 'card_state.dart';
@@ -58,6 +59,7 @@ class _CustomCardState extends State<CustomCard>
       onTap: () {
         setState(() {
           print('Tapped: ${widget.title}');
+          Navigator.pushNamed(context, '/second');
         });
       },
       child: Transform.translate(

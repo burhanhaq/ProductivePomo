@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'bottom_bar.dart';
+import 'clock.dart';
 import 'constants.dart';
 import 'custom_card.dart';
 import 'second_screen.dart';
@@ -65,7 +65,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                     },
                     child: Transform.translate(
                       offset: Offset(
-                          MediaQuery.of(context).size.width * 0.75 * 0, 0.0),
+                          MediaQuery.of(context).size.width * 1, 0.0),
                       child: SecondScreen(),
                     ),
                   ),
