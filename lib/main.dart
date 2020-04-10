@@ -14,13 +14,12 @@ class App extends StatelessWidget {
       theme: Theme.of(context).copyWith(
         primaryColor: yellow,
         accentColor: grey,
-//        scaffoldBackgroundColor: Color(0xFF0A0E21),
       ),
 //      home: Home(),
-      initialRoute: '/',
+      initialRoute: Home.id,
       routes: {
-        '/': (context) => Home(),
-        '/second': (context) => SecondScreen(),
+        Home.id: (context) => Home(),
+        SecondScreen.id: (context) => SecondScreen(),
       },
     );
   }

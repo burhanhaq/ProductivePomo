@@ -5,6 +5,7 @@ import 'constants.dart';
 import 'clock.dart';
 
 class SecondScreen extends StatelessWidget {
+  static final id = 'SecondScreen';
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -25,13 +26,13 @@ class SecondScreen extends StatelessWidget {
                     topLeft: Radius.circular(100),
                     bottomLeft: Radius.circular(100),
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: red1,
+//                  boxShadow: [
+//                    BoxShadow(
+//                      color: red1,
 //                      offset: Offset(1.0, 2.0), //(x,y)
-                      blurRadius: 20.0,
-                    ),
-                  ],
+//                      blurRadius: 20.0,
+//                    ),
+//                  ],
                 ),
                 width: MediaQuery.of(context).size.width * 0.6,
                 height: MediaQuery.of(context).size.height * 0.9,

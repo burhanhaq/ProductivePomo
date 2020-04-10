@@ -59,7 +59,7 @@ class _CustomCardState extends State<CustomCard>
       onTap: () {
         setState(() {
           print('Tapped: ${widget.title}');
-          Navigator.pushNamed(context, '/second');
+          Navigator.pushNamed(context, SecondScreen.id);
         });
       },
       child: Transform.translate(
