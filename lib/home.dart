@@ -1,8 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'bottom_bar.dart';
 import 'constants.dart';
 import 'custom_card.dart';
+import 'second_screen.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -11,13 +13,19 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   AnimationController controller;
+  Animation animation;
+
   @override
   void initState() {
     super.initState();
     controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 5),
+      duration: Duration(milliseconds: 300),
     );
+    animation = Tween(begin: 1.0, end: 0.0).animate(controller)
+      ..addListener(() {
+        setState(() {});
+      });
   }
 
   @override
@@ -25,9 +33,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     controller.dispose();
     super.dispose();
   }
-
-  IconData playIcon = Icons.play_arrow;
-//  String buttonText = 'Play';
 
   @override
   Widget build(BuildContext context) {
@@ -38,26 +43,32 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             Flexible(
-              child: PageView(
-                physics: BouncingScrollPhysics(),
+              child: Stack(
+                alignment: Alignment.centerRight,
                 children: <Widget>[
-                  Stack(
-                    alignment: Alignment.centerRight,
-                    children: <Widget>[
-                      Container(
-                          height: double.infinity,
-                          width: MediaQuery.of(context).size.width * 0.03,
-                          color: Theme.of(context).primaryColor),
-                      ListView(
-                        children: List.generate(cardModels.length, (index) {
-//                  return (Container(
-//                      height: 20, width: 300, color: Colors.orange));
-                          return CustomCard(title: cardModels[index].text);
-                        }),
-                      ),
-                    ],
+                  Container(
+                      height: double.infinity,
+                      width: MediaQuery.of(context).size.width * 0.03,
+                      color: Theme.of(context).primaryColor),
+                  ListView(
+                    physics: BouncingScrollPhysics(),
+                    children: List.generate(cardModels.length, (index) {
+                      return CustomCard(
+                        title: cardModels[index].text,
+                        otherController: controller,
+                      );
+                    }),
                   ),
-//                  Container(color: Theme.of(context).accentColor),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {});
+                    },
+                    child: Transform.translate(
+                      offset: Offset(
+                          MediaQuery.of(context).size.width * 0.75 * 0, 0.0),
+                      child: SecondScreen(),
+                    ),
+                  ),
                 ],
               ),
             ),

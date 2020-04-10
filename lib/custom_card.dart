@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 
 import 'constants.dart';
+import 'card_state.dart';
 
 class CustomCard extends StatefulWidget {
   final String title;
-  CustomCard({@required this.title});
+  final AnimationController otherController;
+//
+  CustomCard({@required this.title, this.otherController});
+//  CustomCard({@required this.title});
+
   @override
   _CustomCardState createState() => _CustomCardState();
 }
@@ -12,38 +17,51 @@ class CustomCard extends StatefulWidget {
 enum Position { None, Left, Right }
 
 class _CustomCardState extends State<CustomCard>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   int count = 0;
-  Position pos = Position.None;
-  AnimationController flipCardController;
-  Animation flipCardAnimation;
-  AnimationStatus flipCardStatus = AnimationStatus.dismissed;
-  double x = 0;
-  double y = 0;
-  double z = 0;
+  AnimationController screenChangeController;
+  Animation screenChangeAnimation;
+//  AnimationStatus screenChangeStatus = AnimationStatus.completed;
+
   @override
   void initState() {
     super.initState();
-    flipCardController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
-    flipCardAnimation =
-        Tween<double>(end: 1, begin: 0).animate(flipCardController)
+    screenChangeController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 200));
+    screenChangeAnimation =
+        Tween<double>(begin: 0.0, end: 1.0).animate(screenChangeController)
           ..addListener(() {
             setState(() {});
-          })
-          ..addStatusListener((status) {
-            flipCardStatus = status;
           });
+//          ..addStatusListener((status) {
+//            screenChangeStatus = status;
+//          });
   }
+
+  double added = 0;
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return GestureDetector(
+      onHorizontalDragUpdate: (details) {
+        setState(() {
+          if (details.primaryDelta < 0) {
+            screenChangeController.forward();
+            widget.otherController.forward();
+          } else {
+            screenChangeController.reverse();
+            widget.otherController.reverse();
+          }
+        });
+      },
       onTap: () {
-        print('please');
+        setState(() {
+          print('Tapped: ${widget.title}');
+        });
       },
       child: Transform.translate(
-        offset: Offset(30, 0),
+        offset: Offset(kEndSpacing - (screenChangeAnimation.value * screenWidth), 0),
         child: Container(
           margin: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
           width: double.infinity,
@@ -54,10 +72,6 @@ class _CustomCardState extends State<CustomCard>
               bottomLeft: Radius.circular(10),
               topLeft: Radius.circular(10),
             ),
-//          border: Border.all(
-//            color: Colors.black,
-//            width: 1.0,
-//          ),
           ),
           child: Row(
             children: <Widget>[
@@ -86,5 +100,11 @@ class _CustomCardState extends State<CustomCard>
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    screenChangeController.dispose();
+    super.dispose();
   }
 }
