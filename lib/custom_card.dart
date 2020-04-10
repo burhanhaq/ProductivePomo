@@ -3,21 +3,20 @@ import 'package:pomodoro_app/second_screen.dart';
 
 import 'constants.dart';
 import 'card_state.dart';
+import 'card_state.dart';
 
 class CustomCard extends StatefulWidget {
+  final int index;
   final String title;
   final int score;
   final int goal;
   final Duration duration;
-
-//  final AnimationController otherController;
-//
   CustomCard({
+    @required this.index,
     @required this.title,
     @required this.score,
     @required this.goal,
     @required this.duration,
-//    this.otherController,
   });
 
   @override
@@ -47,8 +46,6 @@ class _CustomCardState extends State<CustomCard> with TickerProviderStateMixin {
 //          });
   }
 
-  double added = 0;
-
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -58,9 +55,8 @@ class _CustomCardState extends State<CustomCard> with TickerProviderStateMixin {
           if (details.primaryDelta < 0) {
             screenChangeController.forward();
 //            widget.otherController.forward();
-          } else {
-            screenChangeController.reverse();
-//            widget.otherController.reverse();
+//          } else {
+//            screenChangeController.reverse();
           }
         });
       },
@@ -72,6 +68,7 @@ class _CustomCardState extends State<CustomCard> with TickerProviderStateMixin {
               context,
               MaterialPageRoute(
                 builder: (context) => SecondScreen(
+                  index: widget.index,
                   title: widget.title,
                   score: widget.score,
                   goal: widget.goal,
@@ -82,9 +79,9 @@ class _CustomCardState extends State<CustomCard> with TickerProviderStateMixin {
       },
       child: Transform.translate(
         offset: Offset(
-            kEndSpacing - (screenChangeAnimation.value * screenWidth), 0),
+            -(screenChangeAnimation.value * screenWidth), 0),
         child: Container(
-          margin: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
+          margin: EdgeInsets.fromLTRB(20.0, 20.0, 0.0, 0.0),
           width: double.infinity,
           height: 100,
           decoration: BoxDecoration(
@@ -109,11 +106,12 @@ class _CustomCardState extends State<CustomCard> with TickerProviderStateMixin {
                         widget.title.length > 9
                             ? widget.title.substring(0, 9) + '..'
                             : widget.title,
+                        textAlign: TextAlign.end,
                         maxLines: 2,
                         style: kLabel,
                       ),
                     ),
-                    SizedBox(width: 50.0),
+                    SizedBox(width: 20.0),
                   ],
                 ),
               ),

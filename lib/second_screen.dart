@@ -3,21 +3,29 @@ import 'package:flutter/material.dart';
 
 import 'constants.dart';
 import 'clock.dart';
+import 'card_state.dart';
 
-class SecondScreen extends StatelessWidget {
+class SecondScreen extends StatefulWidget {
   static final id = 'SecondScreen';
-  final String title;
-  final int score;
-  final int goal;
-  final Duration duration;
+   int index;
+   String title;
+   int score;
+   int goal;
+   Duration duration;
 
   SecondScreen({
+    @required this.index,
     @required this.title,
     @required this.score,
     @required this.goal,
     @required this.duration,
   });
 
+  @override
+  _SecondScreenState createState() => _SecondScreenState();
+}
+
+class _SecondScreenState extends State<SecondScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -47,7 +55,7 @@ class SecondScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
                       Text(
-                        title.toUpperCase(),
+                        widget.title.toUpperCase(),
                         textAlign: TextAlign.end,
                         maxLines: 2,
                         style: TextStyle(
@@ -65,7 +73,7 @@ class SecondScreen extends StatelessWidget {
                           color: red3,
                           shape: BoxShape.circle,
                         ),
-                        child: Clock(duration: duration),
+                        child: Clock(duration: widget.duration),
                       ),
                     ],
                   ),
@@ -119,7 +127,7 @@ class SecondScreen extends StatelessWidget {
                 Column(
                   children: [
                     Text(
-                      score.toString(),
+                      widget.score.toString(),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 100,
@@ -128,7 +136,7 @@ class SecondScreen extends StatelessWidget {
                     ),
                     Container(height: 10, width: 80, color: Colors.white),
                     Text(
-                      goal.toString(),
+                      widget.goal.toString(),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 50,
@@ -182,18 +190,32 @@ class SecondScreen extends StatelessWidget {
                   children: <Widget>[
                     Padding(
                       padding: EdgeInsets.only(top: 10),
-                      child: Icon(
-                        Icons.remove,
-                        size: 40,
-                        color: white,
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            if (widget.score > 0) --widget.score;
+                          });
+                        },
+                        child: Icon(
+                          Icons.remove,
+                          size: 40,
+                          color: white,
+                        ),
                       ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 10),
-                      child: Icon(
-                        Icons.add,
-                        size: 40,
-                        color: white,
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            ++widget.score;
+                          });
+                        },
+                        child: Icon(
+                          Icons.add,
+                          size: 40,
+                          color: white,
+                        ),
                       ),
                     ),
                   ],

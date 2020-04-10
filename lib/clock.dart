@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'constants.dart';
+import 'card_state.dart';
 
 class Clock extends StatefulWidget {
   final Duration duration;
