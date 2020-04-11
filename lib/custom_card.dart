@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pomodoro_app/second_screen.dart';
+import 'package:provider/provider.dart';
 
 import 'constants.dart';
-import 'card_state.dart';
 import 'card_state.dart';
 
 class CustomCard extends StatefulWidget {
@@ -11,6 +11,7 @@ class CustomCard extends StatefulWidget {
   final int score;
   final int goal;
   final Duration duration;
+
   CustomCard({
     @required this.index,
     @required this.title,
@@ -49,22 +50,13 @@ class _CustomCardState extends State<CustomCard> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    final cardState = Provider.of<CardState>(context);
     return GestureDetector(
       onHorizontalDragUpdate: (details) {
         setState(() {
           if (details.primaryDelta < 0) {
             screenChangeController.forward();
-//            widget.otherController.forward();
-//          } else {
-//            screenChangeController.reverse();
-          }
-        });
-      },
-      onTap: () {
-        setState(() {
-          print('Tapped: ${widget.title}');
-//          Navigator.pushNamed(context, SecondScreen.id);
-          Navigator.push(
+            Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => SecondScreen(
@@ -74,12 +66,21 @@ class _CustomCardState extends State<CustomCard> with TickerProviderStateMixin {
                   goal: widget.goal,
                   duration: widget.duration,
                 ),
-              ));
+              ),
+            );
+          } else {
+            screenChangeController.reverse();
+          }
+        });
+      },
+      onTap: () {
+        setState(() {
+          print('Tapped: ${widget.title}');
+          cardState.currentIndex = widget.index;
         });
       },
       child: Transform.translate(
-        offset: Offset(
-            -(screenChangeAnimation.value * screenWidth), 0),
+        offset: Offset(-(screenChangeAnimation.value * screenWidth * 0.5), 0),
         child: Container(
           margin: EdgeInsets.fromLTRB(20.0, 20.0, 0.0, 0.0),
           width: double.infinity,
@@ -95,7 +96,7 @@ class _CustomCardState extends State<CustomCard> with TickerProviderStateMixin {
             children: <Widget>[
               Icon(Icons.chevron_left,
                   size: 60, color: Theme.of(context).accentColor),
-              Text(widget.score.toString(),
+              Text(cardState.at(widget.index).score.toString(),
                   style: kLabel.copyWith(fontSize: 40)),
               Expanded(
                 child: Row(
@@ -103,7 +104,7 @@ class _CustomCardState extends State<CustomCard> with TickerProviderStateMixin {
                   children: <Widget>[
                     Flexible(
                       child: Text(
-                        widget.title.length > 9
+                        cardState.at(widget.index).text.length > 9
                             ? widget.title.substring(0, 9) + '..'
                             : widget.title,
                         textAlign: TextAlign.end,
