@@ -8,7 +8,15 @@ const kLabel = TextStyle(
   fontSize: 25,
   fontWeight: FontWeight.bold,
   decoration: TextDecoration.none,
-  letterSpacing: 5.0,
+  letterSpacing: 1.0,
+);
+
+const kScore = TextStyle(
+  color: Colors.black,
+  fontSize: 40,
+  fontWeight: FontWeight.bold,
+  decoration: TextDecoration.none,
+  letterSpacing: 1.0,
 );
 
 const double kEndSpacing = 30.0;

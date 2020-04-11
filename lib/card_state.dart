@@ -8,22 +8,34 @@ import 'models/card_model.dart';
 class CardState with ChangeNotifier {
   int _pageScore;
   int _pageGoal;
-  int _pageIndex;
+  int _currentIndex;
+  bool _selected;
 
   int get firstPageScore => _pageScore;
+
   int get firstPageGoal => _pageGoal;
-  int get currentIndex => _pageIndex;
+
+  int get currentIndex => _currentIndex;
+
   int get length => _cardModels.length;
+
+  bool get selected => _selected;
 
   void init() {
     _pageScore = _cardModels[0].score;
     _pageGoal = _cardModels[0].goal;
-    _pageIndex = _cardModels[0].index;
+    _currentIndex = _cardModels[0].index;
+    notifyListeners();
   }
 
   set currentIndex(int i) {
     _pageGoal = _cardModels[i].goal;
     _pageScore = _cardModels[i].score;
+    _currentIndex = i;
+    for (int j = 0; j < _cardModels.length; j++) {
+      _cardModels[j].selected = false;
+    }
+    _cardModels[i].selected = true;
     notifyListeners();
   }
 
@@ -48,6 +60,7 @@ class CardState with ChangeNotifier {
       score: 100,
       goal: 1,
       duration: Duration(seconds: 1),
+      selected: false,
     ),
     CardModel(
       index: 1,
@@ -55,6 +68,7 @@ class CardState with ChangeNotifier {
       score: 1,
       goal: 200,
       duration: Duration(seconds: 2),
+      selected: false,
     ),
     CardModel(
       index: 2,
@@ -62,6 +76,7 @@ class CardState with ChangeNotifier {
       score: 2,
       goal: 3,
       duration: Duration(minutes: 1000),
+      selected: false,
     ),
     CardModel(
       index: 3,
@@ -69,6 +84,7 @@ class CardState with ChangeNotifier {
       score: 3,
       goal: 4,
       duration: Duration(minutes: 4),
+      selected: false,
     ),
     CardModel(
       index: 4,
@@ -76,6 +92,7 @@ class CardState with ChangeNotifier {
       score: 4,
       goal: 5,
       duration: Duration(minutes: 100),
+      selected: false,
     ),
     CardModel(
       index: 5,
@@ -83,6 +100,7 @@ class CardState with ChangeNotifier {
       score: 5,
       goal: 6,
       duration: Duration(milliseconds: 3000),
+      selected: false,
     ),
     CardModel(
       index: 6,
@@ -90,6 +108,7 @@ class CardState with ChangeNotifier {
       score: 6,
       goal: 7,
       duration: Duration(seconds: 10),
+      selected: false,
     ),
     CardModel(
       index: 7,
@@ -97,6 +116,7 @@ class CardState with ChangeNotifier {
       score: 7,
       goal: 8,
       duration: Duration(seconds: 8),
+      selected: false,
     ),
   ];
 }

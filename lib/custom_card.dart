@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pomodoro_app/second_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -11,6 +12,7 @@ class CustomCard extends StatefulWidget {
   final int score;
   final int goal;
   final Duration duration;
+  final bool selected;
 
   CustomCard({
     @required this.index,
@@ -18,6 +20,7 @@ class CustomCard extends StatefulWidget {
     @required this.score,
     @required this.goal,
     @required this.duration,
+    @required this.selected,
   });
 
   @override
@@ -51,6 +54,7 @@ class _CustomCardState extends State<CustomCard> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     final cardState = Provider.of<CardState>(context);
+    bool selected = cardState.at(widget.index).selected;
     return GestureDetector(
       onHorizontalDragUpdate: (details) {
         setState(() {
@@ -65,6 +69,7 @@ class _CustomCardState extends State<CustomCard> with TickerProviderStateMixin {
                   score: widget.score,
                   goal: widget.goal,
                   duration: widget.duration,
+                  selected: widget.selected,
                 ),
               ),
             );
@@ -81,40 +86,53 @@ class _CustomCardState extends State<CustomCard> with TickerProviderStateMixin {
       },
       child: Transform.translate(
         offset: Offset(-(screenChangeAnimation.value * screenWidth * 0.5), 0),
-        child: Container(
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 200),
           margin: EdgeInsets.fromLTRB(20.0, 20.0, 0.0, 0.0),
+          curve: Curves.fastOutSlowIn,
           width: double.infinity,
-          height: 100,
+          height: selected ? 200 : 100,
           decoration: BoxDecoration(
-            color: Theme.of(context).primaryColor,
+            color: selected ? red1 : yellow,
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(10),
               topLeft: Radius.circular(10),
             ),
           ),
-          child: Row(
+          child: Column(
+            mainAxisAlignment: selected
+                ? MainAxisAlignment.spaceBetween
+                : MainAxisAlignment.center,
             children: <Widget>[
-              Icon(Icons.chevron_left,
-                  size: 60, color: Theme.of(context).accentColor),
-              Text(cardState.at(widget.index).score.toString(),
-                  style: kLabel.copyWith(fontSize: 40)),
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    Flexible(
-                      child: Text(
-                        cardState.at(widget.index).text.length > 9
-                            ? widget.title.substring(0, 9) + '..'
-                            : widget.title,
-                        textAlign: TextAlign.end,
-                        maxLines: 2,
-                        style: kLabel,
-                      ),
+              Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.chevron_left,
+                    size: 60,
+                    color: selected ? white : grey,
+                  ),
+                  Text(
+                    cardState.at(widget.index).score.toString(),
+                    style: selected ? kScore.copyWith(color: white) : kScore,
+                  ),
+                  Expanded(
+                    child: Text(
+                      cardState.at(widget.index).text.length > 12
+                          ? widget.title.substring(0, 12) + '..'
+                          : widget.title,
+                      textAlign: TextAlign.end,
+                      maxLines: 2,
+                      style: selected
+                          ? kLabel.copyWith(color: white)
+                          : kLabel,
                     ),
-                    SizedBox(width: 20.0),
-                  ],
-                ),
+                  ),
+                  SizedBox(width: 20.0),
+                ],
+              ),
+              Offstage(
+                child: Text('brhn.dev', style: kLabel.copyWith(color: white)),
+                offstage: !selected,
               ),
             ],
           ),

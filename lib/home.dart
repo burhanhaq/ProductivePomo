@@ -51,28 +51,29 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   child: Stack(
                     alignment: Alignment.centerRight,
                     children: <Widget>[
-                      Container(
-                          height: double.infinity,
-                          width: MediaQuery.of(context).size.width * 0.03,
-                          color: Theme.of(context).primaryColor),
                       ListView(
                         physics: BouncingScrollPhysics(),
-                        children:
-                            List.generate(cardState.length, (index) {
+                        children: List.generate(cardState.length, (index) {
                           return CustomCard(
                             index: index,
                             title: cardState.at(index).text,
                             score: cardState.at(index).score,
                             goal: cardState.at(index).goal,
                             duration: cardState.at(index).duration,
+                            selected: cardState.at(index).selected,
                           );
                         }),
+                      ),
+                      Container(
+                        height: double.infinity,
+                        width: MediaQuery.of(context).size.width * 0.03,
+                        color: yellow,
                       ),
                     ],
                   ),
                 ),
                 Container(
-                  color: grey,
+                  color: red1,
                   width: MediaQuery.of(context).size.width * 0.25,
                   child: Padding(
                     padding: EdgeInsets.only(top: 20, bottom: 20),
@@ -89,8 +90,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                 decoration: TextDecoration.none,
                               ),
                             ),
-                            Container(
-                                height: 10, width: 80, color: yellow),
+                            Container(height: 10, width: 80, color: yellow),
                             Text(
                               cardState.firstPageGoal.toString() ?? 'y',
                               style: TextStyle(
@@ -102,10 +102,15 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           ],
                         ),
                         Expanded(child: Container()),
-                        Icon(
-                          Icons.add_box,
-                          size: 80,
-                          color: yellow,
+                        GestureDetector(
+                          onTap: () { //TODO: Implement adding new CardModel
+                            print('Need to implement adding new CardModel');
+                          },
+                          child: Icon(
+                            Icons.add_box,
+                            size: 80,
+                            color: yellow,
+                          ),
                         ),
                       ],
                     ),

@@ -12,6 +12,7 @@ class SecondScreen extends StatefulWidget {
   int score;
   int goal;
   Duration duration;
+  bool selected;
 
   SecondScreen({
     @required this.index,
@@ -19,11 +20,13 @@ class SecondScreen extends StatefulWidget {
     @required this.score,
     @required this.goal,
     @required this.duration,
+    @required this.selected,
   });
 
   @override
   _SecondScreenState createState() => _SecondScreenState();
 }
+
 
 class _SecondScreenState extends State<SecondScreen> {
   @override
@@ -42,7 +45,7 @@ class _SecondScreenState extends State<SecondScreen> {
                   Container(color: grey),
                   Container(
                     decoration: BoxDecoration(
-                      color: red2,
+                      color: red1,
                       borderRadius: BorderRadius.only(
 //                    topRight: Radius.circular(100),
                         bottomRight: Radius.circular(100),
