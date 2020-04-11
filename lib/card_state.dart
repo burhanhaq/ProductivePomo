@@ -58,7 +58,7 @@ class CardState with ChangeNotifier {
   List<CardModel> _cardModels = [
     CardModel(
       index: 0,
-      text: 'Work',
+      title: 'Work',
       score: 0,
       goal: 1,
       duration: Duration(seconds: 1),
@@ -66,7 +66,7 @@ class CardState with ChangeNotifier {
     ),
     CardModel(
       index: 1,
-      text: 'Flutter',
+      title: 'Flutter',
       score: 1,
       goal: 200,
       duration: Duration(seconds: 2),
@@ -74,7 +74,7 @@ class CardState with ChangeNotifier {
     ),
     CardModel(
       index: 2,
-      text: 'Exercise',
+      title: 'Exercise',
       score: 2,
       goal: 3,
       duration: Duration(minutes: 1000),
@@ -82,7 +82,7 @@ class CardState with ChangeNotifier {
     ),
     CardModel(
       index: 3,
-      text: 'Empty',
+      title: 'Empty',
       score: 3,
       goal: 4,
       duration: Duration(minutes: 4),
@@ -90,7 +90,7 @@ class CardState with ChangeNotifier {
     ),
     CardModel(
       index: 4,
-      text: 'Flute',
+      title: 'Flute',
       score: 4,
       goal: 5,
       duration: Duration(minutes: 100),
@@ -98,7 +98,7 @@ class CardState with ChangeNotifier {
     ),
     CardModel(
       index: 5,
-      text: 'Sit updslkafjsakfsdffds',
+      title: 'Sit updslkafjsakfsdffds',
       score: 5,
       goal: 6,
       duration: Duration(milliseconds: 3000),
@@ -106,7 +106,7 @@ class CardState with ChangeNotifier {
     ),
     CardModel(
       index: 6,
-      text: 'Quran',
+      title: 'Quran',
       score: 6,
       goal: 7,
       duration: Duration(seconds: 10),
@@ -114,7 +114,7 @@ class CardState with ChangeNotifier {
     ),
     CardModel(
       index: 7,
-      text: 'Water',
+      title: 'Water',
       score: 7,
       goal: 8,
       duration: Duration(seconds: 8),

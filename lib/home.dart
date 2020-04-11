@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -57,14 +58,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                       ListView(
                         physics: BouncingScrollPhysics(),
                         children: List.generate(cardState.length, (index) {
-                          return CustomCard(
-                            index: index,
-                            title: cardState.at(index).text,
-                            score: cardState.at(index).score,
-                            goal: cardState.at(index).goal,
-                            duration: cardState.at(index).duration,
-                            selected: cardState.at(index).selected,
-                          );
+                          return CustomCard(cardModel: cardState.at(index));
                         }),
                       ),
                       Container(

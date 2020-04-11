@@ -1,27 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:pomodoro_app/second_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'constants.dart';
 import 'card_state.dart';
+import 'models/card_model.dart';
 
 class CustomCard extends StatefulWidget {
-  final int index;
-  final String title;
-  final int score;
-  final int goal;
-  final Duration duration;
-  final bool selected;
+  CardModel cardModel;
 
-  CustomCard({
-    @required this.index,
-    @required this.title,
-    @required this.score,
-    @required this.goal,
-    @required this.duration,
-    @required this.selected,
-  });
+  CustomCard({@required this.cardModel});
 
   @override
   _CustomCardState createState() => _CustomCardState();
@@ -52,9 +40,15 @@ class _CustomCardState extends State<CustomCard> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final int index = widget.cardModel.index;
+    final String title = widget.cardModel.title;
+//    final int score = widget.cardModel.score;
+//    final int goal = widget.cardModel.goal;
+//    final Duration duration = widget.cardModel.duration;
+//    final bool selected = widget.cardModel.selected;
     double screenWidth = MediaQuery.of(context).size.width;
     final cardState = Provider.of<CardState>(context);
-    bool selected = cardState.at(widget.index).selected;
+    bool isCardSelected = cardState.at(index).selected;
     return GestureDetector(
       onHorizontalDragUpdate: (details) {
         setState(() {
@@ -63,14 +57,7 @@ class _CustomCardState extends State<CustomCard> with TickerProviderStateMixin {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => SecondScreen(
-                  index: widget.index,
-                  title: widget.title,
-                  score: widget.score,
-                  goal: widget.goal,
-                  duration: widget.duration,
-                  selected: widget.selected,
-                ),
+                builder: (context) => SecondScreen(customCard: widget),
               ),
             );
           } else {
@@ -80,8 +67,8 @@ class _CustomCardState extends State<CustomCard> with TickerProviderStateMixin {
       },
       onTap: () {
         setState(() {
-          print('Tapped: ${widget.title}');
-          cardState.currentIndex = widget.index;
+          print('Tapped: $title');
+          cardState.currentIndex = index;
         });
       },
       child: Transform.translate(
@@ -91,16 +78,16 @@ class _CustomCardState extends State<CustomCard> with TickerProviderStateMixin {
           margin: EdgeInsets.fromLTRB(20.0, 20.0, 0.0, 0.0),
           curve: Curves.fastOutSlowIn,
           width: double.infinity,
-          height: selected ? 200 : 100,
+          height: isCardSelected ? 200 : 100,
           decoration: BoxDecoration(
-            color: selected ? red1 : yellow,
+            color: isCardSelected ? red1 : yellow,
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(10),
               topLeft: Radius.circular(10),
             ),
           ),
           child: Column(
-            mainAxisAlignment: selected
+            mainAxisAlignment: isCardSelected
                 ? MainAxisAlignment.spaceBetween
                 : MainAxisAlignment.center,
             children: <Widget>[
@@ -109,20 +96,20 @@ class _CustomCardState extends State<CustomCard> with TickerProviderStateMixin {
                   Icon(
                     Icons.chevron_left,
                     size: 60,
-                    color: selected ? white : grey,
+                    color: isCardSelected ? white : grey,
                   ),
                   Text(
-                    cardState.at(widget.index).score.toString(),
-                    style: selected ? kScore.copyWith(color: white) : kScore,
+                    cardState.at(index).score.toString(),
+                    style: isCardSelected ? kScore.copyWith(color: white) : kScore,
                   ),
                   Expanded(
                     child: Text(
-                      cardState.at(widget.index).text.length > 12
-                          ? widget.title.substring(0, 12) + '..'
-                          : widget.title,
+                      cardState.at(index).title.length > 12
+                          ? title.substring(0, 12) + '..'
+                          : title,
                       textAlign: TextAlign.end,
                       maxLines: 2,
-                      style: selected
+                      style: isCardSelected
                           ? kLabel.copyWith(color: white)
                           : kLabel,
                     ),
@@ -132,7 +119,7 @@ class _CustomCardState extends State<CustomCard> with TickerProviderStateMixin {
               ),
               Offstage(
                 child: Text('brhn.dev', style: kLabel.copyWith(color: white)),
-                offstage: !selected,
+                offstage: !isCardSelected,
               ),
             ],
           ),

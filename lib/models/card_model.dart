@@ -4,14 +4,14 @@ import '../constants.dart';
 
 class CardModel {
   int index;
-  String text;
+  String title;
   int score;
   int goal;
   Duration duration;
   bool selected;
   CardModel({
     @required this.index,
-    @required this.text,
+    @required this.title,
     @required this.score,
     @required this.goal,
     @required this.duration,

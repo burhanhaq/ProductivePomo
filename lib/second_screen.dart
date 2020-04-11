@@ -4,24 +4,13 @@ import 'package:provider/provider.dart';
 import 'constants.dart';
 import 'clock.dart';
 import 'card_state.dart';
+import 'custom_card.dart';
 
 class SecondScreen extends StatefulWidget {
   static final id = 'SecondScreen';
-  int index;
-  String title;
-  int score;
-  int goal;
-  Duration duration;
-  bool selected;
+  final CustomCard customCard;
 
-  SecondScreen({
-    @required this.index,
-    @required this.title,
-    @required this.score,
-    @required this.goal,
-    @required this.duration,
-    @required this.selected,
-  });
+  SecondScreen({@required this.customCard});
 
   @override
   _SecondScreenState createState() => _SecondScreenState();
@@ -30,7 +19,13 @@ class SecondScreen extends StatefulWidget {
 class _SecondScreenState extends State<SecondScreen> {
   @override
   Widget build(BuildContext context) {
-    print('inside build: ${widget.score}');
+    int index = widget.customCard.cardModel.index;
+    String title = widget.customCard.cardModel.title;
+//    int score = widget.customCard.cardModel.score;
+//    int goal = widget.customCard.cardModel.goal;
+    Duration duration = widget.customCard.cardModel.duration;
+//    bool selected = widget.customCard.cardModel.selected;
+//    print('inside build: $score');
     return ChangeNotifierProvider(
       create: (context) => CardState(),
       child: Consumer<CardState>(
@@ -61,7 +56,7 @@ class _SecondScreenState extends State<SecondScreen> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: <Widget>[
                             Text(
-                              widget.title.toUpperCase(),
+                              title.toUpperCase(),
                               textAlign: TextAlign.end,
                               maxLines: 2,
                               style: TextStyle(
@@ -79,7 +74,7 @@ class _SecondScreenState extends State<SecondScreen> {
                                 color: red3,
                                 shape: BoxShape.circle,
                               ),
-                              child: Clock(duration: widget.duration),
+                              child: Clock(duration: duration),
                             ),
                           ],
                         ),
@@ -122,7 +117,7 @@ class _SecondScreenState extends State<SecondScreen> {
                       Column(
                         children: [
                           Text(
-                            cardState.at(widget.index).score.toString() ?? 'x',
+                            cardState.at(index).score.toString() ?? 'x',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 50,
@@ -131,7 +126,7 @@ class _SecondScreenState extends State<SecondScreen> {
                           ),
                           Container(height: 10, width: 80, color: white),
                           Text(
-                            cardState.at(widget.index).goal.toString() ?? 'y',
+                            cardState.at(index).goal.toString() ?? 'y',
                             style: TextStyle(
                               color: white,
                               fontSize: 50,
@@ -188,12 +183,12 @@ class _SecondScreenState extends State<SecondScreen> {
                             child: GestureDetector(
                               onTap: () {
                                 setState(() {
-                                  if (widget.score > 0) --widget.score;
+//                                  if (score > 0) --score;
                                 });
                               },
                               child: GestureDetector(
                                 onTap: () {
-                                  cardState.subtract(widget.index);
+                                  cardState.subtract(index);
                                 },
                                 child: Icon(
                                   Icons.remove,
@@ -208,9 +203,9 @@ class _SecondScreenState extends State<SecondScreen> {
                             child: GestureDetector(
                               onTap: () {
                                 setState(() {
-                                  cardState.add(widget.index);
-                                  ++widget.score;
-                                  print('under add icon: ${cardState.at(widget.index).score}');
+                                  cardState.add(index);
+//                                  ++score;
+                                  print('under add icon: ${cardState.at(index).score}');
                                 });
                               },
                               child: Icon(
