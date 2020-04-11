@@ -51,6 +51,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   child: Stack(
                     alignment: Alignment.centerRight,
                     children: <Widget>[
+//                      ListView(
+//                        children: cardState.cardModels,
+//                      ),
                       ListView(
                         physics: BouncingScrollPhysics(),
                         children: List.generate(cardState.length, (index) {

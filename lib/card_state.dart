@@ -21,6 +21,8 @@ class CardState with ChangeNotifier {
 
   bool get selected => _selected;
 
+//  List<Widget> get cardModels => _cardModels;
+
   void init() {
     _pageScore = _cardModels[0].score;
     _pageGoal = _cardModels[0].goal;
@@ -57,7 +59,7 @@ class CardState with ChangeNotifier {
     CardModel(
       index: 0,
       text: 'Work',
-      score: 100,
+      score: 0,
       goal: 1,
       duration: Duration(seconds: 1),
       selected: false,
