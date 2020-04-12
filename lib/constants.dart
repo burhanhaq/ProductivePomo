@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'models/card_model.dart';
-import 'card_state.dart';
 
 const kLabel = TextStyle(
   color: Colors.black,

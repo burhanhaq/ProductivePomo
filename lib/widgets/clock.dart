@@ -1,8 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'constants.dart';
-import 'card_state.dart';
+import '../constants.dart';
 
 class Clock extends StatefulWidget {
   final Duration duration;
@@ -44,7 +43,7 @@ class _ClockState extends State<Clock> with SingleTickerProviderStateMixin {
                   painter: CustomTimerPainter(
                 animation: controller,
                 backgroundColor: red1,
-                color: red2,
+                color: grey,
               ));
             },
           ),
@@ -53,15 +52,16 @@ class _ClockState extends State<Clock> with SingleTickerProviderStateMixin {
           animation: controller,
           builder: (context, child) {
             return Container(
-              width: 120,
+              width: 135,
               child: FlatButton(
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Icon(playIcon, size: 25),
-                    Text(timerString, style: TextStyle(fontSize: 25.0)),
+                    Icon(playIcon, size: 25, color: Colors.black),
+                    Text(timerString, style: TextStyle(fontSize: 25.0, color: Colors.black)),
                   ],
                 ),
-                color: Theme.of(context).primaryColor,
+                color: red1,
                 onPressed: () {
                   print('Button pressed');
                   setState(() {

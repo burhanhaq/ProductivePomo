@@ -3,13 +3,16 @@ import 'package:flutter/material.dart';
 
 import 'models/card_model.dart';
 
-//AnimationController screenChangeController;
-
 class CardState with ChangeNotifier {
   int _pageScore;
   int _pageGoal;
   int _currentIndex;
   bool _selected;
+  String _newTitle;
+  String _newScore;
+  String _newGoal;
+  String _newMinutes = '10';
+  String _newSeconds = '10';
 
   int get firstPageScore => _pageScore;
 
@@ -21,12 +24,18 @@ class CardState with ChangeNotifier {
 
   bool get selected => _selected;
 
+  String get newTitle => _newTitle;
+  String get newScore => _newScore;
+  String get newGoal => _newGoal;
+  String get newMinutes => _newMinutes;
+  String get newSeconds => _newSeconds;
+
 //  List<Widget> get cardModels => _cardModels;
 
   void init() {
-    _pageScore = _cardModels[0].score;
-    _pageGoal = _cardModels[0].goal;
-    _currentIndex = _cardModels[0].index;
+//    _pageScore = _cardModels[0].score;
+//    _pageGoal = _cardModels[0].goal;
+//    _currentIndex = _cardModels[0].index;
     notifyListeners();
   }
 
@@ -55,70 +64,24 @@ class CardState with ChangeNotifier {
     notifyListeners();
   }
 
-  List<CardModel> _cardModels = [
-    CardModel(
-      index: 0,
-      title: 'Work',
-      score: 0,
-      goal: 1,
-      duration: Duration(seconds: 1),
-      selected: false,
-    ),
-    CardModel(
-      index: 1,
-      title: 'Flutter',
-      score: 1,
-      goal: 200,
-      duration: Duration(seconds: 2),
-      selected: false,
-    ),
-    CardModel(
-      index: 2,
-      title: 'Exercise',
-      score: 2,
-      goal: 3,
-      duration: Duration(minutes: 1000),
-      selected: false,
-    ),
-    CardModel(
-      index: 3,
-      title: 'Empty',
-      score: 3,
-      goal: 4,
-      duration: Duration(minutes: 4),
-      selected: false,
-    ),
-    CardModel(
-      index: 4,
-      title: 'Flute',
-      score: 4,
-      goal: 5,
-      duration: Duration(minutes: 100),
-      selected: false,
-    ),
-    CardModel(
-      index: 5,
-      title: 'Sit updslkafjsakfsdffds',
-      score: 5,
-      goal: 6,
-      duration: Duration(milliseconds: 3000),
-      selected: false,
-    ),
-    CardModel(
-      index: 6,
-      title: 'Quran',
-      score: 6,
-      goal: 7,
-      duration: Duration(seconds: 10),
-      selected: false,
-    ),
-    CardModel(
-      index: 7,
-      title: 'Water',
-      score: 7,
-      goal: 8,
-      duration: Duration(seconds: 8),
-      selected: false,
-    ),
-  ];
+  List<CardModel> _cardModels = CardModel.cardModelsX;
+
+  set newTitle(String val) {
+    _newTitle = val;
+  }
+  set newScore(String val) {
+    _newScore = val;
+  }
+  set newGoal(String val) {
+    _newGoal = val;
+  }
+  set newMinutes(String val) {
+    _newMinutes = val;
+  }
+  set newSeconds(String val) {
+    _newSeconds = val;
+  }
+
+
+
 }
