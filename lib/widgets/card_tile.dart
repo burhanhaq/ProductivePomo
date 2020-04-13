@@ -13,42 +13,42 @@ class CardTile extends StatefulWidget {
   CardModel cardModel;
 
   CardTile({@required this.cardModel});
+
   @override
   _CardTileState createState() => _CardTileState();
 }
 
 enum Position { None, Left, Right }
 
-class _CardTileState extends State<CardTile> with SingleTickerProviderStateMixin {
-  AnimationController screenChangeController;
-  Animation screenChangeAnimation;
+class _CardTileState extends State<CardTile>
+    with SingleTickerProviderStateMixin {
+  AnimationController cardScreenController;
+  Animation cardScreenAnimation;
+  AnimationStatus screenChangeStatus = AnimationStatus.completed;
   SharedPref sharedPref = SharedPref();
-//  CardModel prefCardData;
   int prefScore;
-
-//  AnimationStatus screenChangeStatus = AnimationStatus.completed;
 
   @override
   void initState() {
     super.initState();
-    screenChangeController =
+    cardScreenController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 200));
-    screenChangeAnimation =
-        Tween<double>(begin: 0.0, end: 1.0).animate(screenChangeController)
+    cardScreenAnimation =
+        Tween<double>(begin: 0.0, end: 1.0).animate(cardScreenController)
           ..addListener(() {
             setState(() {});
+          })
+          ..addStatusListener((status) {
+            screenChangeStatus = status;
           });
-//          ..addStatusListener((status) {
-//            screenChangeStatus = status;
-//          });
   }
 
   loadSharedPrefs() async {
     if (mounted) {
       try {
-        CardModel model = CardModel.fromJson(await sharedPref.read(widget.cardModel.title));
+        CardModel model =
+            CardModel.fromJson(await sharedPref.read(widget.cardModel.title));
         setState(() {
-//          prefCardData = model;
           prefScore = model.score;
         });
       } catch (Exception) {
@@ -59,37 +59,43 @@ class _CardTileState extends State<CardTile> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
+    final cardState = Provider.of<CardState>(context);
+//    if (screenChangeStatus == AnimationStatus.dismissed) {
+//      print('${cardState.onCurrentCardScreen}');
+//      if (!cardState.onCurrentCardScreen) {
+//        print('----------------------- reverse');
+//        cardScreenController.reverse();
+//      }
+//    }
     final int index = widget.cardModel.index;
     final String title = widget.cardModel.title;
     double screenWidth = MediaQuery.of(context).size.width;
-    final cardState = Provider.of<CardState>(context);
     bool isCardSelected = cardState.at(index).selected;
     loadSharedPrefs();
-//    sleep(Duration(seconds: 2));
     return GestureDetector(
       onHorizontalDragUpdate: (details) {
-//        setState(() {
-          if (details.primaryDelta < 0) {
-            screenChangeController.forward();
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => SecondScreen(cardTile: widget),
-              ),
-            );
-          } else {
-            screenChangeController.reverse();
-          }
-//        });
+        if (details.primaryDelta < 0) {
+          cardScreenController.forward();
+//            cardState.changeCardScreen();
+//          cardState.changeCurrentCardScreen();
+//          print(
+//              'Going left, change screen bool is: ${cardState.onCurrentCardScreen}');
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SecondScreen(cardTile: widget),
+            ),
+          );
+        } else {
+          cardScreenController.reverse();
+        }
       },
       onTap: () {
-//        setState(() {
-          print('Tapped: $title');
-          cardState.currentIndex = index;
-//        });
+        cardState.currentIndex = index;
       },
-      child: Transform.translate( // todo: make this translate back when back from second screen
-        offset: Offset(-(screenChangeAnimation.value * screenWidth * 0.5), 0),
+      child: Transform.translate(
+        // todo: make this translate back when back from second screen
+        offset: Offset(-(cardScreenAnimation.value * screenWidth * 0.5), 0),
         child: AnimatedContainer(
           duration: Duration(milliseconds: 200),
           margin: EdgeInsets.fromLTRB(20.0, 20.0, 0.0, 0.0),
@@ -119,7 +125,9 @@ class _CardTileState extends State<CardTile> with SingleTickerProviderStateMixin
                     ),
                     Text(
                       prefScore == null ? '-7' : prefScore.toString(),
-                      style: isCardSelected ? kScore.copyWith(color: white) : kScore,
+                      style: isCardSelected
+                          ? kScore.copyWith(color: white)
+                          : kScore,
                     ),
                     Expanded(
                       child: Text(
@@ -150,7 +158,6 @@ class _CardTileState extends State<CardTile> with SingleTickerProviderStateMixin
 
   @override
   void dispose() {
-    screenChangeController.dispose();
     sharedPref = null;
     super.dispose();
   }

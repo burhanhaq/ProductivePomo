@@ -18,7 +18,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   AnimationController controller;
   Animation animation;
   bool addNewScreen = false;
+  bool deleteCardScreen = false;
   SharedPref sharedPref = SharedPref();
+
 //  List<CardModel> cardModelList = [];
   List<CardTile> cardTileList = [];
 
@@ -43,22 +45,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
-//  loadSharedPrefs() async {
-//    try {
-//      CardModel model = CardModel.fromJson(
-//          await sharedPref.read('some')); // todo get this edited
-//      setState(() {
-////        prefCardData = model;
-////        prefTitle = model.title;
-////        prefScore = model.score;
-////        prefGoal = model.goal;
-//      });
-//    } catch (Exception) {
-//      print('Exception in SecondScreen');
-//    }
-//  }
-
-  getCardListFromJson() async {
+  getCardListFromJson() async { // todo add circular bar for waiting for await
     // List<CardModel>
     print('vv');
     List<dynamic> prefCardModelList = await sharedPref.get();
@@ -72,16 +59,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         seconds: prefCardModelList[i]['seconds'],
       ));
       print(CardModel.cardModelsX[i].toString());
-
-
     }
     print('^^');
   }
 
   @override
   Widget build(BuildContext context) {
-    // todo add cards information from pref to list
-
     cardTileList = List.generate(CardModel.cardModelsX.length, (index) {
       return CardTile(cardModel: CardModel.cardModelsX[index]);
     });
@@ -90,7 +73,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       child: Material(
         child: Scaffold(
           body: ChangeNotifierProvider(
-            create: (context) => CardState()..init(),
+            create: (context) => CardState(),
             child: Consumer<CardState>(
               builder: (context, cardState, _) => Container(
                 color: Theme.of(context).accentColor,
@@ -100,9 +83,14 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                       child: Stack(
                         alignment: Alignment.centerRight,
                         children: <Widget>[
-                          ListView(
-                            physics: BouncingScrollPhysics(),
-                            children: cardTileList,
+                          GestureDetector(
+                            onTap: () {
+                              cardState.currentIndex = -1;
+                            },
+                            child: ListView(
+                              physics: BouncingScrollPhysics(),
+                              children: cardTileList,
+                            ),
                           ),
                           Container(
                             height: double.infinity,
@@ -114,7 +102,15 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                             bottom: 0,
                             child: Offstage(
                               offstage: !addNewScreen,
-                              child: AddNew(),
+                              child: AddNewCardSection(),
+                            ),
+                          ),
+                          Positioned(
+                            left: 0,
+                            bottom: 0,
+                            child: Offstage(
+                              offstage: !deleteCardScreen,
+                              child: DeleteCardSection(),
                             ),
                           ),
                         ],
@@ -168,8 +164,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                       print('--------------');
 //                                      for (int i = 0; i < CardModel.cardModelsX.length; i++) {
 //                                      }
-                                      print('cardModelsX: ${CardModel.cardModelsX.toString()}');
-
+                                      print(
+                                          'cardModelsX: ${CardModel.cardModelsX.toString()}');
 
                                       print('--------------');
                                     });
@@ -196,15 +192,24 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                 GestureDetector(
                                   onTap: () {
                                     // todo implement clearing text fields when hit
-                                    if (addNewScreen) {
-                                      cardState.newTitle = '';
-                                      cardState.newGoal = '';
-                                      cardState.newMinutes = '10';
-                                      cardState.newSeconds = '10';
-                                      setState(() {
+                                    setState(() {
+                                      if (addNewScreen) {
+                                        cardState.newTitle = '';
+                                        cardState.newGoal = '';
+                                        cardState.newMinutes = '10';
+                                        cardState.newSeconds = '10';
                                         addNewScreen = !addNewScreen;
-                                      });
-                                    }
+                                      } else if (!deleteCardScreen) {
+                                        // todo implement delete card mode
+//                                        if (!deleteCardScreen)
+                                        deleteCardScreen = !deleteCardScreen;
+                                      } else if (deleteCardScreen) {
+                                        deleteCardScreen = !deleteCardScreen;
+                                        sharedPref
+                                            .remove(cardState.deleteTitle);
+//                                        CardModel.cardModelsX.removeAt(index); // todo need to update index when removed
+                                      }
+                                    });
                                   },
                                   child: Icon(
                                     Icons.close,
@@ -213,42 +218,49 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                   ),
                                 ),
                                 GestureDetector(
-                                  onTap: () {
+                                  onTap: () async {
                                     // todo implement clearing text fields when hit
                                     // todo save to pref when added
                                     // todo add some initial goal value if null, or maybe make it a number drop down
+                                    var keys = await sharedPref
+                                        .getKeys(); // todo check if this works to avoid duplicate
                                     setState(() {
-                                      var keys = sharedPref.getKeys(); // todo check if this works to avoid duplicate
                                       print('await check ${keys.toString()}');
-                                      bool canAddNewScreen = addNewScreen && cardState.newTitle.isNotEmpty;
+                                      bool canAddNewScreen = addNewScreen &&
+                                          cardState.newTitle.isNotEmpty &&
+                                          !keys.contains(cardState.newTitle);
                                       if (canAddNewScreen) {
-                                          CardModel.cardModelsX.add(
-                                            CardModel(
-                                              index: cardState.length,
-                                              title: cardState.newTitle,
-                                              score: 0,
-                                              goal: int.tryParse(
-                                                          cardState.newGoal) ==
-                                                      null
-                                                  ? '-2'
-                                                  : int.tryParse(
-                                                      cardState.newGoal),
-                                              minutes: int.parse(
-                                                  cardState.newMinutes),
-                                              seconds: int.parse(
-                                                  cardState.newSeconds),
-                                            ),
-                                          );
-                                          cardTileList.add(CardTile(
-                                              cardModel: cardState
-                                                  .at(cardState.length - 1)));
-                                          addNewScreen = !addNewScreen;
-                                          print(CardModel.cardModelsX.toString());
-                                          sharedPref.save(cardState.newTitle,
-                                              cardState.at(cardState.length - 1).toJson());
+                                        CardModel.cardModelsX.add(
+                                          CardModel(
+                                            index: cardState.length,
+                                            title: cardState.newTitle,
+                                            score: 0,
+                                            goal: int.tryParse(
+                                                        cardState.newGoal) ==
+                                                    null
+                                                ? '-2'
+                                                : int.tryParse(
+                                                    cardState.newGoal),
+                                            minutes:
+                                                int.parse(cardState.newMinutes),
+                                            seconds:
+                                                int.parse(cardState.newSeconds),
+                                          ),
+                                        );
+                                        cardTileList.add(CardTile(
+                                            cardModel: cardState
+                                                .at(cardState.length - 1)));
+                                        addNewScreen = !addNewScreen;
+                                        print(CardModel.cardModelsX.toString());
+                                        sharedPref.save(
+                                            cardState.newTitle,
+                                            cardState
+                                                .at(cardState.length - 1)
+                                                .toJson());
                                       } else {
                                         print('Not added');
-                                        print('Tried to add title ${cardState.newTitle}');
+                                        print(
+                                            'Tried to add title ${cardState.newTitle}');
                                       }
                                     });
                                   },
@@ -294,12 +306,50 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 }
 
-class AddNew extends StatefulWidget {
+class DeleteCardSection extends StatefulWidget {
   @override
-  _AddNewState createState() => _AddNewState();
+  _DeleteCardSectionState createState() => _DeleteCardSectionState();
 }
 
-class _AddNewState extends State<AddNew> {
+class _DeleteCardSectionState extends State<DeleteCardSection> {
+  @override
+  Widget build(BuildContext context) {
+    var cardState = Provider.of<CardState>(context);
+    return SafeArea(
+      child: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width * 0.72,
+        color: red1,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextField(
+              style: TextStyle(
+                  color: white, fontSize: 30, fontWeight: FontWeight.w600),
+              decoration: InputDecoration(
+                hintStyle: TextStyle(color: yellow),
+                hintText: 'Name to delete',
+                fillColor: blue,
+              ),
+              onChanged: (value) {
+                setState(() {
+                  cardState.deleteTitle = value;
+                });
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class AddNewCardSection extends StatefulWidget {
+  @override
+  _AddNewCardSectionState createState() => _AddNewCardSectionState();
+}
+
+class _AddNewCardSectionState extends State<AddNewCardSection> {
   @override
   Widget build(BuildContext context) {
     var cardState = Provider.of<CardState>(context);
@@ -327,7 +377,9 @@ class _AddNewState extends State<AddNew> {
           padding: EdgeInsets.only(left: 20, right: 20, bottom: 200),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+//              Text('Title', style: TextStyle(color: yellow, fontSize: 100)),
               TextField(
                 style: TextStyle(
                   color: white,

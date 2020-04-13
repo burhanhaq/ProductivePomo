@@ -84,17 +84,20 @@ class _SecondScreenState extends State<SecondScreen> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: <Widget>[
-                                  Text(
-                                    prefTitle == null
-                                        ? 'null'
-                                        : prefTitle.toUpperCase(),
-                                    textAlign: TextAlign.end,
-                                    maxLines: 2,
-                                    style: TextStyle(
-                                      letterSpacing: 2,
-                                      fontSize: 35,
-                                      color: Colors.white,
-                                      decoration: TextDecoration.none,
+                                  Flexible(
+                                    child: Text(
+                                      prefTitle == null
+                                          ? 'null'
+                                          : prefTitle.toUpperCase(),
+                                      textAlign: TextAlign.end,
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        letterSpacing: 2,
+                                        fontSize: 35,
+                                        color: Colors.white,
+                                        decoration: TextDecoration.none,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -123,6 +126,9 @@ class _SecondScreenState extends State<SecondScreen> {
                             children: <Widget>[
                               GestureDetector(
                                 onTap: () {
+//                                  cardState.changeCardScreen();
+//                                  cardState.changeCurrentCardScreen();
+//                                  print('Going right, change screen bool is: ${cardState.onCurrentCardScreen}');
                                   Navigator.pop(context);
                                 },
                                 child: Padding(

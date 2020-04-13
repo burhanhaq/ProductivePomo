@@ -10,7 +10,7 @@ class CardModel {
 //  Duration duration;
   int minutes;
   int seconds;
-  bool selected;
+  bool selected; // todo change to int selected
 
   CardModel({
     @required this.index,
