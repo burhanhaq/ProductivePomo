@@ -41,10 +41,6 @@ class _CardTileState extends State<CardTile> with SingleTickerProviderStateMixin
 //          ..addStatusListener((status) {
 //            screenChangeStatus = status;
 //          });
-
-//    loadSharedPrefs();
-
-//    Future<dynamic> data = loadSharedPrefs('card');
   }
 
   loadSharedPrefs() async {
@@ -56,7 +52,6 @@ class _CardTileState extends State<CardTile> with SingleTickerProviderStateMixin
           prefScore = model.score;
         });
       } catch (Exception) {
-        // do something
         print('Exception in CardTile. Possible Leak!');
       }
     }

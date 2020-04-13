@@ -33,9 +33,10 @@ class _SecondScreenState extends State<SecondScreen> {
       CardModel model = CardModel.fromJson(
           await sharedPref.read(widget.cardTile.cardModel.title));
       setState(() {
+//        prefCardData = model;
         prefTitle = model.title;
         prefScore = model.score;
-        prefGoal = model.score;
+        prefGoal = model.goal;
       });
     } catch (Exception) {
       print('Exception in SecondScreen');
@@ -46,7 +47,7 @@ class _SecondScreenState extends State<SecondScreen> {
   Widget build(BuildContext context) {
     loadSharedPrefs();
     int index = widget.cardTile.cardModel.index;
-    Duration duration = widget.cardTile.cardModel.duration;
+    Duration duration = Duration(minutes: widget.cardTile.cardModel.minutes, seconds: widget.cardTile.cardModel.seconds);
     return SafeArea(
       child: ChangeNotifierProvider(
         create: (context) => CardState(),
@@ -153,7 +154,8 @@ class _SecondScreenState extends State<SecondScreen> {
                             Text(
                               prefScore == null
                                   ? '-3'
-                                  : cardState.at(index).score.toString(),
+                                  : prefScore.toString(),
+//                                  : cardState.at(index).score.toString(),
                               style: TextStyle(
                                 color: Colors.yellow,
                                 fontSize: 50,
@@ -164,7 +166,8 @@ class _SecondScreenState extends State<SecondScreen> {
                             Text(
                               prefGoal == null
                                   ? '-3'
-                                  : cardState.at(index).goal.toString(),
+                                  : prefGoal.toString(),
+//                                  : cardState.at(index).goal.toString(),
                               style: TextStyle(
                                 color: white,
                                 fontSize: 50,

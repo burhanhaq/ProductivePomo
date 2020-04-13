@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:pomodoro_app/shared_pref.dart';
 
 import 'models/card_model.dart';
 
@@ -12,6 +13,7 @@ class CardState with ChangeNotifier {
   String _newGoal = '0';
   String _newMinutes = '10';
   String _newSeconds = '10';
+  SharedPref sharedPref = SharedPref();
 
   int get firstPageScore => _pageScore;
 
@@ -57,7 +59,8 @@ class CardState with ChangeNotifier {
     notifyListeners();
   }
 
-  void add(int i) {
+  void add(int i) async {
+//    sharedPref.read();
     ++_cardModels[i].score;
     notifyListeners();
   }

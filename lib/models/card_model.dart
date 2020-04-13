@@ -7,7 +7,9 @@ class CardModel {
   String title;
   int score;
   int goal;
-  Duration duration;
+//  Duration duration;
+  int minutes;
+  int seconds;
   bool selected;
 
   CardModel({
@@ -15,87 +17,103 @@ class CardModel {
     @required this.title,
     @required this.score,
     @required this.goal,
-    @required this.duration,
+//    @required this.duration,
+    @required this.minutes,
+    @required this.seconds,
     this.selected = false,
   });
 
+  toString() {
+    return '> ${this.title}: ${this.score}/${this.goal} ${this.minutes}:${this.seconds}';
+  }
+
   Map<String, dynamic> toJson() => {
-        'index': index,
         'title': title,
         'score': score,
         'goal': goal,
+        'minutes': minutes,
+        'seconds': seconds,
       };
 
   CardModel.fromJson(Map<String, dynamic> json)
-      : index = json['index'],
-        title = json['title'],
+      : title = json['title'],
         score = json['score'],
-        goal = json['goal'];
+        goal = json['goal'],
+        minutes = json['minutes'],
+        seconds = json['seconds'];
 
   static List<CardModel> cardModelsX = [
-    CardModel(
-      index: 0,
-      title: 'Work',
-      score: 0,
-      goal: 1,
-      duration: Duration(seconds: 1),
-      selected: false,
-    ),
-    CardModel(
-      index: 1,
-      title: 'Flutter',
-      score: 1,
-      goal: 200,
-      duration: Duration(seconds: 2),
-      selected: false,
-    ),
-    CardModel(
-      index: 2,
-      title: 'Exercise',
-      score: 2,
-      goal: 3,
-      duration: Duration(minutes: 21),
-      selected: false,
-    ),
-    CardModel(
-      index: 3,
-      title: 'Empty',
-      score: 3,
-      goal: 4,
-      duration: Duration(minutes: 4),
-      selected: false,
-    ),
-    CardModel(
-      index: 4,
-      title: 'Flute',
-      score: 4,
-      goal: 5,
-      duration: Duration(minutes: 30),
-      selected: false,
-    ),
-    CardModel(
-      index: 5,
-      title: 'Sit updslkafjsakfsdffds',
-      score: 5,
-      goal: 6,
-      duration: Duration(milliseconds: 3000),
-      selected: false,
-    ),
-    CardModel(
-      index: 6,
-      title: 'Quran',
-      score: 6,
-      goal: 7,
-      duration: Duration(seconds: 10),
-      selected: false,
-    ),
-    CardModel(
-      index: 7,
-      title: 'Water',
-      score: 7,
-      goal: 8,
-      duration: Duration(seconds: 8),
-      selected: false,
-    ),
+//    CardModel(
+//      index: 0,
+//      title: 'Work',
+//      score: 0,
+//      goal: 1,
+//      minutes: 0,
+//      seconds: 45,
+//      selected: false,
+//    ),
+//    CardModel(
+//      index: 1,
+//      title: 'Flutter',
+//      score: 1,
+//      goal: 200,
+//      minutes: 0,
+//      seconds: 45,
+//      selected: false,
+//    ),
+//    CardModel(
+//      index: 2,
+//      title: 'Exercise',
+//      score: 2,
+//      goal: 3,
+//      minutes: 0,
+//      seconds: 45,
+//      selected: false,
+//    ),
+//    CardModel(
+//      index: 3,
+//      title: 'Empty',
+//      score: 3,
+//      goal: 4,
+//      minutes: 0,
+//      seconds: 45,
+//      selected: false,
+//    ),
+//    CardModel(
+//      index: 4,
+//      title: 'Flute',
+//      score: 4,
+//      goal: 5,
+//      minutes: 0,
+//      seconds: 45,
+//      selected: false,
+//    ),
+//    CardModel(
+//      index: 5,
+//      title: 'Sit updslkafjsakfsdffds',
+//      score: 5,
+//      goal: 6,
+//      minutes: 0,
+//      seconds: 45,
+//      selected: false,
+//    ),
+//    CardModel(
+//      index: 6,
+//      title: 'Quran',
+//      score: 6,
+//      goal: 7,
+//      minutes: 0,
+//      seconds: 45,
+//      selected: false,
+//    ),
+//    CardModel(
+//      index: 7,
+//      title: 'Water',
+//      score: 7,
+//      goal: 8,
+//      minutes: 0,
+//      seconds: 45,
+//      selected: false,
+//    ),
   ];
 }
