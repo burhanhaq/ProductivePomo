@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'screens/home_screen.dart';
 import 'constants.dart';
-import 'second_screen.dart';
+import 'screens/second_screen.dart';
 
 void main() => runApp(App());
 

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:pomodoro_app/second_screen.dart';
+import '../screens/second_screen.dart';
 import 'package:pomodoro_app/shared_pref.dart';
 import 'package:provider/provider.dart';
 

@@ -3,12 +3,12 @@ import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'constants.dart';
-import 'widgets/clock.dart';
-import 'card_state.dart';
-import 'widgets/card_tile.dart';
-import 'shared_pref.dart';
-import 'models/card_model.dart';
+import '../constants.dart';
+import '../widgets/clock.dart';
+import '../card_state.dart';
+import '../widgets/card_tile.dart';
+import '../shared_pref.dart';
+import '../models/card_model.dart';
 
 class SecondScreen extends StatefulWidget {
   static final id = 'SecondScreen';
@@ -231,7 +231,6 @@ class _SecondScreenState extends State<SecondScreen> {
                               padding: EdgeInsets.only(top: 10),
                               child: GestureDetector(
                                 onTap: () {
-                                  // todo implement delete
                                   cardState.subtract(index);
                                   sharedPref.save(
                                       widget.cardTile.cardModel.title,
@@ -248,16 +247,10 @@ class _SecondScreenState extends State<SecondScreen> {
                               padding: EdgeInsets.only(top: 10),
                               child: GestureDetector(
                                 onTap: () {
-                                  // todo: implement add
                                   cardState.add(index);
                                   sharedPref.save(
                                       widget.cardTile.cardModel.title,
                                       cardState.at(index).toJson());
-//                                  print('Cur json: ${cardState.at(index).toJson()}');
-//                                  var s =  prefs.read('card');
-//                                  s == null ? print('s is null') : print(s);
-
-//                                var s = json.decode(cardState.at(0));
                                 },
                                 child: Icon(
                                   Icons.add,

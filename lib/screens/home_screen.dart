@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'dart:math' as math;
 
 import '../constants.dart';
 import '../widgets/card_tile.dart';
@@ -14,9 +15,12 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
-  AnimationController controller;
-  Animation animation;
+class _HomeState extends State<Home> with TickerProviderStateMixin {
+  AnimationController addNewIconController;
+  Animation addNewIconAnimation;
+  AnimationController closeIconController;
+  Animation closeIconAnimation;
+
   bool addNewScreen = false;
   bool deleteCardScreen = false;
   SharedPref sharedPref = SharedPref();
@@ -29,23 +33,35 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     super.initState();
     getCardListFromJson();
 
-    controller = AnimationController(
+    addNewIconController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 300),
+      duration: Duration(milliseconds: 500),
     );
-    animation = Tween(begin: 1.0, end: 0.0).animate(controller)
-      ..addListener(() {
+    addNewIconAnimation = CurvedAnimation(
+      curve: Curves.elasticInOut,
+      parent: addNewIconController,
+    )..addListener(() {
         setState(() {});
       });
+    closeIconController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 1000),
+    );
+    closeIconAnimation = CurvedAnimation(
+      curve: Curves.bounceInOut,
+      parent: closeIconController,
+    )..addListener(() {setState(() {});});
   }
 
   @override
   void dispose() {
-    controller.dispose();
+    addNewIconController.dispose();
+    closeIconController.dispose();
     super.dispose();
   }
 
-  getCardListFromJson() async { // todo add circular bar for waiting for await
+  getCardListFromJson() async {
+    // todo add circular bar for waiting for await
     // List<CardModel>
     print('vv');
     List<dynamic> prefCardModelList = await sharedPref.get();
@@ -189,105 +205,130 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                     color: yellow,
                                   ),
                                 ),
-                                GestureDetector(
-                                  onTap: () {
-                                    // todo implement clearing text fields when hit
-                                    setState(() {
-                                      if (addNewScreen) {
-                                        cardState.newTitle = '';
-                                        cardState.newGoal = '';
-                                        cardState.newMinutes = '10';
-                                        cardState.newSeconds = '10';
-                                        addNewScreen = !addNewScreen;
-                                      } else if (!deleteCardScreen) {
-                                        // todo implement delete card mode
+                                Transform.rotate(
+                                  angle:  math.pi * closeIconAnimation.value,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      // todo implement clearing text fields when hit
+                                      setState(() {
+                                        addNewIconController.reverse();
+                                        if (closeIconController.isCompleted) {
+                                          closeIconController.reverse();
+                                        } else {
+                                          closeIconController.forward();
+                                        }
+                                        if (addNewScreen) {
+                                          cardState.newTitle = '';
+                                          cardState.newGoal = '';
+                                          cardState.newMinutes = '10';
+                                          cardState.newSeconds = '10';
+                                          addNewScreen = !addNewScreen;
+                                        } else if (!deleteCardScreen) {
+                                          // todo implement delete card mode
 //                                        if (!deleteCardScreen)
-                                        deleteCardScreen = !deleteCardScreen;
-                                      } else if (deleteCardScreen) {
-                                        deleteCardScreen = !deleteCardScreen;
-                                        sharedPref
-                                            .remove(cardState.deleteTitle);
+                                          deleteCardScreen = !deleteCardScreen;
+                                        } else if (deleteCardScreen) {
+                                          deleteCardScreen = !deleteCardScreen;
+                                          sharedPref
+                                              .remove(cardState.deleteTitle);
 //                                        CardModel.cardModelsX.removeAt(index); // todo need to update index when removed
-                                      }
-                                    });
-                                  },
-                                  child: Icon(
-                                    Icons.close,
-                                    size: 80,
-                                    color: yellow,
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () async {
-                                    // todo implement clearing text fields when hit
-                                    // todo save to pref when added
-                                    // todo add some initial goal value if null, or maybe make it a number drop down
-                                    var keys = await sharedPref
-                                        .getKeys(); // todo check if this works to avoid duplicate
-                                    setState(() {
-                                      print('await check ${keys.toString()}');
-                                      bool canAddNewScreen = addNewScreen &&
-                                          cardState.newTitle.isNotEmpty &&
-                                          !keys.contains(cardState.newTitle);
-                                      if (canAddNewScreen) {
-                                        CardModel.cardModelsX.add(
-                                          CardModel(
-                                            index: cardState.length,
-                                            title: cardState.newTitle,
-                                            score: 0,
-                                            goal: int.tryParse(
-                                                        cardState.newGoal) ==
-                                                    null
-                                                ? '-2'
-                                                : int.tryParse(
-                                                    cardState.newGoal),
-                                            minutes:
-                                                int.parse(cardState.newMinutes),
-                                            seconds:
-                                                int.parse(cardState.newSeconds),
-                                          ),
-                                        );
-                                        cardTileList.add(CardTile(
-                                            cardModel: cardState
-                                                .at(cardState.length - 1)));
-                                        addNewScreen = !addNewScreen;
-                                        print(CardModel.cardModelsX.toString());
-                                        sharedPref.save(
-                                            cardState.newTitle,
-                                            cardState
-                                                .at(cardState.length - 1)
-                                                .toJson());
-                                      } else {
-                                        print('Not added');
-                                        print(
-                                            'Tried to add title ${cardState.newTitle}');
-                                      }
-                                    });
-                                  },
-                                  child: Offstage(
-                                    offstage: !addNewScreen,
+                                        }
+                                      });
+                                    },
                                     child: Icon(
-                                      Icons.check_box,
+                                      Icons.close,
                                       size: 80,
                                       color: yellow,
                                     ),
                                   ),
                                 ),
-                                GestureDetector(
-                                  // todo: add new CardModel
-                                  onTap: () {
-                                    setState(() {
-                                      if (!addNewScreen) addNewScreen = true;
-                                    });
-                                  },
-                                  child: Offstage(
-                                    offstage: addNewScreen,
-                                    child: Icon(
-                                      Icons.add_box,
-                                      size: 80,
-                                      color: yellow,
+                                Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Transform.translate(
+                                      offset: Offset(
+                                          100 * (1 - addNewIconAnimation.value),
+                                          0),
+                                      child: GestureDetector(
+                                        onTap: () async {
+                                          // todo implement clearing text fields when hit
+                                          // todo save to pref when added
+                                          // todo add some initial goal value if null, or maybe make it a number drop down
+                                          var keys = await sharedPref
+                                              .getKeys(); // todo check if this works to avoid duplicate
+                                          setState(() {
+                                            print(
+                                                'await check ${keys.toString()}');
+                                            bool canAddNewScreen =
+                                                addNewScreen &&
+                                                    cardState
+                                                        .newTitle.isNotEmpty &&
+                                                    !keys.contains(
+                                                        cardState.newTitle); // todo add animation for duplicate entry
+                                            if (canAddNewScreen) {
+                                              addNewIconController.reverse();
+                                              CardModel.cardModelsX.add(
+                                                CardModel(
+                                                  index: cardState.length,
+                                                  title: cardState.newTitle,
+                                                  score: 0,
+                                                  goal: int.tryParse(cardState
+                                                              .newGoal) ==
+                                                          null
+                                                      ? '-2'
+                                                      : int.tryParse(
+                                                          cardState.newGoal),
+                                                  minutes: int.parse(
+                                                      cardState.newMinutes),
+                                                  seconds: int.parse(
+                                                      cardState.newSeconds),
+                                                ),
+                                              );
+                                              cardTileList.add(CardTile(
+                                                  cardModel: cardState.at(
+                                                      cardState.length - 1)));
+                                              addNewScreen = !addNewScreen;
+                                              print(CardModel.cardModelsX
+                                                  .toString());
+                                              sharedPref.save(
+                                                  cardState.newTitle,
+                                                  cardState
+                                                      .at(cardState.length - 1)
+                                                      .toJson());
+                                            } else {
+                                              print('Not added');
+                                              print(
+                                                  'Tried to add title ${cardState.newTitle}');
+                                            }
+                                          });
+                                        },
+                                        child: Icon(
+                                          Icons.check_box,
+                                          size: 80,
+                                          color: yellow,
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                    Transform.translate(
+                                      offset: Offset(
+                                          100 * addNewIconAnimation.value, 0),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            if (!addNewScreen) {
+                                              addNewScreen = true;
+                                              addNewIconController.forward();
+                                            }
+                                          });
+                                        },
+                                        child: Icon(
+                                          Icons.add_box,
+                                          size: 80,
+                                          color: yellow,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
