@@ -8,9 +8,8 @@ class CardState with ChangeNotifier {
   int _pageGoal;
   int _currentIndex;
   bool _selected;
-  String _newTitle;
-  String _newScore;
-  String _newGoal;
+  String _newTitle = '';
+  String _newGoal = '0';
   String _newMinutes = '10';
   String _newSeconds = '10';
 
@@ -25,7 +24,6 @@ class CardState with ChangeNotifier {
   bool get selected => _selected;
 
   String get newTitle => _newTitle;
-  String get newScore => _newScore;
   String get newGoal => _newGoal;
   String get newMinutes => _newMinutes;
   String get newSeconds => _newSeconds;
@@ -68,9 +66,6 @@ class CardState with ChangeNotifier {
 
   set newTitle(String val) {
     _newTitle = val;
-  }
-  set newScore(String val) {
-    _newScore = val;
   }
   set newGoal(String val) {
     _newGoal = val;

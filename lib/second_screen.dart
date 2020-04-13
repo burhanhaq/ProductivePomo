@@ -33,7 +33,6 @@ class _SecondScreenState extends State<SecondScreen> {
       CardModel model = CardModel.fromJson(
           await sharedPref.read(widget.cardTile.cardModel.title));
       setState(() {
-//        prefCardData = model;
         prefTitle = model.title;
         prefScore = model.score;
         prefGoal = model.score;
@@ -45,11 +44,8 @@ class _SecondScreenState extends State<SecondScreen> {
 
   @override
   Widget build(BuildContext context) {
-//    CardModel cardSave = widget.cardTile.cardModel;
-//    CardModel cardLoad = widget.cardTile.cardModel;
     loadSharedPrefs();
     int index = widget.cardTile.cardModel.index;
-    String title = widget.cardTile.cardModel.title;
     Duration duration = widget.cardTile.cardModel.duration;
     return SafeArea(
       child: ChangeNotifierProvider(
@@ -88,7 +84,10 @@ class _SecondScreenState extends State<SecondScreen> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: <Widget>[
                                   Text(
-                                    prefTitle == null ? 'null' : prefTitle.toUpperCase(),                                    textAlign: TextAlign.end,
+                                    prefTitle == null
+                                        ? 'null'
+                                        : prefTitle.toUpperCase(),
+                                    textAlign: TextAlign.end,
                                     maxLines: 2,
                                     style: TextStyle(
                                       letterSpacing: 2,
@@ -152,8 +151,9 @@ class _SecondScreenState extends State<SecondScreen> {
                         Column(
                           children: [
                             Text(
-                              prefScore == null ? '-3':
-                                  cardState.at(index).score.toString() ,
+                              prefScore == null
+                                  ? '-3'
+                                  : cardState.at(index).score.toString(),
                               style: TextStyle(
                                 color: Colors.yellow,
                                 fontSize: 50,
@@ -162,8 +162,9 @@ class _SecondScreenState extends State<SecondScreen> {
                             ),
                             Container(height: 5, width: 80, color: white),
                             Text(
-                              prefGoal == null ? '-3':
-                                  cardState.at(index).goal.toString() ,
+                              prefGoal == null
+                                  ? '-3'
+                                  : cardState.at(index).goal.toString(),
                               style: TextStyle(
                                 color: white,
                                 fontSize: 50,
@@ -172,20 +173,19 @@ class _SecondScreenState extends State<SecondScreen> {
                             ),
                           ],
                         ),
-//                Expanded(child: Container()),
                         Material(
                           child: Container(
                             decoration: BoxDecoration(
                               color: grey,
                               border: Border.all(
                                 color: yellow,
-                                width: 4,
+                                width: 3,
                               ),
                             ),
                             child: Column(
                               children: [
                                 IconButton(
-                                  // todo: program it to be disabled when at 0 I guess
+                                  // todo: program it to be disabled if at 0 I guess
                                   icon: Icon(Icons.stop),
                                   iconSize: 60,
                                   color: red1,

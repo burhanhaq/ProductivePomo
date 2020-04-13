@@ -57,8 +57,8 @@ class _ClockState extends State<Clock> with SingleTickerProviderStateMixin {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Icon(playIcon, size: 25, color: Colors.black),
-                    Text(timerString, style: TextStyle(fontSize: 25.0, color: Colors.black)),
+                    Icon(playIcon, size: 25, color: red3),
+                    Text(timerString, style: TextStyle(fontSize: 25.0, color: red2)),
                   ],
                 ),
                 color: red1,

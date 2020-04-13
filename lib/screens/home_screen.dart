@@ -19,7 +19,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   Animation animation;
   bool addNewScreen = false;
 
-  List<CardTile> thisList;
+  List<CardTile> cardTileList;
 
   @override
   void initState() {
@@ -43,7 +43,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    thisList = List.generate(CardModel.cardModelsX.length, (index) {
+    // todo add cards information from pref to list
+    cardTileList = List.generate(CardModel.cardModelsX.length, (index) {
       return CardTile(cardModel: CardModel.cardModelsX[index]);
     });
 
@@ -62,7 +63,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                       children: <Widget>[
                         ListView(
                           physics: BouncingScrollPhysics(),
-                          children: thisList,
+                          children: cardTileList,
                         ),
                         Container(
                           height: double.infinity,
@@ -95,7 +96,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                               children: [
                                 Text(
                                   // todo: need to update this when we get back from SecondScreen
-                                  cardState.firstPageScore == null ? 'x' : cardState.firstPageScore.toString() ,
+                                  cardState.firstPageScore == null
+                                      ? 'x'
+                                      : cardState.firstPageScore.toString(),
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 50,
@@ -104,7 +107,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                 ),
                                 Container(height: 10, width: 80, color: yellow),
                                 Text(
-                                  cardState.firstPageGoal == null ? 'y' :cardState.firstPageGoal.toString(),
+                                  cardState.firstPageGoal == null
+                                      ? 'y'
+                                      : cardState.firstPageGoal.toString(),
                                   style: TextStyle(
                                     color: yellow,
                                     fontSize: 50,
@@ -115,83 +120,87 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                             ),
                           ),
                           Expanded(child: Container()),
-                          Transform.translate(
-//                            offset: Offset(0, 100),
-                            offset: Offset(0, 0),
-                            child: Column(
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
+                          Column(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  // todo implement clearing text fields when hit
+                                  if (addNewScreen) {
+                                    cardState.newTitle = '';
+                                    cardState.newGoal = '';
+                                    cardState.newMinutes = '10';
+                                    cardState.newSeconds = '10';
+                                    setState(() {
+                                      addNewScreen = !addNewScreen;
+                                    });
+                                  }
+                                },
+                                child: Icon(
+                                  Icons.close,
+                                  size: 80,
+                                  color: yellow,
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  // todo implement clearing text fields when hit
+                                  // todo dont let duplicate items to be added
+                                  // todo save to pref when added
+                                  setState(() {
                                     if (addNewScreen) {
-                                      cardState.newTitle = '';
-                                      cardState.newScore = '';
-                                      cardState.newGoal = '';
-                                      cardState.newMinutes = '10';
-                                      cardState.newScore = '10';
-                                      setState(() {
+                                      if (cardState.newTitle.isNotEmpty) {
+                                        CardModel.cardModelsX.add(
+                                          CardModel(
+                                            index: cardState.length,
+                                            title: cardState.newTitle,
+                                            score: 0,
+                                            goal: int.tryParse(
+                                                        cardState.newGoal) ==
+                                                    null
+                                                ? '-2'
+                                                : int.tryParse(
+                                                    cardState.newGoal),
+                                            duration: Duration(
+                                                minutes: int.parse(
+                                                    cardState.newMinutes),
+                                                seconds: int.parse(
+                                                    cardState.newSeconds)),
+                                          ),
+                                        );
+                                        cardTileList.add(CardTile(
+                                            cardModel: cardState
+                                                .at(cardState.length - 1)));
                                         addNewScreen = !addNewScreen;
-                                      });
+                                      }
                                     }
-                                  },
+                                  });
+                                },
+                                child: Offstage(
+                                  offstage: !addNewScreen,
                                   child: Icon(
-                                    Icons.close,
+                                    Icons.check_box,
                                     size: 80,
                                     color: yellow,
                                   ),
                                 ),
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      if (addNewScreen) {
-                                        if (cardState.newTitle.isNotEmpty) {
-                                          CardModel.cardModelsX.add(
-                                            CardModel(
-                                              index: cardState.length,
-                                              title: cardState.newTitle,
-                                              score: int.tryParse(
-                                                      cardState.newScore) == null ? '-2' : int.tryParse(
-                                                  cardState.newScore),
-                                              goal: int.tryParse(
-                                                      cardState.newGoal) == null ? '-2' : int.tryParse(
-                                                  cardState.newGoal),
-                                              duration: Duration(minutes: 2),
-                                            ),
-                                          );
-                                          thisList.add(CardTile(
-                                              cardModel: cardState
-                                                  .at(cardState.length - 1)));
-                                          addNewScreen = !addNewScreen;
-                                        }
-                                      }
-                                    });
-                                  },
-                                  child: Offstage(
-                                    offstage: !addNewScreen,
-                                    child: Icon(
-                                      Icons.check_box,
-                                      size: 80,
-                                      color: yellow,
-                                    ),
+                              ),
+                              GestureDetector(
+                                // todo: add new CardModel
+                                onTap: () {
+                                  setState(() {
+                                    if (!addNewScreen) addNewScreen = true;
+                                  });
+                                },
+                                child: Offstage(
+                                  offstage: addNewScreen,
+                                  child: Icon(
+                                    Icons.add_box,
+                                    size: 80,
+                                    color: yellow,
                                   ),
                                 ),
-                                GestureDetector(
-                                  // todo: add new CardModel
-                                  onTap: () {
-                                    setState(() {
-                                      if (!addNewScreen) addNewScreen = true;
-                                    });
-                                  },
-                                  child: Offstage(
-                                    offstage: addNewScreen,
-                                    child: Icon(
-                                      Icons.add_box,
-                                      size: 80,
-                                      color: yellow,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -238,9 +247,7 @@ class _AddNewState extends State<AddNew> {
         child: Padding(
           padding: EdgeInsets.only(left: 20, right: 20, top: 100),
           child: Column(
-//          mainAxisAlignment: MainAxisAlignment.center,
             children: [
-//            Expanded(child: Container()),
               TextField(
                 style: TextStyle(
                   color: white,
@@ -255,21 +262,6 @@ class _AddNewState extends State<AddNew> {
                 onChanged: (value) {
                   setState(() {
                     cardState.newTitle = value;
-                  });
-                },
-              ),
-              TextField(
-                keyboardType: TextInputType.numberWithOptions(decimal: false),
-                style: TextStyle(
-                    color: white, fontSize: 30, fontWeight: FontWeight.w600),
-                decoration: InputDecoration(
-                  hintStyle: TextStyle(color: yellow),
-                  hintText: 'Score',
-                  fillColor: blue,
-                ),
-                onChanged: (value) {
-                  setState(() {
-                    cardState.newScore = value;
                   });
                 },
               ),
@@ -296,7 +288,6 @@ class _AddNewState extends State<AddNew> {
                           color: yellow,
                           fontSize: 30,
                           fontWeight: FontWeight.w600)),
-//                Expanded(child: Container()),
                   Expanded(
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
