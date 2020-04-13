@@ -24,7 +24,7 @@ class _CardTileState extends State<CardTile>
     with SingleTickerProviderStateMixin {
   AnimationController cardScreenController;
   Animation cardScreenAnimation;
-  AnimationStatus screenChangeStatus = AnimationStatus.completed;
+//  AnimationStatus screenChangeStatus = AnimationStatus.completed;
   SharedPref sharedPref = SharedPref();
   int prefScore;
 
@@ -37,10 +37,10 @@ class _CardTileState extends State<CardTile>
         Tween<double>(begin: 0.0, end: 1.0).animate(cardScreenController)
           ..addListener(() {
             setState(() {});
-          })
-          ..addStatusListener((status) {
-            screenChangeStatus = status;
           });
+//          ..addStatusListener((status) {
+//            screenChangeStatus = status;
+//          });
   }
 
   loadSharedPrefs() async {
@@ -60,13 +60,6 @@ class _CardTileState extends State<CardTile>
   @override
   Widget build(BuildContext context) {
     final cardState = Provider.of<CardState>(context);
-//    if (screenChangeStatus == AnimationStatus.dismissed) {
-//      print('${cardState.onCurrentCardScreen}');
-//      if (!cardState.onCurrentCardScreen) {
-//        print('----------------------- reverse');
-//        cardScreenController.reverse();
-//      }
-//    }
     final int index = widget.cardModel.index;
     final String title = widget.cardModel.title;
     double screenWidth = MediaQuery.of(context).size.width;
@@ -75,27 +68,24 @@ class _CardTileState extends State<CardTile>
     return GestureDetector(
       onHorizontalDragUpdate: (details) {
         if (details.primaryDelta < 0) {
-          cardScreenController.forward();
-//            cardState.changeCardScreen();
-//          cardState.changeCurrentCardScreen();
-//          print(
-//              'Going left, change screen bool is: ${cardState.onCurrentCardScreen}');
+          cardScreenController.forward(from: 0.0);
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => SecondScreen(cardTile: widget),
             ),
           );
-        } else {
-          cardScreenController.reverse();
         }
       },
       onTap: () {
         cardState.currentIndex = index;
       },
       child: Transform.translate(
-        // todo: make this translate back when back from second screen
-        offset: Offset(-(cardScreenAnimation.value * screenWidth * 0.5), 0),
+        offset: Offset(
+            cardScreenAnimation.value < 0.5
+                ? -(cardScreenAnimation.value * screenWidth * 0.5)
+                : ((1 - cardScreenAnimation.value) * screenWidth * 0.5),
+            0),
         child: AnimatedContainer(
           duration: Duration(milliseconds: 200),
           margin: EdgeInsets.fromLTRB(20.0, 20.0, 0.0, 0.0),
@@ -141,7 +131,7 @@ class _CardTileState extends State<CardTile>
                             : kLabel,
                       ),
                     ),
-                      SizedBox(width: MediaQuery.of(context).size.width * 0.05),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.05),
 //                    SizedBox(width: 20.0),
                   ],
                 ),

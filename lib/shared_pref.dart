@@ -28,19 +28,12 @@ class SharedPref {
   }
 
   get() async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance(); // todo DRY: replace with getKeys()
     List<String> keys = prefs.getKeys().toList();
-
-    print('-------All keys: $keys');
-
     List<dynamic> fullList = [];
     for (int i = 0; i < keys.length; i++) {
-//      fullList.add(prefs.getString(keys[i])); //json.decode(prefs.getString(keys[i])));
       fullList.add(json.decode(prefs.getString(keys[i])));
     }
-
-
-
     return fullList;
   }
 }

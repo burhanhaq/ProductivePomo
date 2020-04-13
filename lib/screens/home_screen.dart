@@ -64,8 +64,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
   getCardListFromJson() async {
     // todo add circular bar for waiting for await
-    // List<CardModel>
-    print('vv');
     List<dynamic> prefCardModelList = await sharedPref.get();
     for (int i = 0; i < prefCardModelList.length; i++) {
       CardModel.cardModelsX.add(CardModel(
@@ -76,9 +74,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         minutes: prefCardModelList[i]['minutes'],
         seconds: prefCardModelList[i]['seconds'],
       ));
-      print(CardModel.cardModelsX[i].toString());
     }
-    print('^^');
   }
 
   @override
@@ -180,11 +176,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                   onTap: () {
                                     setState(() {
                                       print('--------------');
-//                                      for (int i = 0; i < CardModel.cardModelsX.length; i++) {
-//                                      }
                                       print(
                                           'cardModelsX: ${CardModel.cardModelsX.toString()}');
-
                                       print('--------------');
                                     });
                                   },
@@ -251,7 +244,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                           MediaQuery.of(context).size.width *
                                               0.25 * (1 - addNewIconAnimation.value),
                                           0),
-//                                      offset: Offset(-100 * (1 - addNewIconAnimation.value),0),
                                       child: GestureDetector(
                                         onTap: () async {
                                           // todo implement clearing text fields when hit
