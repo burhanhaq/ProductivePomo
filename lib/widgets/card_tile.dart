@@ -141,7 +141,8 @@ class _CardTileState extends State<CardTile>
                             : kLabel,
                       ),
                     ),
-                    SizedBox(width: 20.0),
+                      SizedBox(width: MediaQuery.of(context).size.width * 0.05),
+//                    SizedBox(width: 20.0),
                   ],
                 ),
                 Offstage(

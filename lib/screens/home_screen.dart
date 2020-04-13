@@ -50,7 +50,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     closeIconAnimation = CurvedAnimation(
       curve: Curves.bounceInOut,
       parent: closeIconController,
-    )..addListener(() {setState(() {});});
+    )..addListener(() {
+        setState(() {});
+      });
   }
 
   @override
@@ -206,7 +208,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                   ),
                                 ),
                                 Transform.rotate(
-                                  angle:  math.pi * closeIconAnimation.value,
+                                  angle: math.pi * closeIconAnimation.value,
                                   child: GestureDetector(
                                     onTap: () {
                                       // todo implement clearing text fields when hit
@@ -225,7 +227,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                           addNewScreen = !addNewScreen;
                                         } else if (!deleteCardScreen) {
                                           // todo implement delete card mode
-//                                        if (!deleteCardScreen)
                                           deleteCardScreen = !deleteCardScreen;
                                         } else if (deleteCardScreen) {
                                           deleteCardScreen = !deleteCardScreen;
@@ -247,24 +248,23 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                   children: [
                                     Transform.translate(
                                       offset: Offset(
-                                          100 * (1 - addNewIconAnimation.value),
+                                          MediaQuery.of(context).size.width *
+                                              0.25 * (1 - addNewIconAnimation.value),
                                           0),
+//                                      offset: Offset(-100 * (1 - addNewIconAnimation.value),0),
                                       child: GestureDetector(
                                         onTap: () async {
                                           // todo implement clearing text fields when hit
-                                          // todo save to pref when added
                                           // todo add some initial goal value if null, or maybe make it a number drop down
                                           var keys = await sharedPref
                                               .getKeys(); // todo check if this works to avoid duplicate
                                           setState(() {
                                             print(
                                                 'await check ${keys.toString()}');
-                                            bool canAddNewScreen =
-                                                addNewScreen &&
-                                                    cardState
-                                                        .newTitle.isNotEmpty &&
-                                                    !keys.contains(
-                                                        cardState.newTitle); // todo add animation for duplicate entry
+                                            bool canAddNewScreen = addNewScreen &&
+                                                cardState.newTitle.isNotEmpty &&
+                                                !keys.contains(cardState
+                                                    .newTitle); // todo add animation for duplicate entry
                                             if (canAddNewScreen) {
                                               addNewIconController.reverse();
                                               CardModel.cardModelsX.add(
@@ -311,7 +311,10 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                     ),
                                     Transform.translate(
                                       offset: Offset(
-                                          100 * addNewIconAnimation.value, 0),
+                                          MediaQuery.of(context).size.width *
+                                              0.25 *
+                                              addNewIconAnimation.value,
+                                          0),
                                       child: GestureDetector(
                                         onTap: () {
                                           setState(() {

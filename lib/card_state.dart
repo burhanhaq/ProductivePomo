@@ -19,15 +19,10 @@ class CardState with ChangeNotifier {
 //  bool _onCurrentCardScreen = false;
 
   int get firstPageScore => _pageScore;
-
   int get firstPageGoal => _pageGoal;
-
   int get currentIndex => _currentIndex;
-
   int get length => _cardModels.length;
-
   bool get selected => _selected;
-
   String get newTitle => _newTitle;
   String get newGoal => _newGoal;
   String get newMinutes => _newMinutes;
@@ -37,13 +32,6 @@ class CardState with ChangeNotifier {
 //  bool get onCurrentCardScreen => _onCurrentCardScreen;
 
 //  List<Widget> get cardModels => _cardModels;
-
-//  void init() {
-////    _pageScore = _cardModels[0].score;
-////    _pageGoal = _cardModels[0].goal;
-////    _currentIndex = _cardModels[0].index;
-//    notifyListeners();
-//  }
 
   set currentIndex(int i) {
     if (i != -1) {
