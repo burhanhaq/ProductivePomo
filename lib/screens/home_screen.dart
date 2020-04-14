@@ -17,14 +17,53 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with TickerProviderStateMixin {
-
   SharedPref sharedPref = SharedPref();
   List<CardTile> cardTileList = [];
+  AnimationController addSectionController;
+  Animation addSectionAnimation;
+  AnimationStatus addSectionStatus = AnimationStatus.dismissed;
+  AnimationController deleteSectionController;
+  Animation deleteSectionAnimation;
+  AnimationStatus deleteSectionStatus = AnimationStatus.dismissed;
 
   @override
   void initState() {
     super.initState();
     getCardListFromJson();
+
+    addSectionController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 700),
+    );
+    addSectionAnimation = CurvedAnimation(
+      parent: addSectionController,
+      curve: Curves.easeOutBack,
+    )
+      ..addListener(() {
+        setState(() {});
+      })
+      ..addStatusListener((status) {
+        setState(() {
+          addSectionStatus = status;
+        });
+      });
+
+    deleteSectionController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 700),
+    );
+    deleteSectionAnimation = CurvedAnimation(
+      parent: deleteSectionController,
+      curve: Curves.easeOutBack,
+    )
+      ..addListener(() {
+        setState(() {});
+      })
+      ..addStatusListener((status) {
+        setState(() {
+          deleteSectionStatus = status;
+        });
+      });
   }
 
   getCardListFromJson() async {
@@ -44,73 +83,94 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    
     final cardState = Provider.of<CardState>(context);
     cardTileList = List.generate(cardState.cardModels.length, (index) {
       return CardTile(cardModel: cardState.cardModels[index]);
     });
-    print('remade cardTileList');
+    if (cardState.addNewScreen) {
+      addSectionController.forward();
+    } else {
+      addSectionController.reverse();
+    }
+    if (cardState.deleteCardScreen) {
+      deleteSectionController.forward();
+    } else {
+      deleteSectionController.reverse();
+    }
 
     return SafeArea(
       child: StreamBuilder<Object>(
-        stream: null,
-        builder: (context, snapshot) {
-          return Consumer<CardState>(
-            builder: (context, cardState, _) => Material(
-              child: Scaffold(
-                body: Container(
-                  color: Theme.of(context).accentColor,
-                  child: Row(
-                    children: <Widget>[
-                      Flexible(
-                        child: Stack(
-                          alignment: Alignment.centerRight,
-                          children: <Widget>[
-                            GestureDetector(
-                              onTap: () {
-                                cardState.currentIndex = null;
-                              },
-                              child: ListView(
-                                physics: BouncingScrollPhysics(),
-                                children: cardTileList,
+          stream: null,
+          builder: (context, snapshot) {
+            return Consumer<CardState>(
+              builder: (context, cardState, _) => Material(
+                child: Scaffold(
+                  body: Container(
+                    color: Theme.of(context).accentColor,
+                    child: Row(
+                      children: <Widget>[
+                        Flexible(
+                          child: Stack(
+                            alignment: Alignment.centerRight,
+                            children: <Widget>[
+                              GestureDetector(
+                                onTap: () {
+                                  cardState.currentIndex = null;
+                                },
+                                child: ListView(
+                                  physics: BouncingScrollPhysics(),
+                                  children: cardTileList,
+                                ),
                               ),
-                            ),
-                            Container(
-                              height: double.infinity,
-                              width: MediaQuery.of(context).size.width * 0.03,
-                              color: yellow,
-                            ),
-                            Positioned(
-                              left: 0,
-                              bottom: 0,
-                              child: Offstage(
-                                offstage: !cardState.addNewScreen,
-                                child: AddNewCardSection(),
+                              Container(
+                                height: double.infinity,
+                                width: MediaQuery.of(context).size.width * 0.03,
+                                color: yellow,
                               ),
-                            ),
-                            Positioned(
-                              left: 0,
-                              bottom: 0,
-                              child: Offstage(
-                                offstage: !cardState.deleteCardScreen,
-                                child: DeleteCardSection(),
+                              Positioned(
+                                left: 0,
+                                bottom: 0,
+                                child: Transform.translate(
+                                    offset: Offset(
+                                        -MediaQuery.of(context).size.width *
+                                            (1 - addSectionAnimation.value) *
+                                            0.69,
+                                        0),
+                                    child: AddNewCardSection()),
                               ),
-                            ),
-                          ],
+                              Positioned(
+                                left: 0,
+                                bottom: 0,
+                                child: Transform.translate(
+                                  offset: Offset(
+                                      -MediaQuery.of(context).size.width *
+                                          (1 - deleteSectionAnimation.value) *
+                                          0.69,
+                                      0),
+                                  child: DeleteCardSection(),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      HomeRightBar(
-                        cardTileList: cardTileList,
-                      ),
-                    ],
+                        HomeRightBar(
+                          cardTileList: cardTileList,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          );
-        }
-      ),
+            );
+          }),
     );
+  }
+
+  @override
+  void dispose() {
+    addSectionController.dispose();
+    deleteSectionController.dispose();
+    super.dispose();
   }
 }
 
@@ -276,12 +336,15 @@ class _AddNewCardSectionState extends State<AddNewCardSection> {
 
 class HomeRightBar extends StatefulWidget {
   List<CardTile> cardTileList;
+
   HomeRightBar({@required this.cardTileList});
+
   @override
   _HomeRightBarState createState() => _HomeRightBarState();
 }
 
-class _HomeRightBarState extends State<HomeRightBar> with TickerProviderStateMixin {
+class _HomeRightBarState extends State<HomeRightBar>
+    with TickerProviderStateMixin {
   AnimationController addNewIconController;
   Animation addNewIconAnimation;
   AnimationController closeIconController;
@@ -299,8 +362,8 @@ class _HomeRightBarState extends State<HomeRightBar> with TickerProviderStateMix
       curve: Curves.elasticInOut,
       parent: addNewIconController,
     )..addListener(() {
-      setState(() {});
-    });
+        setState(() {});
+      });
     closeIconController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 1000),
@@ -309,240 +372,236 @@ class _HomeRightBarState extends State<HomeRightBar> with TickerProviderStateMix
       curve: Curves.bounceInOut,
       parent: closeIconController,
     )..addListener(() {
-      setState(() {});
-    });
+        setState(() {});
+      });
   }
 
   @override
   Widget build(BuildContext context) {
     final cardState = Provider.of<CardState>(context);
-    return
-      Container(
-        color: red1,
-        width: MediaQuery.of(context).size.width * 0.25,
-        child: Padding(
-          padding: EdgeInsets.only(top: 20, bottom: 20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Offstage(
-                offstage:
-                cardState.currentIndex == null ? true : false,
-                child: Column(
-                  children: [
-                    Text(
-                      // todo: need to update this when we get back from SecondScreen
-                      cardState.firstPageScore == null
-                          ? 'x'
-                          : cardState.firstPageScore.toString(),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 50,
-                        decoration: TextDecoration.none,
-                      ),
-                    ),
-                    Container(
-                        height: 10, width: 80, color: yellow),
-                    Text(
-                      cardState.firstPageGoal == null
-                          ? 'y'
-                          : cardState.firstPageGoal.toString(),
-                      style: TextStyle(
-                        color: yellow,
-                        fontSize: 50,
-                        decoration: TextDecoration.none,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(child: Container()),
-              Column(
+    return Container(
+      color: red1,
+      width: MediaQuery.of(context).size.width * 0.25,
+      child: Padding(
+        padding: EdgeInsets.only(top: 20, bottom: 20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Offstage(
+              offstage: cardState.currentIndex == null ? true : false,
+              child: Column(
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        print('--------------');
-                        print(
-                            'cardModelsX: ${CardModel.cardModelsX.toString()}');
-                        print('--------------');
-                      });
-                    },
-                    child: Icon(
-                      Icons.grain,
-                      size: 80,
-                      color: yellow,
+                  Text(
+                    // todo: need to update this when we get back from SecondScreen
+                    cardState.firstPageScore == null
+                        ? 'x'
+                        : cardState.firstPageScore.toString(),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 50,
+                      decoration: TextDecoration.none,
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        sharedPref.removeAll();
-                        cardState.clearCardModelsList();
-                        // todo: throws error when pressed because it checks for index for empty list
-                      });
-                    },
-                    child: Icon(
-                      Icons.do_not_disturb_on,
-                      size: 80,
+                  Container(height: 10, width: 80, color: yellow),
+                  Text(
+                    cardState.firstPageGoal == null
+                        ? 'y'
+                        : cardState.firstPageGoal.toString(),
+                    style: TextStyle(
                       color: yellow,
+                      fontSize: 50,
+                      decoration: TextDecoration.none,
                     ),
                   ),
-                  Transform.rotate(
-                    angle: math.pi * closeIconAnimation.value,
-                    child: GestureDetector(
-                      onTap: () {
-                        // todo implement clearing text fields when hit
-                        setState(() {
-                          addNewIconController.reverse();
-                          if (closeIconController.isCompleted) {
-                            closeIconController.reverse();
-                          } else {
-                            closeIconController.forward();
-                          }
-                          if (cardState.addNewScreen) {
-                            cardState.newTitle = '';
-                            cardState.newGoal = '';
-                            cardState.newMinutes = '10';
-                            cardState.newSeconds = '10';
-                            cardState.addNewScreen = !cardState.addNewScreen;
-                          } else if (!cardState.deleteCardScreen) {
-                            // todo implement delete card mode
-                            cardState.deleteCardScreen = !cardState.deleteCardScreen;
-                          } else if (cardState.deleteCardScreen) {
-                            cardState.deleteCardScreen = !cardState.deleteCardScreen;
-                            sharedPref
-                                .remove(cardState.deleteTitle);
+                ],
+              ),
+            ),
+            Expanded(child: Container()),
+            Column(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      print('--------------');
+                      print('cardModelsX: ${CardModel.cardModelsX.toString()}');
+                      print('--------------');
+                    });
+                  },
+                  child: Icon(
+                    Icons.grain,
+                    size: 80,
+                    color: yellow,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      sharedPref.removeAll();
+                      cardState.clearCardModelsList();
+                      // todo: throws error when pressed because it checks for index for empty list
+                    });
+                  },
+                  child: Icon(
+                    Icons.do_not_disturb_on,
+                    size: 80,
+                    color: yellow,
+                  ),
+                ),
+                Transform.rotate(
+                  angle: math.pi * closeIconAnimation.value,
+                  child: GestureDetector(
+                    onTap: () {
+                      // todo implement clearing text fields when hit
+                      setState(() {
+                        addNewIconController.reverse();
+                        if (closeIconController.isCompleted) {
+                          closeIconController.reverse();
+                        } else {
+                          closeIconController.forward();
+                        }
+                        if (cardState.addNewScreen) {
+                          cardState.newTitle = '';
+                          cardState.newGoal = '';
+                          cardState.newMinutes = '10';
+                          cardState.newSeconds = '10';
+                          cardState.addNewScreen = !cardState.addNewScreen;
+                        } else if (!cardState.deleteCardScreen) {
+                          // todo implement delete card mode
+                          cardState.deleteCardScreen =
+                              !cardState.deleteCardScreen;
+                        } else if (cardState.deleteCardScreen) {
+                          cardState.deleteCardScreen =
+                              !cardState.deleteCardScreen;
+                          sharedPref.remove(cardState.deleteTitle);
 //                                        CardModel.cardModelsX.removeAt(index); // todo need to update index when removed
-                          }
-                        });
-                      },
-                      child: Icon(
-                        Icons.close,
-                        size: 80,
-                        color: yellow,
-                      ),
+                        }
+                      });
+                    },
+                    child: Icon(
+                      Icons.close,
+                      size: 80,
+                      color: yellow,
                     ),
                   ),
-                  Stack(
-                    alignment: Alignment.center,
-                    overflow: Overflow.visible,
-                    children: [
-                      Transform.translate(
-                        offset: Offset(
-                            MediaQuery.of(context).size.width *
-                                0.25 * (1 - addNewIconAnimation.value),
-                            0),
-                        child: GestureDetector(
-                          onTap: () async {
-                            // todo implement clearing text fields when hit
-                            // todo add some initial goal value if null, or maybe make it a number drop down
-                            var keys = await sharedPref
-                                .getKeys();
-                            setState(() {
-                              bool canAddNewScreen = cardState.addNewScreen &&
-                                  cardState.newTitle.isNotEmpty &&
-                                  !keys.contains(cardState
-                                      .newTitle); // todo add animation for duplicate entry
-                              if (canAddNewScreen) {
-                                addNewIconController.reverse();
-                                cardState.addToCardModelsList(
-                                  CardModel(
-                                    index: cardState.length,
-                                    title: cardState.newTitle,
-                                    score: 0,
-                                    goal: int.tryParse(cardState
-                                        .newGoal) ==
-                                        null
-                                        ? '-2'
-                                        : int.tryParse(
-                                        cardState.newGoal),
-                                    minutes: int.parse(
-                                        cardState.newMinutes),
-                                    seconds: int.parse(
-                                        cardState.newSeconds),
-                                  ),
-                                );
-                                widget.cardTileList.add(CardTile(
-                                    cardModel: cardState.at(
-                                        cardState.length - 1)));
-                                cardState.addNewScreen = !cardState.addNewScreen;
-                                print(CardModel.cardModelsX
-                                    .toString());
-                                sharedPref.save(
-                                    cardState.newTitle,
-                                    cardState
-                                        .at(cardState.length - 1)
-                                        .toJson());
-                              } else {
-                                print('Not added');
-                                print(
-                                    'Tried to add title ${cardState.newTitle}');
-                              }
-                            });
-                          },
-                          child: Icon(
-                            Icons.check_box,
-                            size: 80,
-                            color: yellow,
-                          ),
+                ),
+                Stack(
+                  alignment: Alignment.center,
+                  overflow: Overflow.visible,
+                  children: [
+                    Transform.translate(
+                      offset: Offset(
+                          MediaQuery.of(context).size.width *
+                              0.25 *
+                              (1 - addNewIconAnimation.value),
+                          0),
+                      child: GestureDetector(
+                        onTap: () async {
+                          // todo implement clearing text fields when hit
+                          // todo add some initial goal value if null, or maybe make it a number drop down
+                          var keys = await sharedPref.getKeys();
+                          setState(() {
+                            bool canAddNewScreen = cardState.addNewScreen &&
+                                cardState.newTitle.isNotEmpty &&
+                                !keys.contains(cardState
+                                    .newTitle); // todo add animation for duplicate entry
+                            if (canAddNewScreen) {
+                              addNewIconController.reverse();
+                              cardState.addToCardModelsList(
+                                CardModel(
+                                  index: cardState.length,
+                                  title: cardState.newTitle,
+                                  score: 0,
+                                  goal: int.tryParse(cardState.newGoal) == null
+                                      ? '-2'
+                                      : int.tryParse(cardState.newGoal),
+                                  minutes: int.parse(cardState.newMinutes),
+                                  seconds: int.parse(cardState.newSeconds),
+                                ),
+                              );
+                              widget.cardTileList.add(CardTile(
+                                  cardModel:
+                                      cardState.at(cardState.length - 1)));
+                              cardState.addNewScreen = !cardState.addNewScreen;
+                              print(CardModel.cardModelsX.toString());
+                              sharedPref.save(cardState.newTitle,
+                                  cardState.at(cardState.length - 1).toJson());
+                            } else {
+                              print('Not added');
+                              print('Tried to add title ${cardState.newTitle}');
+                            }
+                          });
+                        },
+                        child: Icon(
+                          Icons.check_box,
+                          size: 80,
+                          color: yellow,
                         ),
                       ),
-                      Transform.translate(
-                        offset: Offset(
-                            MediaQuery.of(context).size.width *
-                                0.25 *
-                                addNewIconAnimation.value,
-                            0),
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              if (!cardState.addNewScreen) {
-                                cardState.addNewScreen = true;
-                                addNewIconController.forward();
-                              }
-                            });
-                          },
-                          child: Icon(
-                            Icons.add_box,
-                            size: 80,
-                            color: yellow,
-                          ),
+                    ),
+                    Transform.translate(
+                      offset: Offset(
+                          MediaQuery.of(context).size.width *
+                              0.25 *
+                              addNewIconAnimation.value,
+                          0),
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            if (!cardState.addNewScreen) {
+                              cardState.addNewScreen = true;
+                              addNewIconController.forward();
+                            }
+                          });
+                        },
+                        child: Icon(
+                          Icons.add_box,
+                          size: 80,
+                          color: yellow,
                         ),
                       ),
-                      Offstage(
-                        offstage: cardState.addNewScreen || CardModel.cardModelsX.length > 1, // todo add if <= 2 items
-                        child: Transform.translate(
-                          offset: Offset(-MediaQuery.of(context).size.width * 0.3, 0),
-                          child: Text('Press \'+\' to add items -->',
+                    ),
+                    Offstage(
+                      offstage: cardState.addNewScreen ||
+                          CardModel.cardModelsX.length > 1,
+                      // todo add if <= 2 items
+                      child: Transform.translate(
+                        offset:
+                            Offset(-MediaQuery.of(context).size.width * 0.3, 0),
+                        child: Text('Press \'+\' to add items -->',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 25,
+                              fontWeight: FontWeight.w900,
+                              fontFamily: 'IndieFlower',
+                            )),
+                      ),
+                    ),
+                    Offstage(
+                      // todo: moves up when shown, try to disable that
+                      offstage: !cardState.addNewScreen,
+                      child: Transform.translate(
+                        offset:
+                            Offset(-MediaQuery.of(context).size.width * 0.3, 0),
+                        child: Container(
+                          color: red1,
+                          child: Text('Press \'✓\' to add item -->',
                               style: TextStyle(
-                                color: Colors.white, fontSize: 25, fontWeight: FontWeight.w900,
+                                color: Colors.black,
+                                fontSize: 25,
+                                fontWeight: FontWeight.w900,
                                 fontFamily: 'IndieFlower',
                               )),
                         ),
                       ),
-                      Offstage( // todo: moves up when shown, try to disable that
-                        offstage: !cardState.addNewScreen,
-                        child: Transform.translate(
-                          offset: Offset(-MediaQuery.of(context).size.width * 0.3, 0),
-                          child: Container(
-                            color: red1,
-                            child: Text('Press \'✓\' to add item -->',
-                                style: TextStyle(
-                                  color: Colors.black, fontSize: 25, fontWeight: FontWeight.w900,
-                                  fontFamily: 'IndieFlower',
-                                )),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
         ),
-      );
+      ),
+    );
   }
 
   @override
