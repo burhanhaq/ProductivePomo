@@ -24,7 +24,7 @@ class CardModel {
   });
 
   toString() {
-    return '> ${this.title}: ${this.score}/${this.goal} ${this.minutes}:${this.seconds}';
+    return '> ${this.title} - ${this.score}/${this.goal} ${this.minutes}:${this.seconds}';
   }
 
   Map<String, dynamic> toJson() => {

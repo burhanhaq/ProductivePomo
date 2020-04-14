@@ -69,6 +69,7 @@ class _CardTileState extends State<CardTile>
     return GestureDetector(
       onHorizontalDragUpdate: (details) {
         if (details.primaryDelta < 0) {
+          cardState.currentIndex = index;
           cardScreenController.forward(from: 0.0);
           Navigator.push(
             context,

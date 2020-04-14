@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'screens/home_screen.dart';
 import 'constants.dart';
 import 'screens/second_screen.dart';
+import 'card_state.dart';
 
 void main() => runApp(App());
 
@@ -18,8 +20,10 @@ class App extends StatelessWidget {
 //      home: Home(),
       initialRoute: Home.id,
       routes: {
-        Home.id: (context) => Home(),
-        SecondScreen.id: (context) => SecondScreen(),
+        Home.id: (context) => ChangeNotifierProvider(
+            create: (context) => CardState(), child: Home()),
+        SecondScreen.id: (context) => ChangeNotifierProvider(
+            create: (context) => CardState(), child: SecondScreen()),
       },
     );
   }
