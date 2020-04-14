@@ -11,6 +11,7 @@ class CardState with ChangeNotifier {
   bool _selected; // todo replace with index
   bool _addNewScreen = false;
   bool _deleteCardScreen = false;
+//  bool _progressIndicator = true;
 
   String _newTitle = '';
   String _newGoal = '0';
@@ -33,6 +34,7 @@ class CardState with ChangeNotifier {
 
   bool get addNewScreen => _addNewScreen;
   bool get deleteCardScreen  => _deleteCardScreen;
+//  bool get progressIndicator => _progressIndicator;
 
 
   String get newTitle => _newTitle;
@@ -118,6 +120,11 @@ class CardState with ChangeNotifier {
     _deleteCardScreen = val;
     notifyListeners();
   }
+
+//  set progressIndicator(bool val) {
+//    _progressIndicator = val;
+//    notifyListeners();
+//  }
 
   set newTitle(String val) {
     _newTitle = val;

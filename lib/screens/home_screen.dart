@@ -19,12 +19,17 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> with TickerProviderStateMixin {
   SharedPref sharedPref = SharedPref();
   List<CardTile> cardTileList = [];
+  bool progressIndicator = true;
   AnimationController addSectionController;
   Animation addSectionAnimation;
-  AnimationStatus addSectionStatus = AnimationStatus.dismissed;
+
   AnimationController deleteSectionController;
   Animation deleteSectionAnimation;
-  AnimationStatus deleteSectionStatus = AnimationStatus.dismissed;
+
+  AnimationController progressIndicatorController;
+  Animation progressIndicatorAnimation;
+  AnimationStatus progressIndicatorStatus = AnimationStatus.dismissed;
+  int progressIndicatorCount = 0;
 
   @override
   void initState() {
@@ -44,7 +49,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       })
       ..addStatusListener((status) {
         setState(() {
-          addSectionStatus = status;
         });
       });
 
@@ -61,9 +65,26 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       })
       ..addStatusListener((status) {
         setState(() {
-          deleteSectionStatus = status;
         });
       });
+
+    progressIndicatorController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 200),
+    );
+    progressIndicatorAnimation = CurvedAnimation(
+      parent: progressIndicatorController,
+      curve: Curves.linear,
+    )
+      ..addListener(() {
+        setState(() {});
+      })
+      ..addStatusListener((status) {
+        setState(() {
+          progressIndicatorStatus = status;
+        });
+      });
+    progressIndicatorController.forward();
   }
 
   getCardListFromJson() async {
@@ -87,6 +108,11 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     cardTileList = List.generate(cardState.cardModels.length, (index) {
       return CardTile(cardModel: cardState.cardModels[index]);
     });
+    if (progressIndicator) {
+      if (cardTileList.length > 0) {
+        progressIndicator = false;
+      }
+    }
     if (cardState.addNewScreen) {
       addSectionController.forward();
     } else {
@@ -98,70 +124,105 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       deleteSectionController.reverse();
     }
 
+    if (!progressIndicatorController.isAnimating && progressIndicator) {
+      if (progressIndicatorStatus == AnimationStatus.completed) {
+        progressIndicatorController.reverse();
+        progressIndicatorCount++;
+        if (progressIndicatorCount > 10) {
+          progressIndicator = false;
+        }
+      } else {
+        progressIndicatorController.forward();
+        progressIndicatorCount++;
+      }
+    }
+
     return SafeArea(
-      child: StreamBuilder<Object>(
-          stream: null,
-          builder: (context, snapshot) {
-            return Material(
-                child: Scaffold(
-                  body: Container(
-                    color: Theme.of(context).accentColor,
-                    child: Row(
-                      children: <Widget>[
-                        Flexible(
-                          child: Stack(
-                            alignment: Alignment.centerRight,
-                            children: <Widget>[
-                              GestureDetector(
-                                onTap: () {
-                                  cardState.currentIndex = null;
-                                },
-                                child: ListView(
-                                  physics: BouncingScrollPhysics(),
-                                  children: cardTileList,
+      child: Material(
+        child: Scaffold(
+          body: Container(
+            color: Theme.of(context).accentColor,
+            child: Row(
+              children: <Widget>[
+                Flexible(
+                  child: Stack(
+                    alignment: Alignment.centerRight,
+                    children: <Widget>[
+                      GestureDetector(
+                        onTap: () {
+                          cardState.currentIndex = null;
+                        },
+                        child: ListView(
+                          physics: BouncingScrollPhysics(),
+                          children: cardTileList,
+                        ),
+                      ),
+                      Positioned(
+                        top: 100,
+                        left: 0,
+                        right: 0,
+                        child: Offstage(
+                          offstage: false,
+//                          offstage: !cardState.progressIndicator,
+                          child: Transform.translate(
+                            offset: Offset(0,
+//                                progressIndicatorAnimation.value < 0.5
+//                                    ? 40 * progressIndicatorAnimation.value
+//                                    : 40 * (1-progressIndicatorAnimation.value),
+                                0),
+                            child: Transform.scale(
+                              scale: progressIndicator ? 2 * progressIndicatorAnimation.value : 0,
+                              child: Container(
+                                height: 15,
+                                width: 15,
+                                decoration: BoxDecoration(
+                                  color: yellow,
+                                  shape: BoxShape.circle,
                                 ),
                               ),
-                              Container(
-                                height: double.infinity,
-                                width: MediaQuery.of(context).size.width * 0.03,
-                                color: yellow,
-                              ),
-                              Positioned(
-                                left: 0,
-                                bottom: 0,
-                                child: Transform.translate(
-                                    offset: Offset(
-                                        -MediaQuery.of(context).size.width *
-                                            (1 - addSectionAnimation.value) *
-                                            0.69,
-                                        0),
-                                    child: AddNewCardSection()),
-                              ),
-                              Positioned(
-                                left: 0,
-                                bottom: 0,
-                                child: Transform.translate(
-                                  offset: Offset(
-                                      -MediaQuery.of(context).size.width *
-                                          (1 - deleteSectionAnimation.value) *
-                                          0.69,
-                                      0),
-                                  child: DeleteCardSection(),
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
                         ),
-                        HomeRightBar(
-                          cardTileList: cardTileList,
+                      ),
+                      Container(
+                        height: double.infinity,
+                        width: MediaQuery.of(context).size.width * 0.03,
+                        color: yellow,
+                      ),
+                      Positioned(
+                        left: 0,
+                        bottom: 0,
+                        child: Transform.translate(
+                            offset: Offset(
+                                -MediaQuery.of(context).size.width *
+                                    (1 - addSectionAnimation.value) *
+                                    0.69,
+                                0),
+                            child: AddNewCardSection()),
+                      ),
+                      Positioned(
+                        left: 0,
+                        bottom: 0,
+                        child: Transform.translate(
+                          offset: Offset(
+                              -MediaQuery.of(context).size.width *
+                                  (1 - deleteSectionAnimation.value) *
+                                  0.69,
+                              0),
+                          child: DeleteCardSection(),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-              )
-            ;
-          }),
+                HomeRightBar(
+                  cardTileList: cardTileList,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 
