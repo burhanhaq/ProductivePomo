@@ -102,8 +102,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       child: StreamBuilder<Object>(
           stream: null,
           builder: (context, snapshot) {
-            return Consumer<CardState>(
-              builder: (context, cardState, _) => Material(
+            return Material(
                 child: Scaffold(
                   body: Container(
                     color: Theme.of(context).accentColor,
@@ -160,8 +159,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                     ),
                   ),
                 ),
-              ),
-            );
+              )
+            ;
           }),
     );
   }
