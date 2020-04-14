@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import '../constants.dart';
 import '../card_state.dart';
 import '../models/card_model.dart';
+import '../screen_navigation/second_screen_navigation.dart';
 
 class CardTile extends StatefulWidget {
   CardModel cardModel;
@@ -71,8 +72,8 @@ class _CardTileState extends State<CardTile>
           cardScreenController.forward(from: 0.0);
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => SecondScreen(cardTile: widget),
+            SecondScreenNavigation(widget: //builder: (context) =>
+               SecondScreen(cardTile: widget),
             ),
           );
         }
