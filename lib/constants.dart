@@ -18,6 +18,10 @@ const kScore = TextStyle(
   letterSpacing: 1.0,
 );
 
+const kLong = 60.0;
+const kShort = 15.0;
+const kRotOffset = kShort / 2;
+
 const double kEndSpacing = 30.0;
 const Color grey = Color(0xff343437);
 const Color yellow = Color(0xffF7CE47);

@@ -8,6 +8,7 @@ import '../widgets/card_tile.dart';
 import '../card_state.dart';
 import '../models/card_model.dart';
 import '../shared_pref.dart';
+import '../widgets/long_bars_digital_clock.dart';
 
 class Home extends StatefulWidget {
   static final id = 'Home';
@@ -48,8 +49,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         setState(() {});
       })
       ..addStatusListener((status) {
-        setState(() {
-        });
+        setState(() {});
       });
 
     deleteSectionController = AnimationController(
@@ -64,8 +64,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         setState(() {});
       })
       ..addStatusListener((status) {
-        setState(() {
-        });
+        setState(() {});
       });
 
     progressIndicatorController = AnimationController(
@@ -146,7 +145,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
               children: <Widget>[
                 Flexible(
                   child: Stack(
-                    alignment: Alignment.centerRight,
+                    alignment: Alignment.center,
                     children: <Widget>[
                       GestureDetector(
                         onTap: () {
@@ -165,13 +164,16 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                           offstage: false,
 //                          offstage: !cardState.progressIndicator,
                           child: Transform.translate(
-                            offset: Offset(0,
+                            offset: Offset(
+                                0,
 //                                progressIndicatorAnimation.value < 0.5
 //                                    ? 40 * progressIndicatorAnimation.value
 //                                    : 40 * (1-progressIndicatorAnimation.value),
                                 0),
                             child: Transform.scale(
-                              scale: progressIndicator ? 2 * progressIndicatorAnimation.value : 0,
+                              scale: progressIndicator
+                                  ? 2 * progressIndicatorAnimation.value
+                                  : 0,
                               child: Container(
                                 height: 15,
                                 width: 15,
@@ -184,10 +186,13 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                           ),
                         ),
                       ),
-                      Container(
-                        height: double.infinity,
-                        width: MediaQuery.of(context).size.width * 0.03,
-                        color: yellow,
+                      Positioned(
+                        right: 0,
+                        child: Container(
+                          height: MediaQuery.of(context).size.height,
+                          width: MediaQuery.of(context).size.width * 0.03,
+                          color: yellow,
+                        ),
                       ),
                       Positioned(
                         left: 0,
@@ -211,6 +216,13 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                               0),
                           child: DeleteCardSection(),
                         ),
+                      ),
+                      Positioned(
+                        top: 20,
+                        left: 20,
+//                        right: 0,
+//                        bottom: 0,
+                        child: LongBarsDigitalClock(),
                       ),
                     ],
                   ),
