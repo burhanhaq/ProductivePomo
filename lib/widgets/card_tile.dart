@@ -25,6 +25,7 @@ class _CardTileState extends State<CardTile>
     with SingleTickerProviderStateMixin {
   AnimationController cardScreenController;
   Animation cardScreenAnimation;
+
 //  AnimationStatus screenChangeStatus = AnimationStatus.completed;
   SharedPref sharedPref = SharedPref();
   int prefScore;
@@ -73,13 +74,23 @@ class _CardTileState extends State<CardTile>
           cardScreenController.forward(from: 0.0);
           Navigator.push(
             context,
-            SecondScreenNavigation(widget: //builder: (context) =>
-               SecondScreen(cardTile: widget),
+            SecondScreenNavigation(
+              widget:
+                  SecondScreen(cardTile: widget),
             ),
           );
         }
       },
       onTap: () {
+        if (cardState.currentIndex != null && cardState.currentIndex == index) { // tapped second time
+          Navigator.push(
+            context,
+            SecondScreenNavigation(
+              widget:
+              SecondScreen(cardTile: widget),
+            ),
+          );
+        }
         cardState.currentIndex = index;
       },
       child: Transform.translate(

@@ -248,24 +248,28 @@ class _DeleteCardSectionState extends State<DeleteCardSection> {
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width * 0.72,
         color: red1,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextField(
-              style: TextStyle(
-                  color: white, fontSize: 30, fontWeight: FontWeight.w600),
-              decoration: InputDecoration(
-                hintStyle: TextStyle(color: yellow),
-                hintText: 'Name to delete',
-                fillColor: blue,
+        child: Padding(
+          padding: EdgeInsets.only(left: 20, right: 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextField(
+                enabled: cardState.addNewScreen,
+                style: TextStyle(
+                    color: white, fontSize: 30, fontWeight: FontWeight.w600),
+                decoration: InputDecoration(
+                  hintStyle: TextStyle(color: yellow),
+                  hintText: 'Name to delete',
+                  fillColor: blue,
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    cardState.deleteTitle = value;
+                  });
+                },
               ),
-              onChanged: (value) {
-                setState(() {
-                  cardState.deleteTitle = value;
-                });
-              },
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -309,6 +313,7 @@ class _AddNewCardSectionState extends State<AddNewCardSection> {
             children: [
 //              Text('Title', style: TextStyle(color: yellow, fontSize: 100)),
               TextField(
+                enabled: cardState.addNewScreen,
                 style: TextStyle(
                   color: white,
                   fontSize: 30,
@@ -326,6 +331,7 @@ class _AddNewCardSectionState extends State<AddNewCardSection> {
                 },
               ),
               TextField(
+                enabled: cardState.addNewScreen,
                 keyboardType: TextInputType.numberWithOptions(decimal: false),
                 style: TextStyle(
                     color: white, fontSize: 30, fontWeight: FontWeight.w600),
@@ -522,7 +528,7 @@ class _HomeRightBarState extends State<HomeRightBar>
                         if (cardState.addNewScreen) {
                           cardState.newTitle = '';
                           cardState.newGoal = '';
-                          cardState.newMinutes = '10';
+                          cardState.newMinutes = '30';
                           cardState.newSeconds = '10';
                           cardState.addNewScreen = !cardState.addNewScreen;
                         } else if (!cardState.deleteCardScreen) {
@@ -638,6 +644,7 @@ class _HomeRightBarState extends State<HomeRightBar>
                     ),
                     Offstage(
                       // todo: moves up when shown, try to disable that
+                      // todo: has a red background while screen is moving, try to change it
                       offstage: !cardState.addNewScreen,
                       child: Transform.translate(
                         offset:

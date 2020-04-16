@@ -15,7 +15,7 @@ class CardState with ChangeNotifier {
 
   String _newTitle = '';
   String _newGoal = '0';
-  String _newMinutes = '10';
+  String _newMinutes = '30';
   String _newSeconds = '10';
   String _deleteTitle = '';
 
@@ -83,11 +83,11 @@ class CardState with ChangeNotifier {
     if (i >= _cardModels.length) { // todo change this stupid fix
       return CardModel(
         title: 'Dummy Model',
-        goal: 7,
-        seconds: 7,
-        minutes: 7,
+        goal: -11,
+        seconds: -11,
+        minutes: -11,
         index: null,
-        score: 7,
+        score: -11,
       );
     }
     return _cardModels[i];
