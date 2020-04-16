@@ -28,7 +28,6 @@ class BoxesDigitalClock extends StatefulWidget {
   }
 
   getNumList(int num) {
-    print(num);
     if (num == 0) {
       return [
         true,

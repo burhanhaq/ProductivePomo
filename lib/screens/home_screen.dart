@@ -8,8 +8,6 @@ import '../widgets/card_tile.dart';
 import '../card_state.dart';
 import '../models/card_model.dart';
 import '../shared_pref.dart';
-import '../widgets/long_bars_digital_clock.dart';
-import '../widgets/boxes_digital_clock.dart';
 
 class Home extends StatefulWidget {
   static final id = 'Home';
@@ -100,8 +98,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       ));
     }
   }
-
-  int index = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -205,28 +201,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                   0.69,
                               0),
                           child: DeleteCardSection(),
-                        ),
-                      ),
-                      Positioned(
-                        top: 20,
-                        left: 20,
-                        child: Column(
-                          children: <Widget>[
-                            BoxesDigitalClock(num: index),
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  if (index > 8) index = -1;
-                                  index++;
-                                });
-                              },
-                              child: Container(
-                                height: 80,
-                                width: 80,
-                                color: Colors.red,
-                              ),
-                            ),
-                          ],
                         ),
                       ),
                     ],

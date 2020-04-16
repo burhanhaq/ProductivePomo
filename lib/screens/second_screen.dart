@@ -9,6 +9,7 @@ import '../card_state.dart';
 import '../widgets/card_tile.dart';
 import '../shared_pref.dart';
 import '../models/card_model.dart';
+import '../widgets/boxes_digital_clock.dart';
 
 class SecondScreen extends StatefulWidget {
   static final id = 'SecondScreen';
@@ -20,10 +21,14 @@ class SecondScreen extends StatefulWidget {
   _SecondScreenState createState() => _SecondScreenState();
 }
 
-class _SecondScreenState extends State<SecondScreen> {
+class _SecondScreenState extends State<SecondScreen>
+    with TickerProviderStateMixin {
   SharedPref sharedPref = SharedPref();
+  var timerController;
 
-//  CardModel prefCardData;
+  var playPauseIconController;
+  var playPauseIconAnimation;
+
   String prefTitle;
   int prefScore;
   int prefGoal;
@@ -33,7 +38,6 @@ class _SecondScreenState extends State<SecondScreen> {
       CardModel model = CardModel.fromJson(
           await sharedPref.read(widget.cardTile.cardModel.title));
       setState(() {
-//        prefCardData = model;
         prefTitle = model.title;
         prefScore = model.score;
         prefGoal = model.goal;
@@ -43,8 +47,45 @@ class _SecondScreenState extends State<SecondScreen> {
     }
   }
 
+  int tensMin = 0;
+  int onesMin = 0;
+  int tensSec = 0;
+  int onesSec = 0;
+
+  setTimerValues() {
+    Duration duration = Duration(
+            minutes: widget.cardTile.cardModel.minutes,
+            seconds: widget.cardTile.cardModel.seconds) *
+        (1 - timerController.value);
+    tensMin = (duration.inMinutes / 10).floor() % 10;
+    onesMin = duration.inMinutes % 10;
+    tensSec = ((duration.inSeconds % 60) / 10).floor() % 10;
+    onesSec = (duration.inSeconds % 60) % 10;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    timerController = AnimationController(
+      vsync: this,
+      duration: Duration(
+          minutes: widget.cardTile.cardModel.minutes,
+          seconds: widget.cardTile.cardModel.seconds),
+    );
+
+    playPauseIconController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 300),
+    );
+    playPauseIconAnimation = CurvedAnimation(
+      curve: Curves.bounceIn,
+      parent: playPauseIconController,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    setTimerValues();
     loadSharedPrefs();
     int index = widget.cardTile.cardModel.index;
     Duration duration = Duration(
@@ -71,7 +112,6 @@ class _SecondScreenState extends State<SecondScreen> {
                             color: yellow,
                           ),
                           borderRadius: BorderRadius.only(
-//                    topRight: Radius.circular(100),
                             bottomRight: Radius.circular(100),
                             topLeft: Radius.circular(100),
                             bottomLeft: Radius.circular(100),
@@ -105,6 +145,19 @@ class _SecondScreenState extends State<SecondScreen> {
                                 ],
                               ),
                               Expanded(child: Container()),
+                              Container(
+                                child: Row(
+                                  children: <Widget>[
+                                    BoxesDigitalClock(num: tensMin),
+                                    SizedBox(width: 1),
+                                    BoxesDigitalClock(num: onesMin),
+                                    SizedBox(width: 3),
+                                    BoxesDigitalClock(num: tensSec),
+                                    SizedBox(width: 1),
+                                    BoxesDigitalClock(num: onesSec),
+                                  ],
+                                ),
+                              ),
                               Container(
                                 width: MediaQuery.of(context).size.width * 0.41,
                                 height:
@@ -198,25 +251,28 @@ class _SecondScreenState extends State<SecondScreen> {
                                   color: red1,
                                   onPressed: () {
                                     print('Stop pressed');
+                                    timerController.value = 0.0;
                                   },
                                 ),
-                                IconButton(
-                                  // todo: program it to be enabled after clock starts, and then disabled
-                                  icon: Icon(Icons.pause),
-                                  iconSize: 60,
-                                  color: red1,
-                                  onPressed: () {
-                                    print('Pause pressed');
+                                GestureDetector(
+                                  onTap: () {
+                                    if (playPauseIconController.status ==
+                                        AnimationStatus.dismissed) {
+                                      print('Play pressed');
+                                      timerController.forward();
+                                      playPauseIconController.forward();
+                                    } else {
+                                      print('Pause pressed');
+                                      timerController.stop();
+                                      playPauseIconController.reverse();
+                                    }
                                   },
-                                ),
-                                IconButton(
-                                  // todo: program it to start clock and disable itself
-                                  icon: Icon(Icons.play_arrow),
-                                  iconSize: 60,
-                                  color: red1,
-                                  onPressed: () {
-                                    print('Play pressed');
-                                  },
+                                  child: AnimatedIcon(
+                                    icon: AnimatedIcons.play_pause,
+                                    progress: playPauseIconAnimation,
+                                    size: 60,
+                                    color: red1,
+                                  ),
                                 ),
                               ],
                             ),
@@ -269,5 +325,11 @@ class _SecondScreenState extends State<SecondScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    timerController.dispose();
+    super.dispose();
   }
 }

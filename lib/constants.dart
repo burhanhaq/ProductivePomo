@@ -22,7 +22,7 @@ const kLong = 60.0;
 const kShort = 15.0;
 const kRotOffset = kShort / 2;
 
-const kBoxDim = 40.0;
+const kBoxDim = 15.0;
 const kHit = Colors.blue;
 
 const double kEndSpacing = 30.0;
