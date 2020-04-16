@@ -9,6 +9,7 @@ import '../card_state.dart';
 import '../models/card_model.dart';
 import '../shared_pref.dart';
 import '../widgets/long_bars_digital_clock.dart';
+import '../widgets/boxes_digital_clock.dart';
 
 class Home extends StatefulWidget {
   static final id = 'Home';
@@ -20,17 +21,17 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> with TickerProviderStateMixin {
   SharedPref sharedPref = SharedPref();
   List<CardTile> cardTileList = [];
-  bool progressIndicator = true;
+  bool loadingIndicator = true;
   AnimationController addSectionController;
   Animation addSectionAnimation;
 
   AnimationController deleteSectionController;
   Animation deleteSectionAnimation;
 
-  AnimationController progressIndicatorController;
-  Animation progressIndicatorAnimation;
-  AnimationStatus progressIndicatorStatus = AnimationStatus.dismissed;
-  int progressIndicatorCount = 0;
+  AnimationController loadingIndicatorController;
+  Animation loadingIndicatorAnimation;
+  AnimationStatus loadingIndicatorStatus = AnimationStatus.dismissed;
+  int loadingIndicatorCount = 0;
 
   @override
   void initState() {
@@ -67,12 +68,12 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         setState(() {});
       });
 
-    progressIndicatorController = AnimationController(
+    loadingIndicatorController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 200),
     );
-    progressIndicatorAnimation = CurvedAnimation(
-      parent: progressIndicatorController,
+    loadingIndicatorAnimation = CurvedAnimation(
+      parent: loadingIndicatorController,
       curve: Curves.linear,
     )
       ..addListener(() {
@@ -80,14 +81,13 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       })
       ..addStatusListener((status) {
         setState(() {
-          progressIndicatorStatus = status;
+          loadingIndicatorStatus = status;
         });
       });
-    progressIndicatorController.forward();
+    loadingIndicatorController.forward();
   }
 
   getCardListFromJson() async {
-    // todo add circular bar for waiting for await
     List<dynamic> prefCardModelList = await sharedPref.get();
     for (int i = 0; i < prefCardModelList.length; i++) {
       CardModel.cardModelsX.add(CardModel(
@@ -101,15 +101,17 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     }
   }
 
+  int index = 0;
+
   @override
   Widget build(BuildContext context) {
     final cardState = Provider.of<CardState>(context);
     cardTileList = List.generate(cardState.cardModels.length, (index) {
       return CardTile(cardModel: cardState.cardModels[index]);
     });
-    if (progressIndicator) {
+    if (loadingIndicator) {
       if (cardTileList.length > 0) {
-        progressIndicator = false;
+        loadingIndicator = false;
       }
     }
     if (cardState.addNewScreen) {
@@ -123,16 +125,16 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       deleteSectionController.reverse();
     }
 
-    if (!progressIndicatorController.isAnimating && progressIndicator) {
-      if (progressIndicatorStatus == AnimationStatus.completed) {
-        progressIndicatorController.reverse();
-        progressIndicatorCount++;
-        if (progressIndicatorCount > 10) {
-          progressIndicator = false;
+    if (!loadingIndicatorController.isAnimating && loadingIndicator) {
+      if (loadingIndicatorStatus == AnimationStatus.completed) {
+        loadingIndicatorController.reverse();
+        loadingIndicatorCount++;
+        if (loadingIndicatorCount > 10) {
+          loadingIndicator = false;
         }
       } else {
-        progressIndicatorController.forward();
-        progressIndicatorCount++;
+        loadingIndicatorController.forward();
+        loadingIndicatorCount++;
       }
     }
 
@@ -160,28 +162,16 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         top: 100,
                         left: 0,
                         right: 0,
-                        child: Offstage(
-                          offstage: false,
-//                          offstage: !cardState.progressIndicator,
-                          child: Transform.translate(
-                            offset: Offset(
-                                0,
-//                                progressIndicatorAnimation.value < 0.5
-//                                    ? 40 * progressIndicatorAnimation.value
-//                                    : 40 * (1-progressIndicatorAnimation.value),
-                                0),
-                            child: Transform.scale(
-                              scale: progressIndicator
-                                  ? 2 * progressIndicatorAnimation.value
-                                  : 0,
-                              child: Container(
-                                height: 15,
-                                width: 15,
-                                decoration: BoxDecoration(
-                                  color: yellow,
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
+                        child: Transform.scale(
+                          scale: loadingIndicator
+                              ? 2 * loadingIndicatorAnimation.value
+                              : 0,
+                          child: Container(
+                            height: 15,
+                            width: 15,
+                            decoration: BoxDecoration(
+                              color: yellow,
+                              shape: BoxShape.circle,
                             ),
                           ),
                         ),
@@ -220,9 +210,24 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                       Positioned(
                         top: 20,
                         left: 20,
-//                        right: 0,
-//                        bottom: 0,
-                        child: LongBarsDigitalClock(),
+                        child: Column(
+                          children: <Widget>[
+                            BoxesDigitalClock(num: index),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  if (index > 8) index = -1;
+                                  index++;
+                                });
+                              },
+                              child: Container(
+                                height: 80,
+                                width: 80,
+                                color: Colors.red,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -413,7 +418,7 @@ class _AddNewCardSectionState extends State<AddNewCardSection> {
 }
 
 class HomeRightBar extends StatefulWidget {
-  List<CardTile> cardTileList;
+  final List<CardTile> cardTileList;
 
   HomeRightBar({@required this.cardTileList});
 
