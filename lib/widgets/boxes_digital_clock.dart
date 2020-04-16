@@ -3,7 +3,52 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 
 class BoxesDigitalClock extends StatefulWidget {
+  final int min;
+  final int sec;
+  final double controllerValue;
+
+  BoxesDigitalClock({@required this.min, @required this.sec, @required this.controllerValue});
+
+  @override
+  _BoxesDigitalClockState createState() => _BoxesDigitalClockState();
+}
+
+class _BoxesDigitalClockState extends State<BoxesDigitalClock> {
+  int tensMin = 0;
+  int onesMin = 0;
+  int tensSec = 0;
+  int onesSec = 0;
+
+  setTimerValues() {
+    Duration duration = Duration(
+        minutes: widget.min,
+        seconds: widget.sec) *
+        (1 - widget.controllerValue);
+    tensMin = (duration.inMinutes / 10).floor() % 10;
+    onesMin = duration.inMinutes % 10;
+    tensSec = ((duration.inSeconds % 60) / 10).floor() % 10;
+    onesSec = (duration.inSeconds % 60) % 10;
+  }
+  @override
+  Widget build(BuildContext context) {
+    setTimerValues();
+    return Row(
+      children: <Widget>[
+        Digit(num: tensMin),
+        Digit(num: onesMin),
+        SizedBox(width: 8),
+        Digit(num: tensSec),
+        Digit(num: onesSec),
+      ],
+    );
+  }
+}
+
+class Digit extends StatefulWidget {
   final int num;
+  Digit({@required this.num}) {
+    boolList = getNumList(this.num);
+  }
   var boolList = [
     false,
     false,
@@ -22,10 +67,6 @@ class BoxesDigitalClock extends StatefulWidget {
     false,
     false
   ];
-
-  BoxesDigitalClock({@required this.num}) {
-    boolList = getNumList(this.num);
-  }
 
   getNumList(int num) {
     if (num == 0) {
@@ -230,10 +271,12 @@ class BoxesDigitalClock extends StatefulWidget {
   }
 
   @override
-  _BoxesDigitalClockState createState() => _BoxesDigitalClockState();
+  _DigitState createState() => _DigitState();
 }
 
-class _BoxesDigitalClockState extends State<BoxesDigitalClock> {
+class _DigitState extends State<Digit> {
+  double spacing = 0.3;
+
   @override
   Widget build(BuildContext context) {
     bool zero = widget.boolList[0];
@@ -256,27 +299,41 @@ class _BoxesDigitalClockState extends State<BoxesDigitalClock> {
         Column(
           children: [
             BoxContainer(isActive: zero),
+            SizedBox(height: spacing),
             BoxContainer(isActive: one),
+            SizedBox(height: spacing),
             BoxContainer(isActive: two),
+            SizedBox(height: spacing),
             BoxContainer(isActive: three),
+            SizedBox(height: spacing),
             BoxContainer(isActive: four),
           ],
         ),
+        SizedBox(width: spacing),
         Column(
           children: [
             BoxContainer(isActive: five),
+            SizedBox(height: spacing),
             BoxContainer(isActive: six),
+            SizedBox(height: spacing),
             BoxContainer(isActive: seven),
+            SizedBox(height: spacing),
             BoxContainer(isActive: eighth),
+            SizedBox(height: spacing),
             BoxContainer(isActive: nine),
           ],
         ),
+        SizedBox(width: spacing),
         Column(
           children: [
             BoxContainer(isActive: ten),
+            SizedBox(height: spacing),
             BoxContainer(isActive: eleven),
+            SizedBox(height: spacing),
             BoxContainer(isActive: twelve),
+            SizedBox(height: spacing),
             BoxContainer(isActive: thirteen),
+            SizedBox(height: spacing),
             BoxContainer(isActive: fourteen),
           ],
         ),
@@ -284,6 +341,7 @@ class _BoxesDigitalClockState extends State<BoxesDigitalClock> {
     );
   }
 }
+
 
 class BoxContainer extends StatefulWidget {
 //  Color isActive;

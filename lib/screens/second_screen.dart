@@ -47,21 +47,16 @@ class _SecondScreenState extends State<SecondScreen>
     }
   }
 
-  int tensMin = 0;
-  int onesMin = 0;
-  int tensSec = 0;
-  int onesSec = 0;
-
-  setTimerValues() {
-    Duration duration = Duration(
-            minutes: widget.cardTile.cardModel.minutes,
-            seconds: widget.cardTile.cardModel.seconds) *
-        (1 - timerController.value);
-    tensMin = (duration.inMinutes / 10).floor() % 10;
-    onesMin = duration.inMinutes % 10;
-    tensSec = ((duration.inSeconds % 60) / 10).floor() % 10;
-    onesSec = (duration.inSeconds % 60) % 10;
-  }
+//  setTimerValues() {
+//    Duration duration = Duration(
+//            minutes: widget.cardTile.cardModel.minutes,
+//            seconds: widget.cardTile.cardModel.seconds) *
+//        (1 - timerController.value);
+//    tensMin = (duration.inMinutes / 10).floor() % 10;
+//    onesMin = duration.inMinutes % 10;
+//    tensSec = ((duration.inSeconds % 60) / 10).floor() % 10;
+//    onesSec = (duration.inSeconds % 60) % 10;
+//  }
 
   @override
   void initState() {
@@ -85,12 +80,9 @@ class _SecondScreenState extends State<SecondScreen>
 
   @override
   Widget build(BuildContext context) {
-    setTimerValues();
+//    setTimerValues();
     loadSharedPrefs();
     int index = widget.cardTile.cardModel.index;
-    Duration duration = Duration(
-        minutes: widget.cardTile.cardModel.minutes,
-        seconds: widget.cardTile.cardModel.seconds);
     return SafeArea(
       child: ChangeNotifierProvider(
         create: (context) => CardState(),
@@ -144,30 +136,27 @@ class _SecondScreenState extends State<SecondScreen>
                                   ),
                                 ],
                               ),
-                              Expanded(child: Container()),
+//                              Expanded(child: Container()),
                               Container(
                                 child: Row(
                                   children: <Widget>[
-                                    BoxesDigitalClock(num: tensMin),
-                                    SizedBox(width: 1),
-                                    BoxesDigitalClock(num: onesMin),
-                                    SizedBox(width: 3),
-                                    BoxesDigitalClock(num: tensSec),
-                                    SizedBox(width: 1),
-                                    BoxesDigitalClock(num: onesSec),
+                                    BoxesDigitalClock(
+                                        min: widget.cardTile.cardModel.minutes,
+                                        sec: widget.cardTile.cardModel.seconds,
+                                        controllerValue: timerController.value),
                                   ],
                                 ),
                               ),
-                              Container(
-                                width: MediaQuery.of(context).size.width * 0.41,
-                                height:
-                                    MediaQuery.of(context).size.width * 0.41,
-                                decoration: BoxDecoration(
-                                  color: red1,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Clock(duration: duration),
-                              ),
+//                              Container(
+//                                width: MediaQuery.of(context).size.width * 0.41,
+//                                height:
+//                                    MediaQuery.of(context).size.width * 0.41,
+//                                decoration: BoxDecoration(
+//                                  color: red1,
+//                                  shape: BoxShape.circle,
+//                                ),
+//                                child: Clock(duration: duration),
+//                              ),
                               SizedBox(height: 15),
                             ],
                           ),
@@ -252,6 +241,7 @@ class _SecondScreenState extends State<SecondScreen>
                                   onPressed: () {
                                     print('Stop pressed');
                                     timerController.value = 0.0;
+                                    playPauseIconController.reverse();
                                   },
                                 ),
                                 GestureDetector(

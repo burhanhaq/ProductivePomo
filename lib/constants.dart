@@ -23,7 +23,7 @@ const kShort = 15.0;
 const kRotOffset = kShort / 2;
 
 const kBoxDim = 15.0;
-const kHit = Colors.blue;
+const kHit = red1;
 
 const double kEndSpacing = 30.0;
 const Color grey = Color(0xff343437);
