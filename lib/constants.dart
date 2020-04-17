@@ -22,13 +22,15 @@ const kLong = 60.0;
 const kShort = 15.0;
 const kRotOffset = kShort / 2;
 
-const kBoxDim = 15.0;
-const kHit = red1;
+const kBoxDim = 30.0;
+const kBoxColor = white;
 
 const double kEndSpacing = 30.0;
 const Color grey = Color(0xff343437);
+const Color grey2 = Color(0xff1F1F21);
 const Color yellow = Color(0xffF7CE47);
 const Color red1 = Color(0xffA83535);
+const Color red12 = Color(0xff872929);
 const Color red2 = Color(0xff610404);
 const Color red3 = Color(0xff400303);
 const Color blue = Colors.blue;

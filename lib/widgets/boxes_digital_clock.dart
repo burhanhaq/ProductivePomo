@@ -5,9 +5,9 @@ import '../constants.dart';
 class BoxesDigitalClock extends StatefulWidget {
   final int min;
   final int sec;
-  final double controllerValue;
+  final AnimationController timerController;
 
-  BoxesDigitalClock({@required this.min, @required this.sec, @required this.controllerValue});
+  BoxesDigitalClock({@required this.min, @required this.sec, @required this.timerController});
 
   @override
   _BoxesDigitalClockState createState() => _BoxesDigitalClockState();
@@ -23,7 +23,7 @@ class _BoxesDigitalClockState extends State<BoxesDigitalClock> {
     Duration duration = Duration(
         minutes: widget.min,
         seconds: widget.sec) *
-        (1 - widget.controllerValue);
+        (1 - widget.timerController.value);
     tensMin = (duration.inMinutes / 10).floor() % 10;
     onesMin = duration.inMinutes % 10;
     tensSec = ((duration.inSeconds % 60) / 10).floor() % 10;
@@ -32,13 +32,32 @@ class _BoxesDigitalClockState extends State<BoxesDigitalClock> {
   @override
   Widget build(BuildContext context) {
     setTimerValues();
-    return Row(
+//    print(12/MediaQuery.of(context).size.width);
+    return Wrap(
       children: <Widget>[
-        Digit(num: tensMin),
-        Digit(num: onesMin),
-        SizedBox(width: 8),
-        Digit(num: tensSec),
-        Digit(num: onesSec),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: <Widget>[
+            Digit(num: tensMin, extraPadding: 0),
+            SizedBox(width: 5),
+            Digit(num: onesMin, extraPadding: 0),
+            SizedBox(width: 10),
+//        Padding(
+//          padding: EdgeInsets.symmetric(horizontal: 5),
+//          child: Column(
+//            children: <Widget>[
+//              Container(width: 5, height: 15, color: white),
+//              SizedBox(height: 10),
+//              Container(width: 5, height: 15, color: white),
+//            ],
+//          ),
+//        ),
+            Digit(num: tensSec, extraPadding: -5),
+            SizedBox(width: 5),
+            Digit(num: onesSec, extraPadding: -5),
+          ],
+        ),
       ],
     );
   }
@@ -46,27 +65,11 @@ class _BoxesDigitalClockState extends State<BoxesDigitalClock> {
 
 class Digit extends StatefulWidget {
   final int num;
-  Digit({@required this.num}) {
+  final double extraPadding;
+  var boolList = [];
+  Digit({@required this.num, this.extraPadding}) {
     boolList = getNumList(this.num);
   }
-  var boolList = [
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false
-  ];
 
   getNumList(int num) {
     if (num == 0) {
@@ -298,43 +301,43 @@ class _DigitState extends State<Digit> {
       children: <Widget>[
         Column(
           children: [
-            BoxContainer(isActive: zero),
+            BoxContainer(isActive: zero, extraPadding: widget.extraPadding),
             SizedBox(height: spacing),
-            BoxContainer(isActive: one),
+            BoxContainer(isActive: one, extraPadding: widget.extraPadding),
             SizedBox(height: spacing),
-            BoxContainer(isActive: two),
+            BoxContainer(isActive: two, extraPadding: widget.extraPadding),
             SizedBox(height: spacing),
-            BoxContainer(isActive: three),
+            BoxContainer(isActive: three, extraPadding: widget.extraPadding),
             SizedBox(height: spacing),
-            BoxContainer(isActive: four),
+            BoxContainer(isActive: four, extraPadding: widget.extraPadding),
           ],
         ),
         SizedBox(width: spacing),
         Column(
           children: [
-            BoxContainer(isActive: five),
+            BoxContainer(isActive: five, extraPadding: widget.extraPadding),
             SizedBox(height: spacing),
-            BoxContainer(isActive: six),
+            BoxContainer(isActive: six, extraPadding: widget.extraPadding),
             SizedBox(height: spacing),
-            BoxContainer(isActive: seven),
+            BoxContainer(isActive: seven, extraPadding: widget.extraPadding),
             SizedBox(height: spacing),
-            BoxContainer(isActive: eighth),
+            BoxContainer(isActive: eighth, extraPadding: widget.extraPadding),
             SizedBox(height: spacing),
-            BoxContainer(isActive: nine),
+            BoxContainer(isActive: nine, extraPadding: widget.extraPadding),
           ],
         ),
         SizedBox(width: spacing),
         Column(
           children: [
-            BoxContainer(isActive: ten),
+            BoxContainer(isActive: ten, extraPadding: widget.extraPadding),
             SizedBox(height: spacing),
-            BoxContainer(isActive: eleven),
+            BoxContainer(isActive: eleven, extraPadding: widget.extraPadding),
             SizedBox(height: spacing),
-            BoxContainer(isActive: twelve),
+            BoxContainer(isActive: twelve, extraPadding: widget.extraPadding),
             SizedBox(height: spacing),
-            BoxContainer(isActive: thirteen),
+            BoxContainer(isActive: thirteen, extraPadding: widget.extraPadding),
             SizedBox(height: spacing),
-            BoxContainer(isActive: fourteen),
+            BoxContainer(isActive: fourteen, extraPadding: widget.extraPadding),
           ],
         ),
       ],
@@ -344,10 +347,12 @@ class _DigitState extends State<Digit> {
 
 
 class BoxContainer extends StatefulWidget {
-//  Color isActive;
   bool isActive;
+  double extraPadding = 0;
 
-  BoxContainer({@required this.isActive});
+  BoxContainer({@required this.isActive, @required this.extraPadding}) {
+    if (extraPadding == null) extraPadding = 0;
+  }
 
   @override
   _BoxContainerState createState() => _BoxContainerState();
@@ -356,11 +361,12 @@ class BoxContainer extends StatefulWidget {
 class _BoxContainerState extends State<BoxContainer> {
   @override
   Widget build(BuildContext context) {
+    double sideLength = kBoxDim + widget.extraPadding;
     return AnimatedContainer(
       duration: Duration(milliseconds: 650),
-      height: kBoxDim,
-      width: kBoxDim,
-      color: widget.isActive ? kHit : trans,
+      height: sideLength,
+      width: sideLength,
+      color: widget.isActive ? kBoxColor : trans,
     );
   }
 }
