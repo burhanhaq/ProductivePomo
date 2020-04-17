@@ -17,7 +17,6 @@ class App extends StatelessWidget {
         primaryColor: yellow,
         accentColor: grey,
       ),
-//      home: Home(),
       initialRoute: Home.id,
       routes: {
         Home.id: (context) => ChangeNotifierProvider(

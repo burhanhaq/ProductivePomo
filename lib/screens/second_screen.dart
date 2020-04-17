@@ -87,36 +87,49 @@ class _SecondScreenState extends State<SecondScreen>
                 Positioned(
                   top: 0,
                   left: 0,
-                  child: AnimatedContainer(
-                    duration: Duration(milliseconds: 500),
-                    height: MediaQuery.of(context).size.height *
-                        (timerRunning ? 0.2 : 0.4648),
-                    width: MediaQuery.of(context).size.width * 0.2,
-                    color: timerRunning ? grey2 : blue,
-                    child: Column(
-//                            mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          prefScore == null ? '-3' : prefScore.toString(),
-//                                  : cardState.at(index).score.toString(),
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 50,
-                            decoration: TextDecoration.none,
-                          ),
+                  child: Stack(
+                    alignment: Alignment.bottomCenter,
+                    children: <Widget>[
+                      AnimatedContainer(
+                        duration: Duration(milliseconds: 500),
+                        height: MediaQuery.of(context).size.height *
+                            (timerRunning ? 0.2 : 0.4648),
+                        width: MediaQuery.of(context).size.width * 0.2,
+                        color: timerRunning ? grey2 : yellow,
+                        child: Column(
+                          children: [
+                            Text(
+                              prefScore == null ? '-3' : prefScore.toString(),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 50,
+                                decoration: TextDecoration.none,
+                              ),
+                            ),
+                            Container(height: 5, width: 80, color: white),
+                            Text(
+                              prefGoal == null ? '-3' : prefGoal.toString(),
+                              style: TextStyle(
+                                color: white,
+                                fontSize: 50,
+                                decoration: TextDecoration.none,
+                              ),
+                            ),
+                          ],
                         ),
-                        Container(height: 5, width: 80, color: white),
-                        Text(
-                          prefGoal == null ? '-3' : prefGoal.toString(),
-//                                  : cardState.at(index).goal.toString(),
-                          style: TextStyle(
-                            color: white,
-                            fontSize: 50,
-                            decoration: TextDecoration.none,
-                          ),
+                      ),
+                      Opacity(
+                        opacity: 0.5,
+                        child: AnimatedContainer(
+                          duration: Duration(milliseconds: 500),
+                          height: MediaQuery.of(context).size.height *
+                              (timerRunning ? 0.2 : 0.4648) *
+                              widget.cardTile.cardModel.score.toDouble() / widget.cardTile.cardModel.goal.toDouble(),
+                          width: MediaQuery.of(context).size.width * 0.2,
+                          color: Colors.green,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
                 Positioned(
@@ -125,31 +138,43 @@ class _SecondScreenState extends State<SecondScreen>
                   child: AnimatedContainer(
                     duration: Duration(milliseconds: 500),
                     color: timerRunning ? grey2 : red1,
-                    width: MediaQuery.of(context).size.width * (timerRunning ? 0.7 : 0.8),
+                    width: MediaQuery.of(context).size.width *
+                        (timerRunning ? 0.7 : 0.8),
                     height: MediaQuery.of(context).size.height * 0.2,
+                    child: FittedBox(
+                      fit: BoxFit.contain,
+                      child: Text(
+                        'Alex',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'IndieFlower',
+                          decoration: TextDecoration.none,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
                 Positioned(
                   bottom: 0,
-                    left: 0,
+                  left: 0,
                   child: AnimatedContainer(
                     duration: Duration(milliseconds: 500),
                     height: MediaQuery.of(context).size.height * 0.5,
                     width: MediaQuery.of(context).size.width *
                         (timerRunning ? 0.7 : 0.8),
                     color: timerRunning ? grey2 : red12,
-                    child: Text(
-                      prefTitle == null
-                          ? 'null'
-                          : prefTitle.toUpperCase(),
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.end,
-                      style: TextStyle(
-                        letterSpacing: 2,
-                        fontSize: 20,
-                        color: Colors.white,
-                        decoration: TextDecoration.none,
+                    child: Center(
+                      child: Text(
+                        prefTitle == null ? 'null' : prefTitle.toUpperCase(),
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+//                      textAlign: TextAlign.end,
+                        style: TextStyle(
+                          letterSpacing: 2,
+                          fontSize: 20,
+                          color: Colors.white,
+                          decoration: TextDecoration.none,
+                        ),
                       ),
                     ),
                   ),
@@ -159,40 +184,42 @@ class _SecondScreenState extends State<SecondScreen>
                   bottom: 0,
                   child: AnimatedContainer(
                     duration: Duration(milliseconds: 500),
-                    color: timerRunning ? grey2 : blue,
+                    color: timerRunning ? grey2 : yellow,
                     width: MediaQuery.of(context).size.width * 0.2,
-//                          height: MediaQuery.of(context).size.height * (timerRunning ? 0.5 : 0.7658),
-                    height: MediaQuery.of(context).size.height * (timerRunning ? 0.5 : 0.7658),
+                    height: MediaQuery.of(context).size.height *
+                        (timerRunning ? 0.5 : 0.7658),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Column(
                           children: <Widget>[
-//                            Expanded(child: Container()),
+                            Icon(
+                              Icons.settings,
+                              size: 40,
+                              color: grey,
+                            ),
                             GestureDetector(
                               onTap: () {
                                 cardState.subtract(index);
-                                sharedPref.save(
-                                    widget.cardTile.cardModel.title,
+                                sharedPref.save(widget.cardTile.cardModel.title,
                                     cardState.at(index).toJson());
                               },
                               child: Icon(
                                 Icons.remove,
                                 size: 40,
-                                color: yellow,
+                                color: grey,
                               ),
                             ),
                             GestureDetector(
                               onTap: () {
                                 cardState.add(index);
-                                sharedPref.save(
-                                    widget.cardTile.cardModel.title,
+                                sharedPref.save(widget.cardTile.cardModel.title,
                                     cardState.at(index).toJson());
                               },
                               child: Icon(
                                 Icons.add,
                                 size: 40,
-                                color: yellow,
+                                color: grey,
                               ),
                             ),
                           ],
@@ -200,14 +227,14 @@ class _SecondScreenState extends State<SecondScreen>
                         Material(
                           child: AnimatedContainer(
                             duration: Duration(milliseconds: 500),
-                            color: timerRunning ? grey2 : blue,
+                            color: timerRunning ? grey2 : yellow,
                             child: Column(
                               children: [
                                 IconButton(
                                   // todo: program it to be disabled if at 0 I guess
                                   icon: Icon(Icons.replay),
                                   iconSize: 60,
-                                  color: red1,
+                                  color: timerRunning ? red1 : grey,
                                   onPressed: () {
                                     print('Stop pressed');
                                     timerController.value = 0.0;
@@ -231,7 +258,7 @@ class _SecondScreenState extends State<SecondScreen>
                                     icon: AnimatedIcons.play_pause,
                                     progress: playPauseIconAnimation,
                                     size: 60,
-                                    color: red1,
+                                    color: timerRunning ? red1 : grey,
                                   ),
                                 ),
                               ],
@@ -244,11 +271,14 @@ class _SecondScreenState extends State<SecondScreen>
                 ),
                 Positioned(
                   top: MediaQuery.of(context).size.height * 0.222,
-                  child: BoxesDigitalClock(
-                    // todo show it increase when page opens
-                    min: widget.cardTile.cardModel.minutes,
-                    sec: widget.cardTile.cardModel.seconds,
-                    timerController: timerController,
+                  child: Transform.scale(
+                    scale: timerRunning ? 1 : 0.5,
+                    child: BoxesDigitalClock(
+                      // todo show it increase when page opens
+                      min: widget.cardTile.cardModel.minutes,
+                      sec: widget.cardTile.cardModel.seconds,
+                      timerController: timerController,
+                    ),
                   ),
                 ),
               ],

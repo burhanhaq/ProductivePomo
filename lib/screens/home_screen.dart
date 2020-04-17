@@ -145,17 +145,21 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                   child: Stack(
                     alignment: Alignment.center,
                     children: <Widget>[
-                      GestureDetector(
-                        onTap: () {
-                          cardState.currentIndex = null;
-                        },
-                        child: ListView(
-                          physics: BouncingScrollPhysics(),
-                          children: cardTileList,
+                      Positioned(
+//                        top: 43,
+                        child: GestureDetector(
+                          onTap: () {
+                            cardState.currentIndex = null;
+                          },
+                          child: ListView( // todo add person's name above this
+//                            shrinkWrap: true,
+                            physics: BouncingScrollPhysics(),
+                            children: cardTileList,
+                          ),
                         ),
                       ),
                       Positioned(
-                        top: 100,
+                        top: 150,
                         left: 0,
                         right: 0,
                         child: Transform.scale(
@@ -290,7 +294,6 @@ class _AddNewCardSectionState extends State<AddNewCardSection> {
                 index == 0 || index == 1 ? '0${index * 5}' : '${index * 5}',
                 style: TextStyle(fontSize: 30, color: yellow)),
             value: '${index * 5}'));
-    //FocusScope.of(context).requestFocus(new FocusNode());
     return SafeArea(
       child: Container(
         height: MediaQuery.of(context).size.height,
@@ -302,7 +305,7 @@ class _AddNewCardSectionState extends State<AddNewCardSection> {
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-//              Text('Title', style: TextStyle(color: yellow, fontSize: 100)),
+//              Text('Title', style: TextStyle(color: yellow, fontSize: 100)), // todo adding would be cool
               TextField(
                 enabled: cardState.addNewScreen,
                 style: TextStyle(
@@ -347,39 +350,40 @@ class _AddNewCardSectionState extends State<AddNewCardSection> {
                           fontWeight: FontWeight.w600)),
                   Expanded(
                     child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          DropdownButton(
-                            icon: Icon(Icons.arrow_drop_down, size: 0),
-                            dropdownColor: red1,
-                            onChanged: (inputValue) {
-                              setState(() {
-                                cardState.newMinutes = inputValue;
-                              });
-                            },
-                            value: cardState.newMinutes.toString(),
-                            items: minutesList,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 5),
-                            child: Text(':',
-                                style: TextStyle(
-                                    color: yellow,
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.w900)),
-                          ),
-                          DropdownButton(
-                            icon: Icon(Icons.arrow_drop_down, size: 0),
-                            dropdownColor: red1,
-                            onChanged: (inputValue) {
-                              setState(() {
-                                cardState.newSeconds = inputValue;
-                              });
-                            },
-                            value: cardState.newSeconds.toString(),
-                            items: secondsList,
-                          ),
-                        ]),
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        DropdownButton(
+                          icon: Icon(Icons.arrow_drop_down, size: 0),
+                          dropdownColor: red1,
+                          onChanged: (inputValue) {
+                            setState(() {
+                              cardState.newMinutes = inputValue;
+                            });
+                          },
+                          value: cardState.newMinutes.toString(),
+                          items: minutesList,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 5),
+                          child: Text(':',
+                              style: TextStyle(
+                                  color: yellow,
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.w900)),
+                        ),
+                        DropdownButton(
+                          icon: Icon(Icons.arrow_drop_down, size: 0),
+                          dropdownColor: red1,
+                          onChanged: (inputValue) {
+                            setState(() {
+                              cardState.newSeconds = inputValue;
+                            });
+                          },
+                          value: cardState.newSeconds.toString(),
+                          items: secondsList,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -530,7 +534,7 @@ class _HomeRightBarState extends State<HomeRightBar>
                           cardState.deleteCardScreen =
                               !cardState.deleteCardScreen;
                           sharedPref.remove(cardState.deleteTitle);
-//                                        CardModel.cardModelsX.removeAt(index); // todo need to update index when removed
+//                        CardModel.cardModelsX.removeAt(index); // todo need to update index when removed
                         }
                       });
                     },
@@ -620,7 +624,6 @@ class _HomeRightBarState extends State<HomeRightBar>
                     Offstage(
                       offstage: cardState.addNewScreen ||
                           CardModel.cardModelsX.length > 1,
-                      // todo add if <= 2 items
                       child: Transform.translate(
                         offset:
                             Offset(-MediaQuery.of(context).size.width * 0.3, 0),
@@ -642,13 +645,15 @@ class _HomeRightBarState extends State<HomeRightBar>
                             Offset(-MediaQuery.of(context).size.width * 0.3, 0),
                         child: Container(
                           color: red1,
-                          child: Text('Press \'✓\' to add item -->',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 25,
-                                fontWeight: FontWeight.w900,
-                                fontFamily: 'IndieFlower',
-                              )),
+                          child: Text(
+                            'Press \'✓\' to add item -->',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 25,
+                              fontWeight: FontWeight.w900,
+                              fontFamily: 'IndieFlower',
+                            ),
+                          ),
                         ),
                       ),
                     ),
