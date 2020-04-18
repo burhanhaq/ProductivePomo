@@ -490,18 +490,21 @@ class _HomeRightBarState extends State<HomeRightBar>
             Expanded(child: Container()),
             Column(
               children: [
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      print('--------------');
-                      print('cardModelsX: ${CardModel.cardModelsX.toString()}');
-                      print('--------------');
-                    });
-                  },
-                  child: Icon(
-                    Icons.grain,
-                    size: 80,
-                    color: yellow,
+                Offstage(
+                  offstage: !cardState.devMode,
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        print('--------------');
+                        print('cardModelsX: ${CardModel.cardModelsX.toString()}');
+                        print('--------------');
+                      });
+                    },
+                    child: Icon(
+                      Icons.grain,
+                      size: 80,
+                      color: yellow,
+                    ),
                   ),
                 ),
                 GestureDetector(

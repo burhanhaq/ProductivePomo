@@ -6,6 +6,7 @@ import 'models/card_model.dart';
 import 'widgets/card_tile.dart';
 
 class CardState with ChangeNotifier {
+  bool devMode = true;
   int _pageScore;
   int _pageGoal;
   int _currentIndex;

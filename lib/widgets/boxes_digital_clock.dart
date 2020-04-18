@@ -7,7 +7,8 @@ class BoxesDigitalClock extends StatefulWidget {
   final int sec;
   final AnimationController timerController;
 
-  BoxesDigitalClock({@required this.min, @required this.sec, @required this.timerController});
+  BoxesDigitalClock(
+      {@required this.min, @required this.sec, @required this.timerController});
 
   @override
   _BoxesDigitalClockState createState() => _BoxesDigitalClockState();
@@ -20,15 +21,14 @@ class _BoxesDigitalClockState extends State<BoxesDigitalClock> {
   int onesSec = 0;
 
   setTimerValues() {
-    Duration duration = Duration(
-        minutes: widget.min,
-        seconds: widget.sec) *
+    Duration duration = Duration(minutes: widget.min, seconds: widget.sec) *
         (1 - widget.timerController.value);
     tensMin = (duration.inMinutes / 10).floor() % 10;
     onesMin = duration.inMinutes % 10;
     tensSec = ((duration.inSeconds % 60) / 10).floor() % 10;
     onesSec = (duration.inSeconds % 60) % 10;
   }
+
   @override
   Widget build(BuildContext context) {
     setTimerValues();
@@ -38,9 +38,9 @@ class _BoxesDigitalClockState extends State<BoxesDigitalClock> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
-            Digit(num: tensMin, extraPadding: 0),
+            Digit(num: tensMin),
             SizedBox(width: 5),
-            Digit(num: onesMin, extraPadding: 0),
+            Digit(num: onesMin),
             SizedBox(width: 10),
             Digit(num: tensSec, extraPadding: -5),
             SizedBox(width: 5),
@@ -56,6 +56,7 @@ class Digit extends StatefulWidget {
   final int num;
   final double extraPadding;
   var boolList = [];
+
   Digit({@required this.num, this.extraPadding}) {
     boolList = getNumList(this.num);
   }
@@ -271,6 +272,7 @@ class _DigitState extends State<Digit> {
 
   @override
   Widget build(BuildContext context) {
+    double zeroPadding = 0; // useless so far
     bool zero = widget.boolList[0];
     bool one = widget.boolList[1];
     bool two = widget.boolList[2];
@@ -290,50 +292,136 @@ class _DigitState extends State<Digit> {
       children: <Widget>[
         Column(
           children: [
-            BoxContainer(isActive: zero, extraPadding: widget.extraPadding),
+            Padding(
+                padding: EdgeInsets.all(zeroPadding),
+                child: BoxContainer(
+                    isActive: zero, extraPadding: widget.extraPadding)),
             SizedBox(height: spacing),
-            BoxContainer(isActive: one, extraPadding: widget.extraPadding),
+            Padding(
+              padding: EdgeInsets.all(zeroPadding),
+              child: BoxContainer(
+                isActive: one,
+                extraPadding: widget.extraPadding,
+              ),
+            ),
             SizedBox(height: spacing),
-            BoxContainer(isActive: two, extraPadding: widget.extraPadding),
+            Padding(
+              padding: EdgeInsets.all(zeroPadding),
+              child: BoxContainer(
+                isActive: two,
+                extraPadding: widget.extraPadding,
+              ),
+            ),
             SizedBox(height: spacing),
-            BoxContainer(isActive: three, extraPadding: widget.extraPadding),
+            Padding(
+              padding: EdgeInsets.all(zeroPadding),
+              child: BoxContainer(
+                isActive: three,
+                extraPadding: widget.extraPadding,
+              ),
+            ),
             SizedBox(height: spacing),
-            BoxContainer(isActive: four, extraPadding: widget.extraPadding),
+            Padding(
+              padding: EdgeInsets.all(zeroPadding),
+              child: BoxContainer(
+                isActive: four,
+                extraPadding: widget.extraPadding,
+              ),
+            ),
           ],
         ),
         SizedBox(width: spacing),
         Column(
           children: [
-            BoxContainer(isActive: five, extraPadding: widget.extraPadding),
+            Padding(
+              padding: EdgeInsets.all(zeroPadding),
+              child: BoxContainer(
+                isActive: five,
+                extraPadding: widget.extraPadding,
+              ),
+            ),
             SizedBox(height: spacing),
-            BoxContainer(isActive: six, extraPadding: widget.extraPadding),
+            Padding(
+              padding: EdgeInsets.all(zeroPadding),
+              child: BoxContainer(
+                isActive: six,
+                extraPadding: widget.extraPadding,
+              ),
+            ),
             SizedBox(height: spacing),
-            BoxContainer(isActive: seven, extraPadding: widget.extraPadding),
+            Padding(
+              padding: EdgeInsets.all(zeroPadding),
+              child: BoxContainer(
+                isActive: seven,
+                extraPadding: widget.extraPadding,
+              ),
+            ),
             SizedBox(height: spacing),
-            BoxContainer(isActive: eighth, extraPadding: widget.extraPadding),
+            Padding(
+              padding: EdgeInsets.all(zeroPadding),
+              child: BoxContainer(
+                isActive: eighth,
+                extraPadding: widget.extraPadding,
+              ),
+            ),
             SizedBox(height: spacing),
-            BoxContainer(isActive: nine, extraPadding: widget.extraPadding),
+            Padding(
+              padding: EdgeInsets.all(zeroPadding),
+              child: BoxContainer(
+                isActive: nine,
+                extraPadding: widget.extraPadding,
+              ),
+            ),
           ],
         ),
         SizedBox(width: spacing),
         Column(
           children: [
-            BoxContainer(isActive: ten, extraPadding: widget.extraPadding),
+            Padding(
+              padding: EdgeInsets.all(zeroPadding),
+              child: BoxContainer(
+                isActive: ten,
+                extraPadding: widget.extraPadding,
+              ),
+            ),
             SizedBox(height: spacing),
-            BoxContainer(isActive: eleven, extraPadding: widget.extraPadding),
+            Padding(
+              padding: EdgeInsets.all(zeroPadding),
+              child: BoxContainer(
+                isActive: eleven,
+                extraPadding: widget.extraPadding,
+              ),
+            ),
             SizedBox(height: spacing),
-            BoxContainer(isActive: twelve, extraPadding: widget.extraPadding),
+            Padding(
+              padding: EdgeInsets.all(zeroPadding),
+              child: BoxContainer(
+                isActive: twelve,
+                extraPadding: widget.extraPadding,
+              ),
+            ),
             SizedBox(height: spacing),
-            BoxContainer(isActive: thirteen, extraPadding: widget.extraPadding),
+            Padding(
+              padding: EdgeInsets.all(zeroPadding),
+              child: BoxContainer(
+                isActive: thirteen,
+                extraPadding: widget.extraPadding,
+              ),
+            ),
             SizedBox(height: spacing),
-            BoxContainer(isActive: fourteen, extraPadding: widget.extraPadding),
+            Padding(
+              padding: EdgeInsets.all(zeroPadding),
+              child: BoxContainer(
+                isActive: fourteen,
+                extraPadding: widget.extraPadding,
+              ),
+            ),
           ],
         ),
       ],
     );
   }
 }
-
 
 class BoxContainer extends StatefulWidget {
   bool isActive;

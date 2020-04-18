@@ -22,17 +22,17 @@ class SecondScreen extends StatefulWidget {
 class _SecondScreenState extends State<SecondScreen>
     with TickerProviderStateMixin {
   SharedPref sharedPref = SharedPref();
-  var timerController;
-
+  var timerDurationController;
   var playPauseIconController;
   var playPauseIconAnimation;
-
   var verticalBarsController;
   var verticalBarsAnimation;
   var horizontalBarsController;
   var horizontalBarsAnimation;
   var backgroundOpacityController;
   var backgroundOpacityAnimation;
+  var timerScaleController;
+  var timerScaleAnimation;
 
   String prefTitle;
   int prefScore;
@@ -56,7 +56,7 @@ class _SecondScreenState extends State<SecondScreen>
   @override
   void initState() {
     super.initState();
-    timerController = AnimationController(
+    timerDurationController = AnimationController(
       vsync: this,
       duration: Duration(
         minutes: widget.cardTile.cardModel.minutes,
@@ -75,16 +75,20 @@ class _SecondScreenState extends State<SecondScreen>
 
     verticalBarsController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 900));
-    verticalBarsAnimation =
-        CurvedAnimation(parent: verticalBarsController, curve: Curves.easeInExpo);
-    horizontalBarsController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 900));
-    horizontalBarsAnimation =
-        CurvedAnimation(parent: horizontalBarsController, curve: Curves.bounceOut);
+    verticalBarsAnimation = CurvedAnimation(
+        parent: verticalBarsController, curve: Curves.easeInExpo);
+    horizontalBarsController = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 1500));
+    horizontalBarsAnimation = CurvedAnimation(
+        parent: horizontalBarsController, curve: Curves.bounceOut);
     backgroundOpacityController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 900));
-    backgroundOpacityAnimation =
-        CurvedAnimation(parent: backgroundOpacityController, curve: Curves.linear);
+    backgroundOpacityAnimation = CurvedAnimation(
+        parent: backgroundOpacityController, curve: Curves.linear);
+    timerScaleController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+    timerScaleAnimation =
+        CurvedAnimation(parent: timerScaleController, curve: Curves.bounceOut);
   }
 
   @override
@@ -95,11 +99,12 @@ class _SecondScreenState extends State<SecondScreen>
 
     loadSharedPrefs();
     int index = widget.cardTile.cardModel.index;
-    bool timerRunning = timerController.isAnimating;
+    bool timerRunning = timerDurationController.isAnimating;
     var safeAreaPadding = MediaQuery.of(context).padding.top;
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
-    return Container(color: trans,
+    return Container(
+      color: trans,
       child: SafeArea(
         child: ChangeNotifierProvider(
           create: (context) => CardState(),
@@ -109,7 +114,8 @@ class _SecondScreenState extends State<SecondScreen>
               children: <Widget>[
                 Opacity(
                   opacity: backgroundOpacityAnimation.value,
-                    child: Container(color: grey),),
+                  child: Container(color: grey),
+                ),
                 Positioned(
                   top: 0,
                   left: 0,
@@ -119,54 +125,87 @@ class _SecondScreenState extends State<SecondScreen>
                         -(height * 0.5 + safeAreaPadding) *
                             (1 - verticalBarsAnimation.value)),
                     child: Stack(
-                      alignment: Alignment.bottomCenter,
+                      alignment: Alignment.center,
                       children: <Widget>[
                         AnimatedContainer(
                           duration: Duration(milliseconds: 500),
                           height: height * (timerRunning ? 0.2 : 0.5),
                           width: width * 0.2,
-                          color: timerRunning
-                              ? Color(0xff6A5920)
-                              : Color(0xffF7CE47),
-                          child: Column(
-                            children: [
-                              FittedBox(
-                                fit: BoxFit.contain,
-                                child: Text(
-                                  prefScore == null
-                                      ? '-3'
-                                      : prefScore.toString(),
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    decoration: TextDecoration.none,
-                                  ),
-                                ),
+                          color: timerRunning ? darkYellow : yellow,
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          child: Opacity(
+                            opacity: 0.8,
+                            child: AnimatedContainer(
+                              constraints: BoxConstraints(
+                                maxHeight: height * 0.5,
                               ),
-                              Container(height: 5, width: 65, color: white),
-                              FittedBox(
-                                fit: BoxFit.contain,
-                                child: Text(
-                                  prefGoal == null ? '-3' : prefGoal.toString(),
-                                  style: TextStyle(
-                                    color: white,
-                                    decoration: TextDecoration.none,
-                                  ),
-                                ),
-                              ),
-                            ],
+                              // todo overflows when score > goal, add second AnimatedContainer maybe
+                              duration: Duration(milliseconds: 500),
+                              height: height *
+                                  (timerRunning ? 0.2 : 0.5) *
+                                  widget.cardTile.cardModel.score.toDouble() /
+                                  widget.cardTile.cardModel.goal.toDouble(),
+                              width: width * 0.2,
+                              color: Colors.green,
+                            ),
                           ),
                         ),
-                        Opacity(
-                          opacity: 0.5,
-                          child: AnimatedContainer(
-                            duration: Duration(milliseconds: 500),
-                            height: height *
-                                (timerRunning ? 0.2 : 0.5) *
-                                widget.cardTile.cardModel.score.toDouble() /
-                                widget.cardTile.cardModel.goal.toDouble(),
-                            width: width * 0.2,
-                            color: Colors.green,
+                        Positioned(
+                          top: 0,
+                          child: Opacity(
+                            opacity: 0.8,
+                            child: AnimatedContainer(
+                              constraints: BoxConstraints(
+                                maxHeight: height * (timerRunning ? 0.2 : 0.5),
+                              ),
+                              // todo overflows when score > goal, add second AnimatedContainer maybe
+                              duration: Duration(milliseconds: 500),
+                              height: height *
+                                  (timerRunning ? 0.2 : 0.5) *
+                                  (widget.cardTile.cardModel.score.toDouble() -
+                                      widget.cardTile.cardModel.goal
+                                          .toDouble()) /
+                                  widget.cardTile.cardModel.goal.toDouble(),
+                              width: width * 0.2,
+                              color: Colors.red,
+                            ),
                           ),
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            FittedBox(
+                              fit: BoxFit.contain,
+                              child: Text(
+                                prefScore == null ? '-3' : prefScore.toString(),
+                                style: TextStyle(
+                                  color: timerRunning
+                                      ? Colors.white
+                                      : Colors.black,
+                                  decoration: TextDecoration.none,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              height: 5,
+                              width: 65,
+                              color: timerRunning ? Colors.white : Colors.black,
+                            ),
+                            FittedBox(
+                              fit: BoxFit.contain,
+                              child: Text(
+                                prefGoal == null ? '-3' : prefGoal.toString(),
+                                style: TextStyle(
+                                  color: timerRunning
+                                      ? Colors.white
+                                      : Colors.black,
+                                  decoration: TextDecoration.none,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -176,11 +215,11 @@ class _SecondScreenState extends State<SecondScreen>
                   top: 0,
                   right: 0,
                   child: Transform.translate(
-                    offset:
-                        Offset(width * 0.8 * (1 - horizontalBarsAnimation.value), 0),
+                    offset: Offset(
+                        width * 0.8 * (1 - horizontalBarsAnimation.value), 0),
                     child: AnimatedContainer(
                       duration: Duration(milliseconds: 500),
-                      color: timerRunning ? Color(0xff6E2929) : red1,
+                      color: timerRunning ? darkRed : red1,
                       width: width * (timerRunning ? 0.7 : 0.8),
                       height: height * 0.2,
                       child: FittedBox(
@@ -201,12 +240,13 @@ class _SecondScreenState extends State<SecondScreen>
                   bottom: 0,
                   left: 0,
                   child: Transform.translate(
-                    offset: Offset(-width * 0.8 * (1-horizontalBarsAnimation.value), 0),
+                    offset: Offset(
+                        -width * 0.8 * (1 - horizontalBarsAnimation.value), 0),
                     child: AnimatedContainer(
                       duration: Duration(milliseconds: 500),
                       height: height * 0.5 - safeAreaPadding,
                       width: width * (timerRunning ? 0.7 : 0.8),
-                      color: timerRunning ? Color(0xff6E2929) : red1,
+                      color: timerRunning ? darkRed : red1,
                       child: Center(
                         child: Text(
                           prefTitle == null ? 'null' : prefTitle.toUpperCase(),
@@ -227,12 +267,14 @@ class _SecondScreenState extends State<SecondScreen>
                   right: 0,
                   bottom: 0,
                   child: Transform.translate(
-                    offset: Offset(0, height * 0.8 * (1-verticalBarsAnimation.value)),
+                    offset: Offset(
+                        0, height * 0.8 * (1 - verticalBarsAnimation.value)),
                     child: AnimatedContainer(
                       duration: Duration(milliseconds: 500),
-                      color: timerRunning ? Color(0xff6A5920) : Color(0xffF7CE47),
+                      color: timerRunning ? darkYellow : yellow,
                       width: width * 0.2,
-                      height: height * (timerRunning ? 0.5 : 0.8) - safeAreaPadding,
+                      height:
+                          height * (timerRunning ? 0.5 : 0.8) - safeAreaPadding,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -241,7 +283,8 @@ class _SecondScreenState extends State<SecondScreen>
                               GestureDetector(
                                 onTap: () {
                                   cardState.subtract(index);
-                                  sharedPref.save(widget.cardTile.cardModel.title,
+                                  sharedPref.save(
+                                      widget.cardTile.cardModel.title,
                                       cardState.at(index).toJson());
                                 },
                                 child: Icon(
@@ -253,7 +296,8 @@ class _SecondScreenState extends State<SecondScreen>
                               GestureDetector(
                                 onTap: () {
                                   cardState.add(index);
-                                  sharedPref.save(widget.cardTile.cardModel.title,
+                                  sharedPref.save(
+                                      widget.cardTile.cardModel.title,
                                       cardState.at(index).toJson());
                                 },
                                 child: Icon(
@@ -268,14 +312,10 @@ class _SecondScreenState extends State<SecondScreen>
                             child: AnimatedContainer(
                               duration: Duration(milliseconds: 500),
                               decoration: BoxDecoration(
-                                color: timerRunning
-                                    ? Color(0xff6A5920)
-                                    : Color(0xffF7CE47),
+                                color: timerRunning ? white : yellow,
                                 border: Border.all(
                                   width: 0,
-                                  color: timerRunning
-                                      ? Color(0xff6A5920)
-                                      : Color(0xffF7CE47),
+                                  color: timerRunning ? darkYellow : yellow,
                                 ),
                               ),
                               child: Column(
@@ -287,7 +327,7 @@ class _SecondScreenState extends State<SecondScreen>
                                     color: timerRunning ? red2 : grey,
                                     onPressed: () {
                                       print('Stop pressed');
-                                      timerController.value = 0.0;
+                                      timerDurationController.value = 0.0;
                                       playPauseIconController.reverse();
                                     },
                                   ),
@@ -296,11 +336,14 @@ class _SecondScreenState extends State<SecondScreen>
                                       if (playPauseIconController.status ==
                                           AnimationStatus.dismissed) {
                                         print('Play pressed');
-                                        timerController.forward();
+                                        timerDurationController.forward();
+                                        timerScaleController.forward();
                                         playPauseIconController.forward();
                                       } else {
                                         print('Pause pressed');
-                                        timerController.stop();
+                                        timerDurationController.stop();
+                                        timerScaleController
+                                            .reverse(); // todo doesn't do reverse curve
                                         playPauseIconController.reverse();
                                       }
                                     },
@@ -321,20 +364,23 @@ class _SecondScreenState extends State<SecondScreen>
                             size: 40,
                             color: grey,
                           ),
+                          SizedBox(height: 10),
                         ],
                       ),
                     ),
                   ),
                 ),
                 Positioned(
-                  top: height * 0.222,
+                  top: height * 0.235,
                   child: Transform.scale(
-                    scale: timerRunning ? 1 : 0.5,
+                    scale: 0.5 +
+                        (timerScaleAnimation.value) *
+                            (timerRunning ? 0.5 : 0.0),
                     child: BoxesDigitalClock(
                       // todo show it increase when page opens
                       min: widget.cardTile.cardModel.minutes,
                       sec: widget.cardTile.cardModel.seconds,
-                      timerController: timerController,
+                      timerController: timerDurationController,
                     ),
                   ),
                 ),
@@ -348,7 +394,12 @@ class _SecondScreenState extends State<SecondScreen>
 
   @override
   void dispose() {
-    timerController.dispose();
+    timerDurationController.dispose();
+    playPauseIconController.dispose();
+    verticalBarsController.dispose();
+    horizontalBarsController.dispose();
+    backgroundOpacityController.dispose();
+    timerScaleController.dispose();
     super.dispose();
   }
 }
