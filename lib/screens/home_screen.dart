@@ -250,6 +250,7 @@ class _DeleteCardSectionState extends State<DeleteCardSection> {
             children: [
               TextField(
                 enabled: cardState.addNewScreen,
+                autofocus: true,
                 style: TextStyle(
                     color: white, fontSize: 30, fontWeight: FontWeight.w600),
                 decoration: InputDecoration(
@@ -277,9 +278,14 @@ class AddNewCardSection extends StatefulWidget {
 }
 
 class _AddNewCardSectionState extends State<AddNewCardSection> {
+  TextEditingController titleTextController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     var cardState = Provider.of<CardState>(context);
+    if (cardState.isClearTitleTextEditingController) {
+      titleTextController.clear();
+      cardState.clearTitleTextEditingControllerSwitch();
+    }
     var minutesList = List.generate(
         13,
         (index) => DropdownMenuItem(
@@ -308,6 +314,8 @@ class _AddNewCardSectionState extends State<AddNewCardSection> {
 //              Text('Title', style: TextStyle(color: yellow, fontSize: 100)), // todo adding would be cool
               TextField(
                 enabled: cardState.addNewScreen,
+                controller: titleTextController,
+                autofocus: false,
                 style: TextStyle(
                   color: white,
                   fontSize: 30,
@@ -326,6 +334,7 @@ class _AddNewCardSectionState extends State<AddNewCardSection> {
               ),
               TextField(
                 enabled: cardState.addNewScreen,
+                autofocus: false,
                 keyboardType: TextInputType.numberWithOptions(decimal: false),
                 style: TextStyle(
                     color: white, fontSize: 30, fontWeight: FontWeight.w600),
@@ -567,6 +576,7 @@ class _HomeRightBarState extends State<HomeRightBar>
                                     .newTitle); // todo add animation for duplicate entry
                             if (canAddNewScreen) {
                               addNewIconController.reverse();
+                              cardState.clearTitleTextEditingControllerSwitch();
                               cardState.addToCardModelsList(
                                 CardModel(
                                   index: cardState.length,

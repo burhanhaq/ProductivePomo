@@ -19,6 +19,8 @@ class CardState with ChangeNotifier {
   String _newSeconds = '10';
   String _deleteTitle = '';
 
+  bool _isClearTitleTextEditingController = false;
+
 //  SharedPref sharedPref = SharedPref(); // todo implement this maybe to speed things up
 //  bool _onCurrentCardScreen = false;
 
@@ -34,7 +36,6 @@ class CardState with ChangeNotifier {
 
   bool get addNewScreen => _addNewScreen;
   bool get deleteCardScreen  => _deleteCardScreen;
-//  bool get progressIndicator => _progressIndicator;
 
 
   String get newTitle => _newTitle;
@@ -52,6 +53,8 @@ class CardState with ChangeNotifier {
   String get newSeconds => _newSeconds;
 
   String get deleteTitle => _deleteTitle;
+
+  bool get isClearTitleTextEditingController => _isClearTitleTextEditingController;
 
 //  bool get onCurrentCardScreen => _onCurrentCardScreen;
 
@@ -121,11 +124,6 @@ class CardState with ChangeNotifier {
     notifyListeners();
   }
 
-//  set progressIndicator(bool val) {
-//    _progressIndicator = val;
-//    notifyListeners();
-//  }
-
   set newTitle(String val) {
     _newTitle = val;
     notifyListeners();
@@ -151,14 +149,9 @@ class CardState with ChangeNotifier {
     notifyListeners();
   }
 
-//  set onCurrentCardScreen(bool val) {
-//    _onCurrentCardScreen = val;
-//    notifyListeners();
-//  }
-
-//  changeCurrentCardScreen() {
-//    _onCurrentCardScreen = !_onCurrentCardScreen;
-//    notifyListeners();
-//  }
+  void clearTitleTextEditingControllerSwitch() {
+    _isClearTitleTextEditingController = !_isClearTitleTextEditingController;
+    notifyListeners();
+  }
 
 }
