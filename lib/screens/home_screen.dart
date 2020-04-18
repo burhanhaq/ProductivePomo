@@ -23,9 +23,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   AnimationController addSectionController;
   Animation addSectionAnimation;
 
-  AnimationController deleteSectionController;
-  Animation deleteSectionAnimation;
-
   AnimationController loadingIndicatorController;
   Animation loadingIndicatorAnimation;
   AnimationStatus loadingIndicatorStatus = AnimationStatus.dismissed;
@@ -42,21 +39,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     );
     addSectionAnimation = CurvedAnimation(
       parent: addSectionController,
-      curve: Curves.easeOutBack,
-    )
-      ..addListener(() {
-        setState(() {});
-      })
-      ..addStatusListener((status) {
-        setState(() {});
-      });
-
-    deleteSectionController = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 700),
-    );
-    deleteSectionAnimation = CurvedAnimation(
-      parent: deleteSectionController,
       curve: Curves.easeOutBack,
     )
       ..addListener(() {
@@ -113,11 +95,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       addSectionController.forward();
     } else {
       addSectionController.reverse();
-    }
-    if (cardState.deleteCardScreen) {
-      deleteSectionController.forward();
-    } else {
-      deleteSectionController.reverse();
     }
 
     if (!loadingIndicatorController.isAnimating && loadingIndicator) {
@@ -191,18 +168,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                               0),
                           child: AddNewCardSection()),
                     ),
-                    Positioned(
-                      left: 0,
-                      bottom: 0,
-                      child: Transform.translate(
-                        offset: Offset(
-                            -MediaQuery.of(context).size.width *
-                                (1 - deleteSectionAnimation.value) *
-                                0.69,
-                            0),
-                        child: DeleteCardSection(),
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -219,51 +184,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   void dispose() {
     addSectionController.dispose();
-    deleteSectionController.dispose();
     super.dispose();
-  }
-}
-
-class DeleteCardSection extends StatefulWidget {
-  @override
-  _DeleteCardSectionState createState() => _DeleteCardSectionState();
-}
-
-class _DeleteCardSectionState extends State<DeleteCardSection> {
-  @override
-  Widget build(BuildContext context) {
-    var cardState = Provider.of<CardState>(context);
-    return SafeArea(
-      child: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width * 0.72,
-        color: red1,
-        child: Padding(
-          padding: EdgeInsets.only(left: 20, right: 20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextField(
-                enabled: cardState.addNewScreen,
-                autofocus: true,
-                style: TextStyle(
-                    color: white, fontSize: 30, fontWeight: FontWeight.w600),
-                decoration: InputDecoration(
-                  hintStyle: TextStyle(color: yellow),
-                  hintText: 'Name to delete',
-                  fillColor: blue,
-                ),
-                onChanged: (value) {
-                  setState(() {
-                    cardState.deleteTitle = value;
-                  });
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 }
 
@@ -517,10 +438,12 @@ class _HomeRightBarState extends State<HomeRightBar>
                 ),
                 GestureDetector(
                   onTap: () {
-                    setState(() { // todo add confirmation to delete
-                        sharedPref.remove(cardState.cardModels[cardState.selectedIndex].title);
-                        CardModel.cardModelsX.removeAt(cardState.selectedIndex);
-                        cardState.selectTile = null;
+                    setState(() {
+                      // todo add confirmation to delete
+                      sharedPref.remove(
+                          cardState.cardModels[cardState.selectedIndex].title);
+                      CardModel.cardModelsX.removeAt(cardState.selectedIndex);
+                      cardState.selectTile = null;
                     });
                   },
                   child: Icon(
@@ -547,15 +470,6 @@ class _HomeRightBarState extends State<HomeRightBar>
                           cardState.newMinutes = '30';
                           cardState.newSeconds = '10';
                           cardState.addNewScreen = !cardState.addNewScreen;
-                        } else if (!cardState.deleteCardScreen) {
-                          // todo implement delete card mode
-                          cardState.deleteCardScreen =
-                              !cardState.deleteCardScreen;
-                        } else if (cardState.deleteCardScreen) {
-                          cardState.deleteCardScreen =
-                              !cardState.deleteCardScreen;
-                          sharedPref.remove(cardState.deleteTitle);
-//                        CardModel.cardModelsX.remove(widget.cardTileList.); // todo need to update index when removed
                         }
                       });
                     },

@@ -11,7 +11,6 @@ class CardState with ChangeNotifier {
   int _pageScore;
   int _pageGoal;
 
-//  int _currentIndex;
   int _selectedIndex;
   bool _addNewScreen = false;
   bool _deleteCardScreen = false;
@@ -20,7 +19,6 @@ class CardState with ChangeNotifier {
   String _newGoal = '1';
   String _newMinutes = '30';
   String _newSeconds = '10';
-  String _deleteTitle = '';
 
   bool _isClearTitleTextEditingController = false;
 
@@ -30,8 +28,6 @@ class CardState with ChangeNotifier {
 
   int get firstPageGoal => _pageGoal;
 
-//  int get currentIndex => _currentIndex;
-
   int get length => _cardModels.length;
 
   int get selectedIndex {
@@ -39,8 +35,6 @@ class CardState with ChangeNotifier {
   }
 
   bool get addNewScreen => _addNewScreen;
-
-  bool get deleteCardScreen => _deleteCardScreen;
 
   String get newTitle => _newTitle;
 
@@ -55,8 +49,6 @@ class CardState with ChangeNotifier {
   String get newMinutes => _newMinutes;
 
   String get newSeconds => _newSeconds;
-
-  String get deleteTitle => _deleteTitle;
 
   bool get isClearTitleTextEditingController =>
       _isClearTitleTextEditingController;
@@ -75,7 +67,6 @@ class CardState with ChangeNotifier {
         goal: -11,
         seconds: -11,
         minutes: -11,
-//        index: null,
         score: -11,
       );
     }
@@ -129,11 +120,6 @@ class CardState with ChangeNotifier {
     notifyListeners();
   }
 
-  set deleteCardScreen(bool val) {
-    _deleteCardScreen = val;
-    notifyListeners();
-  }
-
   set newTitle(String val) {
     _newTitle = val;
     notifyListeners();
@@ -151,11 +137,6 @@ class CardState with ChangeNotifier {
 
   set newSeconds(String val) {
     _newSeconds = val;
-    notifyListeners();
-  }
-
-  set deleteTitle(String val) {
-    _deleteTitle = val;
     notifyListeners();
   }
 
