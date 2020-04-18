@@ -8,7 +8,6 @@ import '../widgets/card_tile.dart';
 import '../card_state.dart';
 import '../models/card_model.dart';
 import '../shared_pref.dart';
-import 'second_screen.dart';
 
 class Home extends StatefulWidget {
   static final id = 'Home';
@@ -90,7 +89,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     List<dynamic> prefCardModelList = await sharedPref.get();
     for (int i = 0; i < prefCardModelList.length; i++) {
       CardModel.cardModelsX.add(CardModel(
-        index: i,
+//        index: i,
         title: prefCardModelList[i]['title'],
         score: prefCardModelList[i]['score'],
         goal: prefCardModelList[i]['goal'],
@@ -145,18 +144,15 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 child: Stack(
                   alignment: Alignment.center,
                   children: <Widget>[
-                    Positioned(
-//                        top: 43,
-                      child: GestureDetector(
-                        onTap: () {
-                          cardState.currentIndex = null;
-                        },
-                        child: ListView(
-                          // todo add person's name above this
+                    GestureDetector(
+                      onTap: () {
+                      cardState.select = null;
+                      },
+                      child: ListView(
+                        // todo add person's name above this
 //                            shrinkWrap: true,
-                          physics: BouncingScrollPhysics(),
-                          children: cardTileList,
-                        ),
+                        physics: BouncingScrollPhysics(),
+                        children: cardTileList,
                       ),
                     ),
                     Positioned(
@@ -459,7 +455,7 @@ class _HomeRightBarState extends State<HomeRightBar>
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Offstage(
-              offstage: cardState.currentIndex == null ? true : false,
+              offstage: cardState.selected == null ? true : cardState.selected,
               child: Column(
                 children: [
                   Text(
@@ -495,9 +491,7 @@ class _HomeRightBarState extends State<HomeRightBar>
                   child: GestureDetector(
                     onTap: () {
                       setState(() {
-                        print('--------------');
                         print('cardModelsX: ${CardModel.cardModelsX.toString()}');
-                        print('--------------');
                       });
                     },
                     child: Icon(
@@ -583,7 +577,7 @@ class _HomeRightBarState extends State<HomeRightBar>
                               cardState.clearTitleTextEditingControllerSwitch();
                               cardState.addToCardModelsList(
                                 CardModel(
-                                  index: cardState.length,
+//                                  index: cardState.length,
                                   title: cardState.newTitle,
                                   score: 0,
                                   goal: int.tryParse(cardState.newGoal) == null

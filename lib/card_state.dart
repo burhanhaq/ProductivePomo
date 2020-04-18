@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pomodoro_app/shared_pref.dart';
@@ -9,7 +10,8 @@ class CardState with ChangeNotifier {
   bool devMode = true;
   int _pageScore;
   int _pageGoal;
-  int _currentIndex;
+
+//  int _currentIndex;
   bool _selected; // todo replace with index
   bool _addNewScreen = false;
   bool _deleteCardScreen = false;
@@ -29,11 +31,13 @@ class CardState with ChangeNotifier {
 
   int get firstPageGoal => _pageGoal;
 
-  int get currentIndex => _currentIndex;
+//  int get currentIndex => _currentIndex;
 
   int get length => _cardModels.length;
 
-  bool get selected => _selected;
+  bool get selected {
+    return _selected == null ? false : _selected;
+  }
 
   bool get addNewScreen => _addNewScreen;
 
@@ -67,23 +71,6 @@ class CardState with ChangeNotifier {
     notifyListeners();
   }
 
-  set currentIndex(int i) {
-    if (i == null) {
-      for (int j = 0; j < _cardModels.length; j++) {
-        _cardModels[j].selected = false;
-      }
-    } else {
-      _pageGoal = _cardModels[i].goal;
-      _pageScore = _cardModels[i].score;
-      _currentIndex = i;
-      for (int j = 0; j < _cardModels.length; j++) {
-        _cardModels[j].selected = false;
-      }
-      _cardModels[i].selected = true;
-    }
-    notifyListeners();
-  }
-
   CardModel at(int i) {
     if (i >= _cardModels.length) {
       // todo change this stupid fix
@@ -92,20 +79,21 @@ class CardState with ChangeNotifier {
         goal: -11,
         seconds: -11,
         minutes: -11,
-        index: null,
+//        index: null,
         score: -11,
       );
     }
     return _cardModels[i];
   }
 
-  void subtract(int i) {
+  void subtract(CardModel model) {
+    int i = _cardModels.indexOf(model);
     if (_cardModels[i].score > 0) --_cardModels[i].score;
     notifyListeners();
   }
 
-  void add(int i) async {
-//    sharedPref.read();
+  void add(CardModel model) async {
+    int i = _cardModels.indexOf(model);
     ++_cardModels[i].score;
     notifyListeners();
   }
@@ -114,6 +102,28 @@ class CardState with ChangeNotifier {
 
   addToCardModelsList(CardModel model) {
     _cardModels.add(model);
+    notifyListeners();
+  }
+
+  set select(CardModel model) {
+//    _selected = true;
+    int i = cardModels.indexOf(model);
+
+    if (model == null) {
+      _pageGoal = null;
+      _pageScore = null;
+      for (int j = 0; j < _cardModels.length; j++) {
+        _cardModels[j].selected = false;
+      }
+    } else {
+      _pageGoal = _cardModels[i].goal;
+      _pageScore = _cardModels[i].score;
+      for (int j = 0; j < _cardModels.length; j++) {
+        _cardModels[j].selected = false;
+      }
+      _cardModels[i].selected = true;
+    }
+    print(model.toString());
     notifyListeners();
   }
 

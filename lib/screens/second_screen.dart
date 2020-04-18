@@ -98,7 +98,8 @@ class _SecondScreenState extends State<SecondScreen>
     backgroundOpacityController.forward();
 
     loadSharedPrefs();
-    int index = widget.cardTile.cardModel.index;
+//    int index = widget.cardTile.cardModel.index;
+    String title = widget.cardTile.cardModel.title;
     bool timerRunning = timerDurationController.isAnimating;
     var safeAreaPadding = MediaQuery.of(context).padding.top;
     var width = MediaQuery.of(context).size.width;
@@ -129,7 +130,7 @@ class _SecondScreenState extends State<SecondScreen>
                       children: <Widget>[
                         AnimatedContainer(
                           duration: Duration(milliseconds: 500),
-                          height: height * (timerRunning ? 0.2 : 0.5),
+                          height: height * (timerRunning ? 0.2 : 0.5) - 10,
                           width: width * 0.2,
                           color: timerRunning ? darkYellow : yellow,
                         ),
@@ -220,7 +221,7 @@ class _SecondScreenState extends State<SecondScreen>
                     child: AnimatedContainer(
                       duration: Duration(milliseconds: 500),
                       color: timerRunning ? darkRed : red1,
-                      width: width * (timerRunning ? 0.7 : 0.8),
+                      width: width * (timerRunning ? 0.7 : 0.8) - 10,
                       height: height * 0.2,
                       child: FittedBox(
                         fit: BoxFit.contain,
@@ -245,7 +246,7 @@ class _SecondScreenState extends State<SecondScreen>
                     child: AnimatedContainer(
                       duration: Duration(milliseconds: 500),
                       height: height * 0.5 - safeAreaPadding,
-                      width: width * (timerRunning ? 0.7 : 0.8),
+                      width: width * (timerRunning ? 0.7 : 0.8) - 10,
                       color: timerRunning ? darkRed : red1,
                       child: Center(
                         child: Text(
@@ -274,7 +275,7 @@ class _SecondScreenState extends State<SecondScreen>
                       color: timerRunning ? darkYellow : yellow,
                       width: width * 0.2,
                       height:
-                          height * (timerRunning ? 0.5 : 0.8) - safeAreaPadding,
+                          height * (timerRunning ? 0.5 : 0.8) - safeAreaPadding - 10,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -282,10 +283,10 @@ class _SecondScreenState extends State<SecondScreen>
                             children: <Widget>[
                               GestureDetector(
                                 onTap: () {
-                                  cardState.subtract(index);
+                                  cardState.subtract(widget.cardTile.cardModel);
                                   sharedPref.save(
                                       widget.cardTile.cardModel.title,
-                                      cardState.at(index).toJson());
+                                      widget.cardTile.cardModel.toJson());
                                 },
                                 child: Icon(
                                   Icons.remove,
@@ -295,10 +296,10 @@ class _SecondScreenState extends State<SecondScreen>
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  cardState.add(index);
+                                  cardState.add(widget.cardTile.cardModel);
                                   sharedPref.save(
                                       widget.cardTile.cardModel.title,
-                                      cardState.at(index).toJson());
+                                      widget.cardTile.cardModel.toJson());
                                 },
                                 child: Icon(
                                   Icons.add,

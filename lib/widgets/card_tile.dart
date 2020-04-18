@@ -56,15 +56,15 @@ class _CardTileState extends State<CardTile>
   @override
   Widget build(BuildContext context) {
     final cardState = Provider.of<CardState>(context);
-    final int index = widget.cardModel.index;
+//    final int index = widget.cardModel.index;
     final String title = widget.cardModel.title;
     double screenWidth = MediaQuery.of(context).size.width;
-    bool isCardSelected = cardState.at(index).selected;
+    bool isCardSelected = widget.cardModel.selected;
     loadSharedPrefs();
     return GestureDetector(
       onHorizontalDragUpdate: (details) {
         if (details.primaryDelta < 0) {
-          cardState.currentIndex = index;
+          cardState.select = widget.cardModel;
           cardScreenController.forward(from: 0.0);
           Navigator.push(
             context,
@@ -76,9 +76,7 @@ class _CardTileState extends State<CardTile>
         }
       },
       onTap: () {
-        if (cardState.currentIndex != null && cardState.currentIndex == index) { // tapped second time
-//          cardState.tileWidget = widget;
-//          cardState.secondOffstage = false;
+        if (cardState.selected) { // tapped second time
           Navigator.push(
             context,
             SecondScreenNavigation(
@@ -87,7 +85,7 @@ class _CardTileState extends State<CardTile>
             ),
           );
         }
-        cardState.currentIndex = index;
+        cardState.select = widget.cardModel;
       },
       child: Transform.translate(
         offset: Offset(
@@ -130,7 +128,7 @@ class _CardTileState extends State<CardTile>
                     ),
                     Expanded(
                       child: Text(
-                        cardState.at(index).title.length > 12
+                        widget.cardModel.title.length > 12
                             ? title.substring(0, 12) + '..'
                             : title,
                         textAlign: TextAlign.end,
