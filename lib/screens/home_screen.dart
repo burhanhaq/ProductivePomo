@@ -89,7 +89,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     List<dynamic> prefCardModelList = await sharedPref.get();
     for (int i = 0; i < prefCardModelList.length; i++) {
       CardModel.cardModelsX.add(CardModel(
-//        index: i,
         title: prefCardModelList[i]['title'],
         score: prefCardModelList[i]['score'],
         goal: prefCardModelList[i]['goal'],
@@ -146,7 +145,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                   children: <Widget>[
                     GestureDetector(
                       onTap: () {
-                      cardState.select = null;
+                        cardState.selectTile = null;
                       },
                       child: ListView(
                         // todo add person's name above this
@@ -455,7 +454,7 @@ class _HomeRightBarState extends State<HomeRightBar>
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Offstage(
-              offstage: cardState.selected == null ? true : cardState.selected,
+              offstage: cardState.selectedIndex == null,
               child: Column(
                 children: [
                   Text(
@@ -491,7 +490,8 @@ class _HomeRightBarState extends State<HomeRightBar>
                   child: GestureDetector(
                     onTap: () {
                       setState(() {
-                        print('cardModelsX: ${CardModel.cardModelsX.toString()}');
+                        print(
+                            'cardModelsX: ${CardModel.cardModelsX.toString()}');
                       });
                     },
                     child: Icon(
@@ -511,6 +511,20 @@ class _HomeRightBarState extends State<HomeRightBar>
                   },
                   child: Icon(
                     Icons.do_not_disturb_on,
+                    size: 80,
+                    color: yellow,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    setState(() { // todo add confirmation to delete
+                        sharedPref.remove(cardState.cardModels[cardState.selectedIndex].title);
+                        CardModel.cardModelsX.removeAt(cardState.selectedIndex);
+                        cardState.selectTile = null;
+                    });
+                  },
+                  child: Icon(
+                    Icons.delete,
                     size: 80,
                     color: yellow,
                   ),
@@ -541,7 +555,7 @@ class _HomeRightBarState extends State<HomeRightBar>
                           cardState.deleteCardScreen =
                               !cardState.deleteCardScreen;
                           sharedPref.remove(cardState.deleteTitle);
-//                        CardModel.cardModelsX.removeAt(index); // todo need to update index when removed
+//                        CardModel.cardModelsX.remove(widget.cardTileList.); // todo need to update index when removed
                         }
                       });
                     },

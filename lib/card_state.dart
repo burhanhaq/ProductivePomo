@@ -12,7 +12,7 @@ class CardState with ChangeNotifier {
   int _pageGoal;
 
 //  int _currentIndex;
-  bool _selected; // todo replace with index
+  int _selectedIndex;
   bool _addNewScreen = false;
   bool _deleteCardScreen = false;
 
@@ -25,7 +25,6 @@ class CardState with ChangeNotifier {
   bool _isClearTitleTextEditingController = false;
 
 //  SharedPref sharedPref = SharedPref(); // todo implement this maybe to speed things up
-//  bool _onCurrentCardScreen = false;
 
   int get firstPageScore => _pageScore;
 
@@ -35,8 +34,8 @@ class CardState with ChangeNotifier {
 
   int get length => _cardModels.length;
 
-  bool get selected {
-    return _selected == null ? false : _selected;
+  int get selectedIndex {
+    return _selectedIndex; // todo check this
   }
 
   bool get addNewScreen => _addNewScreen;
@@ -62,16 +61,13 @@ class CardState with ChangeNotifier {
   bool get isClearTitleTextEditingController =>
       _isClearTitleTextEditingController;
 
-//  bool get onCurrentCardScreen => _onCurrentCardScreen;
-
-  List<CardModel> get cardModels => CardModel.cardModelsX;
 
   clearCardModelsList() {
-    cardModels.clear();
+    _cardModels.clear();
     notifyListeners();
   }
 
-  CardModel at(int i) {
+  CardModel at(int i) { // todo see if this is needed
     if (i >= _cardModels.length) {
       // todo change this stupid fix
       return CardModel(
@@ -98,24 +94,26 @@ class CardState with ChangeNotifier {
     notifyListeners();
   }
 
-  List<CardModel> _cardModels = CardModel.cardModelsX;
+  List<CardModel> _cardModels = CardModel.cardModelsX; // todo duplicates
+  List<CardModel> get cardModels => CardModel.cardModelsX;
 
   addToCardModelsList(CardModel model) {
     _cardModels.add(model);
     notifyListeners();
   }
 
-  set select(CardModel model) {
-//    _selected = true;
-    int i = cardModels.indexOf(model);
+  set selectTile(CardModel model) {
+    int i = _cardModels.indexOf(model);
 
     if (model == null) {
       _pageGoal = null;
       _pageScore = null;
+      _selectedIndex = null;
       for (int j = 0; j < _cardModels.length; j++) {
         _cardModels[j].selected = false;
       }
     } else {
+      _selectedIndex = i;
       _pageGoal = _cardModels[i].goal;
       _pageScore = _cardModels[i].score;
       for (int j = 0; j < _cardModels.length; j++) {
@@ -123,7 +121,6 @@ class CardState with ChangeNotifier {
       }
       _cardModels[i].selected = true;
     }
-    print(model.toString());
     notifyListeners();
   }
 

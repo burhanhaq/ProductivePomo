@@ -64,7 +64,7 @@ class _CardTileState extends State<CardTile>
     return GestureDetector(
       onHorizontalDragUpdate: (details) {
         if (details.primaryDelta < 0) {
-          cardState.select = widget.cardModel;
+          cardState.selectTile = widget.cardModel;
           cardScreenController.forward(from: 0.0);
           Navigator.push(
             context,
@@ -76,7 +76,7 @@ class _CardTileState extends State<CardTile>
         }
       },
       onTap: () {
-        if (cardState.selected) { // tapped second time
+        if (widget.cardModel.selected) { // todo tapped second time
           Navigator.push(
             context,
             SecondScreenNavigation(
@@ -85,7 +85,7 @@ class _CardTileState extends State<CardTile>
             ),
           );
         }
-        cardState.select = widget.cardModel;
+        cardState.selectTile = widget.cardModel;
       },
       child: Transform.translate(
         offset: Offset(
