@@ -71,7 +71,6 @@ class _SecondScreenState extends State<SecondScreen>
 
   @override
   Widget build(BuildContext context) {
-//    setTimerValues();
     loadSharedPrefs();
     int index = widget.cardTile.cardModel.index;
     bool timerRunning = timerController.isAnimating;
@@ -94,7 +93,7 @@ class _SecondScreenState extends State<SecondScreen>
                       AnimatedContainer(
                         duration: Duration(milliseconds: 500),
                         height: MediaQuery.of(context).size.height *
-                            (timerRunning ? 0.2 : 0.4648),
+                            (timerRunning ? 0.2 : 0.5) ,
                         width: MediaQuery.of(context).size.width * 0.2,
                         color: timerRunning ? grey2 : yellow,
                         child: Column(
@@ -105,7 +104,6 @@ class _SecondScreenState extends State<SecondScreen>
                                 prefScore == null ? '-3' : prefScore.toString(),
                                 style: TextStyle(
                                   color: Colors.white,
-//                                fontSize: 50,
                                   decoration: TextDecoration.none,
                                 ),
                               ),
@@ -117,7 +115,6 @@ class _SecondScreenState extends State<SecondScreen>
                                 prefGoal == null ? '-3' : prefGoal.toString(),
                                 style: TextStyle(
                                   color: white,
-//                                fontSize: 50,
                                   decoration: TextDecoration.none,
                                 ),
                               ),
@@ -130,7 +127,7 @@ class _SecondScreenState extends State<SecondScreen>
                         child: AnimatedContainer(
                           duration: Duration(milliseconds: 500),
                           height: MediaQuery.of(context).size.height *
-                              (timerRunning ? 0.2 : 0.4648) *
+                              (timerRunning ? 0.2 : 0.5) *
                               widget.cardTile.cardModel.score.toDouble() / widget.cardTile.cardModel.goal.toDouble(),
                           width: MediaQuery.of(context).size.width * 0.2,
                           color: Colors.green,
