@@ -150,14 +150,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                       ),
                     ),
                     Positioned(
-                      right: 0,
-                      child: Container(
-                        height: MediaQuery.of(context).size.height,
-                        width: MediaQuery.of(context).size.width * 0.03,
-                        color: yellow,
-                      ),
-                    ),
-                    Positioned(
                       left: 0,
                       bottom: 0,
                       child: Transform.translate(
@@ -169,6 +161,14 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                           child: AddNewCardSection()),
                     ),
                   ],
+                ),
+              ),
+              Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width * 0.03,
+                decoration: BoxDecoration(
+                  color: yellow,
+                  border: Border.all(width: 0, color: yellow),
                 ),
               ),
               HomeRightBar(
@@ -436,47 +436,54 @@ class _HomeRightBarState extends State<HomeRightBar>
                     color: yellow,
                   ),
                 ),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      // todo add confirmation to delete
-                      sharedPref.remove(
-                          cardState.cardModels[cardState.selectedIndex].title);
-                      CardModel.cardModelsX.removeAt(cardState.selectedIndex);
-                      cardState.selectTile = null;
-                    });
-                  },
-                  child: Icon(
-                    Icons.delete,
-                    size: 80,
-                    color: yellow,
-                  ),
-                ),
-                Transform.rotate(
-                  angle: math.pi * closeIconAnimation.value,
+                Offstage(
+                  offstage: cardState.selectedIndex == null,
                   child: GestureDetector(
                     onTap: () {
-                      // todo implement clearing text fields when hit
                       setState(() {
-                        addNewIconController.reverse();
-                        if (closeIconController.isCompleted) {
-                          closeIconController.reverse();
-                        } else {
-                          closeIconController.forward();
-                        }
-                        if (cardState.addNewScreen) {
-                          cardState.newTitle = '';
-                          cardState.newGoal = '';
-                          cardState.newMinutes = '30';
-                          cardState.newSeconds = '10';
-                          cardState.addNewScreen = !cardState.addNewScreen;
-                        }
+                        // todo add confirmation to delete
+                        // todo add scale transition
+                        sharedPref.remove(
+                            cardState.cardModels[cardState.selectedIndex].title);
+                        CardModel.cardModelsX.removeAt(cardState.selectedIndex);
+                        cardState.selectTile = null;
                       });
                     },
                     child: Icon(
-                      Icons.close,
+                      Icons.delete,
                       size: 80,
                       color: yellow,
+                    ),
+                  ),
+                ),
+                Offstage( // todo add scale transition/size transition
+                  offstage: !cardState.addNewScreen,
+                  child: Transform.rotate(
+                    angle: math.pi * closeIconAnimation.value,
+                    child: GestureDetector(
+                      onTap: () {
+                        // todo implement clearing text fields when hit
+                        setState(() {
+                          addNewIconController.reverse();
+                          if (cardState.addNewScreen) {
+                            if (closeIconController.isCompleted) {
+                              closeIconController.reverse();
+                            } else {
+                              closeIconController.forward();
+                            }
+                            cardState.newTitle = '';
+                            cardState.newGoal = '';
+                            cardState.newMinutes = '30';
+                            cardState.newSeconds = '10';
+                            cardState.addNewScreen = !cardState.addNewScreen;
+                          }
+                        });
+                      },
+                      child: Icon(
+                        Icons.close,
+                        size: 80,
+                        color: yellow,
+                      ),
                     ),
                   ),
                 ),

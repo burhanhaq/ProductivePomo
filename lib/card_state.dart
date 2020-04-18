@@ -13,9 +13,8 @@ class CardState with ChangeNotifier {
 
   int _selectedIndex;
   bool _addNewScreen = false;
-  bool _deleteCardScreen = false;
 
-  String _newTitle = '';
+  String _newTitle = ''; // todo add to init perhaps
   String _newGoal = '1';
   String _newMinutes = '30';
   String _newSeconds = '10';
@@ -60,16 +59,16 @@ class CardState with ChangeNotifier {
   }
 
   CardModel at(int i) { // todo see if this is needed
-    if (i >= _cardModels.length) {
-      // todo change this stupid fix
-      return CardModel(
-        title: 'Dummy Model',
-        goal: -11,
-        seconds: -11,
-        minutes: -11,
-        score: -11,
-      );
-    }
+//    if (i >= _cardModels.length) {
+//      // todo change this stupid fix
+//      return CardModel(
+//        title: 'Dummy Model',
+//        goal: -11,
+//        seconds: -11,
+//        minutes: -11,
+//        score: -11,
+//      );
+//    }
     return _cardModels[i];
   }
 

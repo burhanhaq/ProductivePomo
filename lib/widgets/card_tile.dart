@@ -56,7 +56,6 @@ class _CardTileState extends State<CardTile>
   @override
   Widget build(BuildContext context) {
     final cardState = Provider.of<CardState>(context);
-//    final int index = widget.cardModel.index;
     final String title = widget.cardModel.title;
     double screenWidth = MediaQuery.of(context).size.width;
     bool isCardSelected = widget.cardModel.selected;
@@ -76,7 +75,7 @@ class _CardTileState extends State<CardTile>
         }
       },
       onTap: () {
-        if (widget.cardModel.selected) { // todo tapped second time
+        if (widget.cardModel.selected) { // tapped second time
           Navigator.push(
             context,
             SecondScreenNavigation(
@@ -95,19 +94,19 @@ class _CardTileState extends State<CardTile>
             0),
         child: AnimatedContainer(
           duration: Duration(milliseconds: 200),
-          margin: EdgeInsets.fromLTRB(20.0, 20.0, 0.0, 0.0),
+          margin: EdgeInsets.fromLTRB(screenWidth * 0.07, 20.0, 0.0, 0.0),
           curve: Curves.fastOutSlowIn,
           width: double.infinity,
           height: isCardSelected ? 200 : 100,
           decoration: BoxDecoration(
             color: isCardSelected ? red1 : yellow,
             borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(10),
-              topLeft: Radius.circular(10),
+              bottomLeft: Radius.circular(3),
+              topLeft: Radius.circular(3),
             ),
           ),
           child: Padding(
-            padding: EdgeInsets.only(bottom: 5),
+            padding: EdgeInsets.only(bottom: 10, right: 10),
             child: Column(
               mainAxisAlignment: isCardSelected
                   ? MainAxisAlignment.spaceBetween
@@ -138,8 +137,6 @@ class _CardTileState extends State<CardTile>
                             : kLabel,
                       ),
                     ),
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.05),
-//                    SizedBox(width: 20.0),
                   ],
                 ),
                 Offstage(
