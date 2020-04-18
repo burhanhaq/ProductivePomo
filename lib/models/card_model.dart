@@ -7,7 +7,6 @@ class CardModel {
   String title;
   int score;
   int goal;
-//  Duration duration;
   int minutes;
   int seconds;
   bool selected; // todo change to int selected
@@ -17,7 +16,6 @@ class CardModel {
     @required this.title,
     @required this.score,
     @required this.goal,
-//    @required this.duration,
     @required this.minutes,
     @required this.seconds,
     this.selected = false,

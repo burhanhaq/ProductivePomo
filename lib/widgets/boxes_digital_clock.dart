@@ -32,7 +32,6 @@ class _BoxesDigitalClockState extends State<BoxesDigitalClock> {
   @override
   Widget build(BuildContext context) {
     setTimerValues();
-//    print(12/MediaQuery.of(context).size.width);
     return Wrap(
       children: <Widget>[
         Row(
@@ -43,16 +42,6 @@ class _BoxesDigitalClockState extends State<BoxesDigitalClock> {
             SizedBox(width: 5),
             Digit(num: onesMin, extraPadding: 0),
             SizedBox(width: 10),
-//        Padding(
-//          padding: EdgeInsets.symmetric(horizontal: 5),
-//          child: Column(
-//            children: <Widget>[
-//              Container(width: 5, height: 15, color: white),
-//              SizedBox(height: 10),
-//              Container(width: 5, height: 15, color: white),
-//            ],
-//          ),
-//        ),
             Digit(num: tensSec, extraPadding: -5),
             SizedBox(width: 5),
             Digit(num: onesSec, extraPadding: -5),

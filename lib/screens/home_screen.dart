@@ -8,6 +8,7 @@ import '../widgets/card_tile.dart';
 import '../card_state.dart';
 import '../models/card_model.dart';
 import '../shared_pref.dart';
+import 'second_screen.dart';
 
 class Home extends StatefulWidget {
   static final id = 'Home';
@@ -136,85 +137,84 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
     return SafeArea(
       child: Material(
-        child: Scaffold(
-          body: Container(
-            color: Theme.of(context).accentColor,
-            child: Row(
-              children: <Widget>[
-                Flexible(
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: <Widget>[
-                      Positioned(
+        child: Container(
+          color: Theme.of(context).accentColor,
+          child: Row(
+            children: <Widget>[
+              Flexible(
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: <Widget>[
+                    Positioned(
 //                        top: 43,
-                        child: GestureDetector(
-                          onTap: () {
-                            cardState.currentIndex = null;
-                          },
-                          child: ListView( // todo add person's name above this
+                      child: GestureDetector(
+                        onTap: () {
+                          cardState.currentIndex = null;
+                        },
+                        child: ListView(
+                          // todo add person's name above this
 //                            shrinkWrap: true,
-                            physics: BouncingScrollPhysics(),
-                            children: cardTileList,
-                          ),
+                          physics: BouncingScrollPhysics(),
+                          children: cardTileList,
                         ),
                       ),
-                      Positioned(
-                        top: 150,
-                        left: 0,
-                        right: 0,
-                        child: Transform.scale(
-                          scale: loadingIndicator
-                              ? 2 * loadingIndicatorAnimation.value
-                              : 0,
-                          child: Container(
-                            height: 15,
-                            width: 15,
-                            decoration: BoxDecoration(
-                              color: yellow,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        right: 0,
+                    ),
+                    Positioned(
+                      top: 150,
+                      left: 0,
+                      right: 0,
+                      child: Transform.scale(
+                        scale: loadingIndicator
+                            ? 2 * loadingIndicatorAnimation.value
+                            : 0,
                         child: Container(
-                          height: MediaQuery.of(context).size.height,
-                          width: MediaQuery.of(context).size.width * 0.03,
-                          color: yellow,
+                          height: 15,
+                          width: 15,
+                          decoration: BoxDecoration(
+                            color: yellow,
+                            shape: BoxShape.circle,
+                          ),
                         ),
                       ),
-                      Positioned(
-                        left: 0,
-                        bottom: 0,
-                        child: Transform.translate(
-                            offset: Offset(
-                                -MediaQuery.of(context).size.width *
-                                    (1 - addSectionAnimation.value) *
-                                    0.69,
-                                0),
-                            child: AddNewCardSection()),
+                    ),
+                    Positioned(
+                      right: 0,
+                      child: Container(
+                        height: MediaQuery.of(context).size.height,
+                        width: MediaQuery.of(context).size.width * 0.03,
+                        color: yellow,
                       ),
-                      Positioned(
-                        left: 0,
-                        bottom: 0,
-                        child: Transform.translate(
+                    ),
+                    Positioned(
+                      left: 0,
+                      bottom: 0,
+                      child: Transform.translate(
                           offset: Offset(
                               -MediaQuery.of(context).size.width *
-                                  (1 - deleteSectionAnimation.value) *
+                                  (1 - addSectionAnimation.value) *
                                   0.69,
                               0),
-                          child: DeleteCardSection(),
-                        ),
+                          child: AddNewCardSection()),
+                    ),
+                    Positioned(
+                      left: 0,
+                      bottom: 0,
+                      child: Transform.translate(
+                        offset: Offset(
+                            -MediaQuery.of(context).size.width *
+                                (1 - deleteSectionAnimation.value) *
+                                0.69,
+                            0),
+                        child: DeleteCardSection(),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                HomeRightBar(
-                  cardTileList: cardTileList,
-                ),
-              ],
-            ),
+              ),
+              HomeRightBar(
+                cardTileList: cardTileList,
+              ),
+            ],
           ),
         ),
       ),
@@ -279,6 +279,7 @@ class AddNewCardSection extends StatefulWidget {
 
 class _AddNewCardSectionState extends State<AddNewCardSection> {
   TextEditingController titleTextController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     var cardState = Provider.of<CardState>(context);

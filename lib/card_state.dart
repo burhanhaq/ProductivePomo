@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pomodoro_app/shared_pref.dart';
 
 import 'models/card_model.dart';
+import 'widgets/card_tile.dart';
 
 class CardState with ChangeNotifier {
   int _pageScore;
@@ -11,7 +12,6 @@ class CardState with ChangeNotifier {
   bool _selected; // todo replace with index
   bool _addNewScreen = false;
   bool _deleteCardScreen = false;
-//  bool _progressIndicator = true;
 
   String _newTitle = '';
   String _newGoal = '1';
@@ -35,8 +35,8 @@ class CardState with ChangeNotifier {
   bool get selected => _selected;
 
   bool get addNewScreen => _addNewScreen;
-  bool get deleteCardScreen  => _deleteCardScreen;
 
+  bool get deleteCardScreen => _deleteCardScreen;
 
   String get newTitle => _newTitle;
 
@@ -54,7 +54,8 @@ class CardState with ChangeNotifier {
 
   String get deleteTitle => _deleteTitle;
 
-  bool get isClearTitleTextEditingController => _isClearTitleTextEditingController;
+  bool get isClearTitleTextEditingController =>
+      _isClearTitleTextEditingController;
 
 //  bool get onCurrentCardScreen => _onCurrentCardScreen;
 
@@ -83,7 +84,8 @@ class CardState with ChangeNotifier {
   }
 
   CardModel at(int i) {
-    if (i >= _cardModels.length) { // todo change this stupid fix
+    if (i >= _cardModels.length) {
+      // todo change this stupid fix
       return CardModel(
         title: 'Dummy Model',
         goal: -11,
@@ -153,5 +155,4 @@ class CardState with ChangeNotifier {
     _isClearTitleTextEditingController = !_isClearTitleTextEditingController;
     notifyListeners();
   }
-
 }

@@ -11,7 +11,7 @@ import '../models/card_model.dart';
 import '../screen_navigation/second_screen_navigation.dart';
 
 class CardTile extends StatefulWidget {
-  CardModel cardModel;
+  final CardModel cardModel;
 
   CardTile({@required this.cardModel});
 
@@ -19,14 +19,11 @@ class CardTile extends StatefulWidget {
   _CardTileState createState() => _CardTileState();
 }
 
-enum Position { None, Left, Right }
-
 class _CardTileState extends State<CardTile>
     with SingleTickerProviderStateMixin {
   AnimationController cardScreenController;
   Animation cardScreenAnimation;
 
-//  AnimationStatus screenChangeStatus = AnimationStatus.completed;
   SharedPref sharedPref = SharedPref();
   int prefScore;
 
@@ -40,9 +37,6 @@ class _CardTileState extends State<CardTile>
           ..addListener(() {
             setState(() {});
           });
-//          ..addStatusListener((status) {
-//            screenChangeStatus = status;
-//          });
   }
 
   loadSharedPrefs() async {
@@ -83,6 +77,8 @@ class _CardTileState extends State<CardTile>
       },
       onTap: () {
         if (cardState.currentIndex != null && cardState.currentIndex == index) { // tapped second time
+//          cardState.tileWidget = widget;
+//          cardState.secondOffstage = false;
           Navigator.push(
             context,
             SecondScreenNavigation(

@@ -21,8 +21,8 @@ class App extends StatelessWidget {
       routes: {
         Home.id: (context) => ChangeNotifierProvider(
             create: (context) => CardState(), child: Home()),
-        SecondScreen.id: (context) => ChangeNotifierProvider(
-            create: (context) => CardState(), child: SecondScreen()),
+//        SecondScreen.id: (context) => ChangeNotifierProvider(
+//            create: (context) => CardState(), child: SecondScreen()),
       },
     );
   }

@@ -1,11 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'dart:math' as math;
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants.dart';
-import '../widgets/clock.dart';
 import '../card_state.dart';
 import '../widgets/card_tile.dart';
 import '../shared_pref.dart';
@@ -30,6 +27,13 @@ class _SecondScreenState extends State<SecondScreen>
   var playPauseIconController;
   var playPauseIconAnimation;
 
+  var verticalBarsController;
+  var verticalBarsAnimation;
+  var horizontalBarsController;
+  var horizontalBarsAnimation;
+  var backgroundOpacityController;
+  var backgroundOpacityAnimation;
+
   String prefTitle;
   int prefScore;
   int prefGoal;
@@ -45,6 +49,7 @@ class _SecondScreenState extends State<SecondScreen>
       });
     } catch (Exception) {
       print('Exception in SecondScreen');
+      print(Exception.toString());
     }
   }
 
@@ -67,219 +72,262 @@ class _SecondScreenState extends State<SecondScreen>
       curve: Curves.bounceIn,
       parent: playPauseIconController,
     );
+
+    verticalBarsController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 900));
+    verticalBarsAnimation =
+        CurvedAnimation(parent: verticalBarsController, curve: Curves.easeInExpo);
+    horizontalBarsController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 900));
+    horizontalBarsAnimation =
+        CurvedAnimation(parent: horizontalBarsController, curve: Curves.bounceOut);
+    backgroundOpacityController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 900));
+    backgroundOpacityAnimation =
+        CurvedAnimation(parent: backgroundOpacityController, curve: Curves.linear);
   }
 
   @override
   Widget build(BuildContext context) {
+    verticalBarsController.forward();
+    horizontalBarsController.forward();
+    backgroundOpacityController.forward();
+
     loadSharedPrefs();
     int index = widget.cardTile.cardModel.index;
     bool timerRunning = timerController.isAnimating;
     var safeAreaPadding = MediaQuery.of(context).padding.top;
-    return SafeArea(
-      child: ChangeNotifierProvider(
-        create: (context) => CardState(),
-        child: Consumer<CardState>(
-          builder: (context, cardState, _) => Container(
-            color: grey,
-            child: Stack(
+    var width = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
+    return Container(color: trans,
+      child: SafeArea(
+        child: ChangeNotifierProvider(
+          create: (context) => CardState(),
+          child: Consumer<CardState>(
+            builder: (context, cardState, _) => Stack(
               alignment: Alignment.center,
               children: <Widget>[
+                Opacity(
+                  opacity: backgroundOpacityAnimation.value,
+                    child: Container(color: grey),),
                 Positioned(
                   top: 0,
                   left: 0,
-                  child: Stack(
-                    alignment: Alignment.bottomCenter,
-                    children: <Widget>[
-                      AnimatedContainer(
-                        duration: Duration(milliseconds: 500),
-                        height: MediaQuery.of(context).size.height *
-                            (timerRunning ? 0.2 : 0.5) ,
-                        width: MediaQuery.of(context).size.width * 0.2,
-                        color: timerRunning ? Color(0xff6A5920) : Color(0xffF7CE47),
-                        child: Column(
-                          children: [
-                            FittedBox(
-                              fit: BoxFit.contain,
-                              child: Text(
-                                prefScore == null ? '-3' : prefScore.toString(),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  decoration: TextDecoration.none,
-                                ),
-                              ),
-                            ),
-                            Container(height: 5, width: 65, color: white),
-                            FittedBox(
-                              fit: BoxFit.contain,
-                              child: Text(
-                                prefGoal == null ? '-3' : prefGoal.toString(),
-                                style: TextStyle(
-                                  color: white,
-                                  decoration: TextDecoration.none,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Opacity(
-                        opacity: 0.5,
-                        child: AnimatedContainer(
+                  child: Transform.translate(
+                    offset: Offset(
+                        0,
+                        -(height * 0.5 + safeAreaPadding) *
+                            (1 - verticalBarsAnimation.value)),
+                    child: Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: <Widget>[
+                        AnimatedContainer(
                           duration: Duration(milliseconds: 500),
-                          height: MediaQuery.of(context).size.height *
-                              (timerRunning ? 0.2 : 0.5) *
-                              widget.cardTile.cardModel.score.toDouble() / widget.cardTile.cardModel.goal.toDouble(),
-                          width: MediaQuery.of(context).size.width * 0.2,
-                          color: Colors.green,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: AnimatedContainer(
-                    duration: Duration(milliseconds: 500),
-                    color: timerRunning ? Color(0xff6E2929) : red1,
-                    width: MediaQuery.of(context).size.width *
-                        (timerRunning ? 0.7 : 0.8),
-                    height: MediaQuery.of(context).size.height * 0.2,
-                    child: FittedBox(
-                      fit: BoxFit.contain,
-                      child: Text(
-                        'Alex',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'IndieFlower',
-                          decoration: TextDecoration.none,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  child: AnimatedContainer(
-                    duration: Duration(milliseconds: 500),
-                    height: MediaQuery.of(context).size.height * 0.5,
-                    width: MediaQuery.of(context).size.width *
-                        (timerRunning ? 0.7 : 0.8),
-                    color: timerRunning ? Color(0xff6E2929) : red1,
-                    child: Center(
-                      child: Text(
-                        prefTitle == null ? 'null' : prefTitle.toUpperCase(),
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-//                      textAlign: TextAlign.end,
-                        style: TextStyle(
-                          letterSpacing: 2,
-                          fontSize: 20,
-                          color: Colors.white,
-                          decoration: TextDecoration.none,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  right: 0,
-                  bottom: 0,
-                  child: AnimatedContainer(
-                    duration: Duration(milliseconds: 500),
-                    color: timerRunning ? Color(0xff6A5920) : Color(0xffF7CE47),
-                    width: MediaQuery.of(context).size.width * 0.2,
-                    height: MediaQuery.of(context).size.height *
-                        (timerRunning ? 0.5 : 0.7658),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Column(
-                          children: <Widget>[
-                            GestureDetector(
-                              onTap: () {
-                                cardState.subtract(index);
-                                sharedPref.save(widget.cardTile.cardModel.title,
-                                    cardState.at(index).toJson());
-                              },
-                              child: Icon(
-                                Icons.remove,
-                                size: 40,
-                                color: grey,
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                cardState.add(index);
-                                sharedPref.save(widget.cardTile.cardModel.title,
-                                    cardState.at(index).toJson());
-                              },
-                              child: Icon(
-                                Icons.add,
-                                size: 40,
-                                color: grey,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Material(
-                          child: AnimatedContainer(
-                            duration: Duration(milliseconds: 500),
-                            decoration: BoxDecoration(
-                              color: timerRunning ? Color(0xff6A5920) : Color(0xffF7CE47),
-                              border: Border.all(width: 0,
-                              color: timerRunning ? Color(0xff6A5920) : Color(0xffF7CE47),),
-                            ),
-                            child: Column(
-                              children: [
-                                IconButton(
-                                  // todo: program it to be disabled if at 0 I guess
-                                  icon: Icon(Icons.replay),
-                                  iconSize: 60,
-                                  color: timerRunning ? red2 : grey,
-                                  onPressed: () {
-                                    print('Stop pressed');
-                                    timerController.value = 0.0;
-                                    playPauseIconController.reverse();
-                                  },
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    if (playPauseIconController.status ==
-                                        AnimationStatus.dismissed) {
-                                      print('Play pressed');
-                                      timerController.forward();
-                                      playPauseIconController.forward();
-                                    } else {
-                                      print('Pause pressed');
-                                      timerController.stop();
-                                      playPauseIconController.reverse();
-                                    }
-                                  },
-                                  child: AnimatedIcon(
-                                    icon: AnimatedIcons.play_pause,
-                                    progress: playPauseIconAnimation,
-                                    size: 60,
-                                    color: timerRunning ? red2 : grey,
+                          height: height * (timerRunning ? 0.2 : 0.5),
+                          width: width * 0.2,
+                          color: timerRunning
+                              ? Color(0xff6A5920)
+                              : Color(0xffF7CE47),
+                          child: Column(
+                            children: [
+                              FittedBox(
+                                fit: BoxFit.contain,
+                                child: Text(
+                                  prefScore == null
+                                      ? '-3'
+                                      : prefScore.toString(),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    decoration: TextDecoration.none,
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                              Container(height: 5, width: 65, color: white),
+                              FittedBox(
+                                fit: BoxFit.contain,
+                                child: Text(
+                                  prefGoal == null ? '-3' : prefGoal.toString(),
+                                  style: TextStyle(
+                                    color: white,
+                                    decoration: TextDecoration.none,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        SizedBox(height: MediaQuery.of(context).size.height * 0.1),
-                        Icon(
-                          Icons.settings,
-                          size: 40,
-                          color: grey,
+                        Opacity(
+                          opacity: 0.5,
+                          child: AnimatedContainer(
+                            duration: Duration(milliseconds: 500),
+                            height: height *
+                                (timerRunning ? 0.2 : 0.5) *
+                                widget.cardTile.cardModel.score.toDouble() /
+                                widget.cardTile.cardModel.goal.toDouble(),
+                            width: width * 0.2,
+                            color: Colors.green,
+                          ),
                         ),
                       ],
                     ),
                   ),
                 ),
                 Positioned(
-                  top: MediaQuery.of(context).size.height * 0.222,
+                  top: 0,
+                  right: 0,
+                  child: Transform.translate(
+                    offset:
+                        Offset(width * 0.8 * (1 - horizontalBarsAnimation.value), 0),
+                    child: AnimatedContainer(
+                      duration: Duration(milliseconds: 500),
+                      color: timerRunning ? Color(0xff6E2929) : red1,
+                      width: width * (timerRunning ? 0.7 : 0.8),
+                      height: height * 0.2,
+                      child: FittedBox(
+                        fit: BoxFit.contain,
+                        child: Text(
+                          'Alex',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'IndieFlower',
+                            decoration: TextDecoration.none,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  child: Transform.translate(
+                    offset: Offset(-width * 0.8 * (1-horizontalBarsAnimation.value), 0),
+                    child: AnimatedContainer(
+                      duration: Duration(milliseconds: 500),
+                      height: height * 0.5 - safeAreaPadding,
+                      width: width * (timerRunning ? 0.7 : 0.8),
+                      color: timerRunning ? Color(0xff6E2929) : red1,
+                      child: Center(
+                        child: Text(
+                          prefTitle == null ? 'null' : prefTitle.toUpperCase(),
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            letterSpacing: 2,
+                            fontSize: 20,
+                            color: Colors.white,
+                            decoration: TextDecoration.none,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  right: 0,
+                  bottom: 0,
+                  child: Transform.translate(
+                    offset: Offset(0, height * 0.8 * (1-verticalBarsAnimation.value)),
+                    child: AnimatedContainer(
+                      duration: Duration(milliseconds: 500),
+                      color: timerRunning ? Color(0xff6A5920) : Color(0xffF7CE47),
+                      width: width * 0.2,
+                      height: height * (timerRunning ? 0.5 : 0.8) - safeAreaPadding,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Column(
+                            children: <Widget>[
+                              GestureDetector(
+                                onTap: () {
+                                  cardState.subtract(index);
+                                  sharedPref.save(widget.cardTile.cardModel.title,
+                                      cardState.at(index).toJson());
+                                },
+                                child: Icon(
+                                  Icons.remove,
+                                  size: 40,
+                                  color: grey,
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  cardState.add(index);
+                                  sharedPref.save(widget.cardTile.cardModel.title,
+                                      cardState.at(index).toJson());
+                                },
+                                child: Icon(
+                                  Icons.add,
+                                  size: 40,
+                                  color: grey,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Material(
+                            child: AnimatedContainer(
+                              duration: Duration(milliseconds: 500),
+                              decoration: BoxDecoration(
+                                color: timerRunning
+                                    ? Color(0xff6A5920)
+                                    : Color(0xffF7CE47),
+                                border: Border.all(
+                                  width: 0,
+                                  color: timerRunning
+                                      ? Color(0xff6A5920)
+                                      : Color(0xffF7CE47),
+                                ),
+                              ),
+                              child: Column(
+                                children: [
+                                  IconButton(
+                                    // todo: program it to be disabled if at 0 I guess
+                                    icon: Icon(Icons.replay),
+                                    iconSize: 60,
+                                    color: timerRunning ? red2 : grey,
+                                    onPressed: () {
+                                      print('Stop pressed');
+                                      timerController.value = 0.0;
+                                      playPauseIconController.reverse();
+                                    },
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      if (playPauseIconController.status ==
+                                          AnimationStatus.dismissed) {
+                                        print('Play pressed');
+                                        timerController.forward();
+                                        playPauseIconController.forward();
+                                      } else {
+                                        print('Pause pressed');
+                                        timerController.stop();
+                                        playPauseIconController.reverse();
+                                      }
+                                    },
+                                    child: AnimatedIcon(
+                                      icon: AnimatedIcons.play_pause,
+                                      progress: playPauseIconAnimation,
+                                      size: 60,
+                                      color: timerRunning ? red2 : grey,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: height * 0.05),
+                          Icon(
+                            Icons.settings,
+                            size: 40,
+                            color: grey,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: height * 0.222,
                   child: Transform.scale(
                     scale: timerRunning ? 1 : 0.5,
                     child: BoxesDigitalClock(
