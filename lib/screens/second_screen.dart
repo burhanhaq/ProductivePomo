@@ -75,6 +75,7 @@ class _SecondScreenState extends State<SecondScreen>
     loadSharedPrefs();
     int index = widget.cardTile.cardModel.index;
     bool timerRunning = timerController.isAnimating;
+    var safeAreaPadding = MediaQuery.of(context).padding.top;
     return SafeArea(
       child: ChangeNotifierProvider(
         create: (context) => CardState(),
@@ -98,21 +99,27 @@ class _SecondScreenState extends State<SecondScreen>
                         color: timerRunning ? grey2 : yellow,
                         child: Column(
                           children: [
-                            Text(
-                              prefScore == null ? '-3' : prefScore.toString(),
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 50,
-                                decoration: TextDecoration.none,
+                            FittedBox(
+                              fit: BoxFit.contain,
+                              child: Text(
+                                prefScore == null ? '-3' : prefScore.toString(),
+                                style: TextStyle(
+                                  color: Colors.white,
+//                                fontSize: 50,
+                                  decoration: TextDecoration.none,
+                                ),
                               ),
                             ),
-                            Container(height: 5, width: 80, color: white),
-                            Text(
-                              prefGoal == null ? '-3' : prefGoal.toString(),
-                              style: TextStyle(
-                                color: white,
-                                fontSize: 50,
-                                decoration: TextDecoration.none,
+                            Container(height: 5, width: 65, color: white),
+                            FittedBox(
+                              fit: BoxFit.contain,
+                              child: Text(
+                                prefGoal == null ? '-3' : prefGoal.toString(),
+                                style: TextStyle(
+                                  color: white,
+//                                fontSize: 50,
+                                  decoration: TextDecoration.none,
+                                ),
                               ),
                             ),
                           ],

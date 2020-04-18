@@ -14,7 +14,7 @@ class CardState with ChangeNotifier {
 //  bool _progressIndicator = true;
 
   String _newTitle = '';
-  String _newGoal = '0';
+  String _newGoal = '1';
   String _newMinutes = '30';
   String _newSeconds = '10';
   String _deleteTitle = '';
@@ -41,7 +41,7 @@ class CardState with ChangeNotifier {
 
   String get newGoal {
     if (_newGoal == '') {
-      _newGoal = '0';
+      _newGoal = '1';
       notifyListeners();
     }
     return _newGoal;
