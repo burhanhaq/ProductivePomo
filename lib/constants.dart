@@ -36,3 +36,6 @@ const Color red3 = Color(0xff400303);
 const Color blue = Colors.blue;
 const Color white = Colors.white;
 const Color trans = Colors.transparent;
+const Color pink = Color(0xff85203b);
+const Color orange = Color(0xffff9f68);
+const Color darkPurple = Color(0xff492540);

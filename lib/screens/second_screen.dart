@@ -95,7 +95,7 @@ class _SecondScreenState extends State<SecondScreen>
                         height: MediaQuery.of(context).size.height *
                             (timerRunning ? 0.2 : 0.5) ,
                         width: MediaQuery.of(context).size.width * 0.2,
-                        color: timerRunning ? grey2 : yellow,
+                        color: timerRunning ? Color(0xff6A5920) : Color(0xffF7CE47),
                         child: Column(
                           children: [
                             FittedBox(
@@ -141,7 +141,7 @@ class _SecondScreenState extends State<SecondScreen>
                   right: 0,
                   child: AnimatedContainer(
                     duration: Duration(milliseconds: 500),
-                    color: timerRunning ? grey2 : red1,
+                    color: timerRunning ? Color(0xff6E2929) : red1,
                     width: MediaQuery.of(context).size.width *
                         (timerRunning ? 0.7 : 0.8),
                     height: MediaQuery.of(context).size.height * 0.2,
@@ -166,7 +166,7 @@ class _SecondScreenState extends State<SecondScreen>
                     height: MediaQuery.of(context).size.height * 0.5,
                     width: MediaQuery.of(context).size.width *
                         (timerRunning ? 0.7 : 0.8),
-                    color: timerRunning ? grey2 : red12,
+                    color: timerRunning ? Color(0xff6E2929) : red1,
                     child: Center(
                       child: Text(
                         prefTitle == null ? 'null' : prefTitle.toUpperCase(),
@@ -188,7 +188,7 @@ class _SecondScreenState extends State<SecondScreen>
                   bottom: 0,
                   child: AnimatedContainer(
                     duration: Duration(milliseconds: 500),
-                    color: timerRunning ? grey2 : yellow,
+                    color: timerRunning ? Color(0xff6A5920) : Color(0xffF7CE47),
                     width: MediaQuery.of(context).size.width * 0.2,
                     height: MediaQuery.of(context).size.height *
                         (timerRunning ? 0.5 : 0.7658),
@@ -197,11 +197,6 @@ class _SecondScreenState extends State<SecondScreen>
                       children: [
                         Column(
                           children: <Widget>[
-                            Icon(
-                              Icons.settings,
-                              size: 40,
-                              color: grey,
-                            ),
                             GestureDetector(
                               onTap: () {
                                 cardState.subtract(index);
@@ -231,14 +226,18 @@ class _SecondScreenState extends State<SecondScreen>
                         Material(
                           child: AnimatedContainer(
                             duration: Duration(milliseconds: 500),
-                            color: timerRunning ? grey2 : yellow,
+                            decoration: BoxDecoration(
+                              color: timerRunning ? Color(0xff6A5920) : Color(0xffF7CE47),
+                              border: Border.all(width: 0,
+                              color: timerRunning ? Color(0xff6A5920) : Color(0xffF7CE47),),
+                            ),
                             child: Column(
                               children: [
                                 IconButton(
                                   // todo: program it to be disabled if at 0 I guess
                                   icon: Icon(Icons.replay),
                                   iconSize: 60,
-                                  color: timerRunning ? red1 : grey,
+                                  color: timerRunning ? red2 : grey,
                                   onPressed: () {
                                     print('Stop pressed');
                                     timerController.value = 0.0;
@@ -262,12 +261,18 @@ class _SecondScreenState extends State<SecondScreen>
                                     icon: AnimatedIcons.play_pause,
                                     progress: playPauseIconAnimation,
                                     size: 60,
-                                    color: timerRunning ? red1 : grey,
+                                    color: timerRunning ? red2 : grey,
                                   ),
                                 ),
                               ],
                             ),
                           ),
+                        ),
+                        SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+                        Icon(
+                          Icons.settings,
+                          size: 40,
+                          color: grey,
                         ),
                       ],
                     ),
