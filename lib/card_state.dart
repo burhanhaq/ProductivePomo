@@ -64,16 +64,6 @@ class CardState with ChangeNotifier {
   }
 
   CardModel at(int i) { // todo see if this is needed
-//    if (i >= _cardModels.length) {
-//      // todo change this stupid fix
-//      return CardModel(
-//        title: 'Dummy Model',
-//        goal: -11,
-//        seconds: -11,
-//        minutes: -11,
-//        score: -11,
-//      );
-//    }
     return _cardModels[i];
   }
 
@@ -161,6 +151,6 @@ class CardState with ChangeNotifier {
 
   set tappedEmptyAreaUnderListView(bool val) {
     _tappedEmptyAreaUnderListView = val;
-    notifyListeners();
+    // don't add notifyListeners()
   }
 }

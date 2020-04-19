@@ -125,19 +125,20 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         cardState.selectTile = null;
                         cardState.closeHomeRightBar();
                         cardState.tappedEmptyAreaUnderListView = true;
+//                        cardState.tappedEmptyAreaUnderListView = !cardState.tappedEmptyAreaUnderListView;
+                        print('tapped everywhere');
                       },
                       onHorizontalDragUpdate: (details) {
-                      setState(() {
-                        if (details.delta.dx < 0) {
-                          cardState.openHomeRightBar();
-                        } else {
-                          cardState.closeHomeRightBar();
-                        }
-                      });
-                    },
+                        setState(() {
+                          if (details.delta.dx < 0) {
+                            cardState.openHomeRightBar();
+                          } else {
+                            cardState.closeHomeRightBar();
+                          }
+                        });
+                      },
                       child: ListView(
                         // todo add person's name above this
-//                            shrinkWrap: true,
                         physics: BouncingScrollPhysics(),
                         children: cardTileList,
                       ),
@@ -346,11 +347,10 @@ class HomeRightBar extends StatefulWidget {
 
 class _HomeRightBarState extends State<HomeRightBar>
     with TickerProviderStateMixin {
-  AnimationController addNewIconController;
-  Animation addNewIconAnimation;
-  AnimationController
-      closeIconController; // not being used for the moment. might change later
-  Animation closeIconAnimation;
+  var addNewIconController;
+  var addNewIconAnimation;
+  var closeIconController; // not being used for the moment. might change later
+  var closeIconAnimation;
   var rightBarController;
   var rightBarAnimation;
   var rightBarStatus = AnimationStatus.dismissed;
@@ -379,8 +379,8 @@ class _HomeRightBarState extends State<HomeRightBar>
     )..addListener(() {
         setState(() {});
       });
-    rightBarController = AnimationController(
-        vsync: this, duration: Duration(milliseconds: 150));
+    rightBarController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 150));
     rightBarAnimation =
         CurvedAnimation(parent: rightBarController, curve: Curves.elasticInOut)
           ..addListener(() {
@@ -396,12 +396,14 @@ class _HomeRightBarState extends State<HomeRightBar>
   @override
   Widget build(BuildContext context) {
     final cardState = Provider.of<CardState>(context);
-    if (cardState.tappedEmptyAreaUnderListView && rightBarStatus == AnimationStatus.dismissed) {
+    if (cardState.tappedEmptyAreaUnderListView &&
+        rightBarStatus == AnimationStatus.dismissed) {
       rightBarController.forward(from: 0.0);
-    }
-    if (rightBarStatus == AnimationStatus.completed) {
+    } else if (rightBarStatus == AnimationStatus.completed) {
       rightBarStatus = AnimationStatus.dismissed;
+      cardState.tappedEmptyAreaUnderListView = false;
     }
+    print(cardState.tappedEmptyAreaUnderListView);
 
     return GestureDetector(
       onTap: () {
@@ -428,7 +430,10 @@ class _HomeRightBarState extends State<HomeRightBar>
         width: MediaQuery.of(context).size.width *
             (cardState.homeRightBarOpen
                 ? 0.55
-                : (0.25 +  (rightBarAnimation.value < 0.5 ? rightBarAnimation.value : (1-rightBarAnimation.value)))
+                : (0.25 +
+                    (rightBarAnimation.value < 0.5
+                        ? rightBarAnimation.value
+                        : (1 - rightBarAnimation.value)))
             // todo maybe limit to if < 2 items
             ),
         child: Padding(
@@ -505,7 +510,6 @@ class _HomeRightBarState extends State<HomeRightBar>
                       setState(() {
                         sharedPref.removeAll();
                         cardState.clearCardModelsList();
-                        // todo: throws error when pressed because it checks for index for empty list
                       });
                     },
                     child: Row(
@@ -581,7 +585,8 @@ class _HomeRightBarState extends State<HomeRightBar>
                             } else {
                               closeIconController.forward();
                             }
-                            cardState.newTitle = '';
+                            cardState.newTitle =
+                                ''; // todo create init or something
                             cardState.newGoal = '';
                             cardState.newMinutes = '30';
                             cardState.newSeconds = '10';
@@ -616,7 +621,7 @@ class _HomeRightBarState extends State<HomeRightBar>
                   ),
                   Stack(
                     alignment: Alignment.center,
-                    overflow: Overflow.visible,
+//                    overflow: Overflow.visible,
                     children: [
                       Transform.translate(
                         offset: Offset(
@@ -697,6 +702,7 @@ class _HomeRightBarState extends State<HomeRightBar>
                             setState(() {
                               if (!cardState.addNewScreen) {
                                 cardState.addNewScreen = true;
+                                cardState.closeHomeRightBar();
                                 addNewIconController.forward();
                               }
                             });
