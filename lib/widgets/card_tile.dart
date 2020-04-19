@@ -95,18 +95,35 @@ class _CardTileState extends State<CardTile>
             0),
         child: AnimatedContainer(
           duration: Duration(milliseconds: 200),
-          margin: EdgeInsets.fromLTRB( // todo set values
-              screenWidth * 0.07, 20.0, screenWidth * 0.04, 0.0),
+          margin: EdgeInsets.fromLTRB(
+              // todo set values
+              screenWidth * 0.07,
+              20.0,
+              screenWidth * 0.04,
+              0.0),
           padding: EdgeInsets.only(right: 7),
           curve: Curves.fastOutSlowIn,
           width: double.infinity,
           height: isCardSelected ? 150 : 100,
           decoration: BoxDecoration(
             color: isCardSelected ? red1 : yellow,
-            borderRadius: BorderRadius.all(Radius.circular(3)),
+//            borderRadius: BorderRadius.circular(30),
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(3),
+              topLeft: Radius.circular(3),
+              bottomRight: Radius.circular(3),
+              bottomLeft: Radius.circular(3),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black,
+                blurRadius: 20,
+                spreadRadius: 2,
+                offset: Offset(7, 7),
+              ),
+            ],
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Column(
                 children: [
@@ -126,19 +143,18 @@ class _CardTileState extends State<CardTile>
                       ),
                     ],
                   ),
-
                   Text(
                     widget.cardModel.title.length > 12
                         ? title.substring(0, 12) + '..'
                         : title,
                     textAlign: TextAlign.end,
                     maxLines: 2,
-                    style: isCardSelected
-                        ? kLabel.copyWith(color: white)
-                        : kLabel,
+                    style:
+                        isCardSelected ? kLabel.copyWith(color: white) : kLabel,
                   ),
                 ],
               ),
+              Spacer(),
               Offstage(
                 child: Text('brhn.dev', style: kLabel.copyWith(color: white)),
                 offstage: !isCardSelected,

@@ -403,7 +403,6 @@ class _HomeRightBarState extends State<HomeRightBar>
       rightBarStatus = AnimationStatus.dismissed;
       cardState.tappedEmptyAreaUnderListView = false;
     }
-    print(cardState.tappedEmptyAreaUnderListView);
 
     return GestureDetector(
       onTap: () {
