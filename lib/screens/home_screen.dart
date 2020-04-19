@@ -373,11 +373,15 @@ class _HomeRightBarState extends State<HomeRightBar>
     with TickerProviderStateMixin {
   var addNewIconController;
   var addNewIconAnimation;
-  var closeIconController; // not being used for the moment. might change later
-  var closeIconAnimation;
+  var cancelIconController; // not being used for the moment. might change later
+  var cancelIconAnimation;
   var rightBarController;
   var rightBarAnimation;
   var rightBarStatus = AnimationStatus.dismissed;
+  var deleteIconScaleController;
+  var deleteIconScaleAnimation;
+  var cancelIconScaleController;
+  var cancelIconScaleAnimation;
   SharedPref sharedPref = SharedPref();
 
   @override
@@ -393,13 +397,13 @@ class _HomeRightBarState extends State<HomeRightBar>
     )..addListener(() {
         setState(() {});
       });
-    closeIconController = AnimationController(
+    cancelIconController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 1000),
     );
-    closeIconAnimation = CurvedAnimation(
+    cancelIconAnimation = CurvedAnimation(
       curve: Curves.bounceInOut,
-      parent: closeIconController,
+      parent: cancelIconController,
     )..addListener(() {
         setState(() {});
       });
@@ -415,6 +419,10 @@ class _HomeRightBarState extends State<HomeRightBar>
               rightBarStatus = status;
             });
           });
+    deleteIconScaleController = AnimationController(vsync: this, duration: Duration(milliseconds: 200));
+    deleteIconScaleAnimation = CurvedAnimation(parent: deleteIconScaleController, curve: Curves.bounceIn);
+    cancelIconScaleController = AnimationController(vsync: this, duration: Duration(milliseconds: 200));
+    cancelIconScaleAnimation = CurvedAnimation(parent: cancelIconScaleController, curve: Curves.bounceIn);
   }
 
   @override
@@ -426,6 +434,11 @@ class _HomeRightBarState extends State<HomeRightBar>
     } else if (rightBarStatus == AnimationStatus.completed) {
       rightBarStatus = AnimationStatus.dismissed;
       cardState.tappedEmptyAreaUnderListView = false;
+    }
+    if (cardState.selectedIndex != null) {
+      deleteIconScaleController.forward();
+    } else {
+      deleteIconScaleController.reverse();
     }
 
     return GestureDetector(
@@ -559,7 +572,6 @@ class _HomeRightBarState extends State<HomeRightBar>
                     child: GestureDetector(
                       onTap: () {
                         setState(() {
-                          // todo add scale transition
                           if (cardState.confirmDeleteIndex ==
                               cardState.selectedIndex) {
                             // second tap
@@ -577,13 +589,16 @@ class _HomeRightBarState extends State<HomeRightBar>
                       },
                       child: Row(
                         children: [
-                          Icon(
-                            Icons.delete,
-                            size: 80,
-                            color: cardState.selectedIndex ==
-                                    cardState.confirmDeleteIndex
-                                ? blue
-                                : yellow,
+                          ScaleTransition(
+                            scale: deleteIconScaleAnimation,
+                            child: Icon(
+                              Icons.delete,
+                              size: 80,
+                              color: cardState.selectedIndex ==
+                                      cardState.confirmDeleteIndex
+                                  ? blue
+                                  : yellow,
+                            ),
                           ),
                           Offstage(
                             offstage: !cardState.homeRightBarOpen,
@@ -601,18 +616,17 @@ class _HomeRightBarState extends State<HomeRightBar>
                     ),
                   ),
                   Offstage(
-                    // todo add scale transition/size transition
                     offstage: !cardState.addNewScreen,
-                    // todo this can't be seen right now
                     child: GestureDetector(
                       onTap: () {
                         setState(() {
                           addNewIconController.reverse();
+                          cancelIconScaleController.reverse();
                           if (cardState.addNewScreen) {
-                            if (closeIconController.isCompleted) {
-                              closeIconController.reverse();
+                            if (cancelIconController.isCompleted) {
+                              cancelIconController.reverse();
                             } else {
-                              closeIconController.forward();
+                              cancelIconController.forward();
                             }
                             cardState.newTitle =
                                 ''; // todo create init or something
@@ -626,11 +640,14 @@ class _HomeRightBarState extends State<HomeRightBar>
                       child: Row(
                         children: [
                           Transform.rotate(
-                            angle: math.pi * closeIconAnimation.value,
-                            child: Icon(
-                              Icons.close,
-                              size: 80,
-                              color: yellow,
+                            angle: math.pi * cancelIconAnimation.value,
+                            child: ScaleTransition(
+                              scale: cancelIconScaleAnimation,
+                              child: Icon(
+                                Icons.cancel,
+                                size: 80,
+                                color: yellow,
+                              ),
                             ),
                           ),
                           Offstage(
@@ -669,6 +686,7 @@ class _HomeRightBarState extends State<HomeRightBar>
                                       .newTitle); // todo add animation for duplicate entry
                               if (canAddNewScreen) {
                                 addNewIconController.reverse();
+                                cancelIconScaleController.reverse();
                                 cardState
                                     .clearTitleTextEditingControllerSwitch();
                                 cardState.addToCardModelsList(
@@ -730,6 +748,7 @@ class _HomeRightBarState extends State<HomeRightBar>
                           onTap: () {
                             setState(() {
                               if (!cardState.addNewScreen) {
+                                cancelIconScaleController.forward();
                                 cardState.addNewScreen = true;
                                 cardState.closeHomeRightBar();
                                 cardState.selectTile = null;
@@ -773,8 +792,10 @@ class _HomeRightBarState extends State<HomeRightBar>
   @override
   void dispose() {
     addNewIconController.dispose();
-    closeIconController.dispose();
+    cancelIconController.dispose();
     rightBarController.dispose();
+    cancelIconScaleController.dispose();
+    deleteIconScaleController.dispose();
     super.dispose();
   }
 }
