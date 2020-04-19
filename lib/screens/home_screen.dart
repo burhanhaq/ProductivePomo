@@ -87,7 +87,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       return CardTile(cardModel: cardState.cardModels[index]);
     });
     if (loadingIndicator) {
-      if (cardTileList.length > 0) {
+      if (cardTileList.length > 0 && cardTileList[0].cardModel.score < 0) {
         loadingIndicator = false;
       }
     }
@@ -123,6 +123,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                     GestureDetector(
                       onTap: () {
                         cardState.selectTile = null;
+                        cardState.homeRightBarOpen = false;
                       },
                       child: ListView(
                         // todo add person's name above this
@@ -171,8 +172,11 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                   border: Border.all(width: 0, color: yellow),
                 ),
               ),
-              HomeRightBar(
-                cardTileList: cardTileList,
+              Transform.translate(
+                offset: Offset(0, 0),
+                child: HomeRightBar(
+                  cardTileList: cardTileList,
+                ),
               ),
             ],
           ),
@@ -366,100 +370,165 @@ class _HomeRightBarState extends State<HomeRightBar>
   @override
   Widget build(BuildContext context) {
     final cardState = Provider.of<CardState>(context);
-    return Container(
-      color: red1,
-      width: MediaQuery.of(context).size.width * 0.25,
-      child: Padding(
-        padding: EdgeInsets.only(top: 20, bottom: 20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Offstage(
-              offstage: cardState.selectedIndex == null,
-              child: Column(
-                children: [
-                  Text(
-                    // todo: need to update this when we get back from SecondScreen
-                    cardState.firstPageScore == null
-                        ? 'x'
-                        : cardState.firstPageScore.toString(),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 50,
-                      decoration: TextDecoration.none,
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          cardState.homeRightBarOpen = !cardState.homeRightBarOpen;
+        });
+      },
+    onHorizontalDragUpdate: (details) {
+        setState(() {
+          if (details.delta.dx < 0) {
+            cardState.homeRightBarOpen = true;
+          } else {
+            cardState.homeRightBarOpen = false;
+          }
+        });
+        print(details.delta.dx);
+    },
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 100),
+        color: red1,
+        width: MediaQuery.of(context).size.width * (cardState.homeRightBarOpen ? 0.55 : 0.25),
+        child: Padding(
+          padding: EdgeInsets.only(top: 20, bottom: 20, left: 10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Offstage(
+                offstage: cardState.selectedIndex == null,
+                child: Column(
+                  children: [
+                    Text(
+                      // todo: need to update this when we get back from SecondScreen
+                      cardState.firstPageScore == null
+                          ? 'x'
+                          : cardState.firstPageScore.toString(),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 50,
+                        decoration: TextDecoration.none,
+                      ),
                     ),
-                  ),
-                  Container(height: 10, width: 80, color: yellow),
-                  Text(
-                    cardState.firstPageGoal == null
-                        ? 'y'
-                        : cardState.firstPageGoal.toString(),
-                    style: TextStyle(
-                      color: yellow,
-                      fontSize: 50,
-                      decoration: TextDecoration.none,
+                    Container(height: 10, width: 80, color: yellow),
+                    Text(
+                      cardState.firstPageGoal == null
+                          ? 'y'
+                          : cardState.firstPageGoal.toString(),
+                      style: TextStyle(
+                        color: yellow,
+                        fontSize: 50,
+                        decoration: TextDecoration.none,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Expanded(child: Container()),
-            Column(
-              children: [
-                Offstage(
-                  offstage: !cardState.devMode,
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        print(
-                            'cardModelsX: ${CardModel.cardModelsX.toString()}');
-                      });
-                    },
-                    child: Icon(
-                      Icons.grain,
-                      size: 80,
-                      color: yellow,
+              Spacer(),
+              Column(
+                children: [
+                  Offstage(
+                    offstage: !cardState.devMode,
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          print(
+                              'cardModelsX: ${CardModel.cardModelsX.toString()}');
+                        });
+                      },
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.grain,
+                            size: 80,
+                            color: yellow,
+                          ),
+                          Offstage(
+                            offstage: !cardState.homeRightBarOpen,
+                            child: Text(
+                              'Lol',
+                              style: TextStyle(
+                                color: yellow,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      sharedPref.removeAll();
-                      cardState.clearCardModelsList();
-                      // todo: throws error when pressed because it checks for index for empty list
-                    });
-                  },
-                  child: Icon(
-                    Icons.do_not_disturb_on,
-                    size: 80,
-                    color: yellow,
-                  ),
-                ),
-                Offstage(
-                  offstage: cardState.selectedIndex == null,
-                  child: GestureDetector(
+                  GestureDetector(
                     onTap: () {
                       setState(() {
-                        // todo add confirmation to delete
-                        // todo add scale transition
-                        sharedPref.remove(
-                            cardState.cardModels[cardState.selectedIndex].title);
-                        CardModel.cardModelsX.removeAt(cardState.selectedIndex);
-                        cardState.selectTile = null;
+                        sharedPref.removeAll();
+                        cardState.clearCardModelsList();
+                        // todo: throws error when pressed because it checks for index for empty list
                       });
                     },
-                    child: Icon(
-                      Icons.delete,
-                      size: 80,
-                      color: yellow,
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.do_not_disturb_on,
+                          size: 80,
+                          color: yellow,
+                        ),
+                        Offstage(
+                          offstage: !cardState.homeRightBarOpen,
+                          child: Text(
+                            'Delete All',
+                            style: TextStyle(
+                              color: yellow,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ),
-                Offstage( // todo add scale transition/size transition
-                  offstage: !cardState.addNewScreen,
-                  child: Transform.rotate(
-                    angle: math.pi * closeIconAnimation.value,
+                  Offstage(
+                    offstage: cardState.selectedIndex == null,
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          // todo add confirmation to delete, like a double tap
+                          // todo add scale transition
+                          sharedPref.remove(cardState
+                              .cardModels[cardState.selectedIndex].title);
+                          CardModel.cardModelsX
+                              .removeAt(cardState.selectedIndex);
+                          cardState.selectTile = null;
+                        });
+                      },
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.delete,
+                            size: 80,
+                            color: yellow,
+                          ),
+                          Offstage(
+                            offstage: !cardState.homeRightBarOpen,
+                            child: Text(
+                              'Delete Item',
+                              style: TextStyle(
+                                color: yellow,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Offstage(
+                    // todo add scale transition/size transition
+                    offstage: !cardState.addNewScreen,
+                    // todo this can't be seen right now
+//                  offstage: false,
                     child: GestureDetector(
                       onTap: () {
                         // todo implement clearing text fields when hit
@@ -479,132 +548,183 @@ class _HomeRightBarState extends State<HomeRightBar>
                           }
                         });
                       },
-                      child: Icon(
-                        Icons.close,
-                        size: 80,
-                        color: yellow,
+                      child: Row(
+                        children: [
+                          Transform.rotate(
+                            angle: math.pi * closeIconAnimation.value,
+                            child: Icon(
+                              Icons.close,
+                              size: 80,
+                              color: yellow,
+                            ),
+                          ),
+                          Offstage(
+                            offstage: !cardState.homeRightBarOpen,
+                            child: Text(
+                              'Cancel',
+                              style: TextStyle(
+                                color: yellow,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                ),
-                Stack(
-                  alignment: Alignment.center,
-                  overflow: Overflow.visible,
-                  children: [
-                    Transform.translate(
-                      offset: Offset(
-                          MediaQuery.of(context).size.width *
-                              0.25 *
-                              (1 - addNewIconAnimation.value),
-                          0),
-                      child: GestureDetector(
-                        onTap: () async {
-                          // todo implement clearing text fields when hit
-                          // todo add some initial goal value if null, or maybe make it a number drop down
-                          var keys = await sharedPref.getKeys();
-                          setState(() {
-                            bool canAddNewScreen = cardState.addNewScreen &&
-                                cardState.newTitle.isNotEmpty &&
-                                !keys.contains(cardState
-                                    .newTitle); // todo add animation for duplicate entry
-                            if (canAddNewScreen) {
-                              addNewIconController.reverse();
-                              cardState.clearTitleTextEditingControllerSwitch();
-                              cardState.addToCardModelsList(
-                                CardModel(
-//                                  index: cardState.length,
-                                  title: cardState.newTitle,
-                                  score: 0,
-                                  goal: int.tryParse(cardState.newGoal) == null
-                                      ? '-2'
-                                      : int.tryParse(cardState.newGoal),
-                                  minutes: int.parse(cardState.newMinutes),
-                                  seconds: int.parse(cardState.newSeconds),
+                  Stack(
+                    alignment: Alignment.center,
+                    overflow: Overflow.visible,
+                    children: [
+                      Transform.translate(
+                        offset: Offset(
+                            0,
+                            MediaQuery.of(context).size.height *
+                                0.2 *
+                                (1 - addNewIconAnimation.value)),
+                        child: GestureDetector(
+                          onTap: () async {
+                            // todo implement clearing text fields when hit
+                            // todo add some initial goal value if null, or maybe make it a number drop down
+                            var keys = await sharedPref.getKeys();
+                            setState(() {
+                              bool canAddNewScreen = cardState.addNewScreen &&
+                                  cardState.newTitle.isNotEmpty &&
+                                  !keys.contains(cardState
+                                      .newTitle); // todo add animation for duplicate entry
+                              if (canAddNewScreen) {
+                                addNewIconController.reverse();
+                                cardState
+                                    .clearTitleTextEditingControllerSwitch();
+                                cardState.addToCardModelsList(
+                                  CardModel(
+                                    title: cardState.newTitle,
+                                    score: 0,
+                                    goal:
+                                        int.tryParse(cardState.newGoal) == null
+                                            ? '-2'
+                                            : int.tryParse(cardState.newGoal),
+                                    minutes: int.parse(cardState.newMinutes),
+                                    seconds: int.parse(cardState.newSeconds),
+                                  ),
+                                );
+                                widget.cardTileList.add(CardTile(
+                                    cardModel:
+                                        cardState.at(cardState.length - 1)));
+                                cardState.addNewScreen =
+                                    !cardState.addNewScreen;
+                                sharedPref.save(
+                                    cardState.newTitle,
+                                    cardState
+                                        .at(cardState.length - 1)
+                                        .toJson());
+                              } else {
+                                // todo add animation for incorrect entry and maybe explain why
+                              }
+                            });
+                          },
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.check_box,
+                                size: 80,
+                                color: yellow,
+                              ),
+                              Offstage(
+                                offstage: !cardState.homeRightBarOpen,
+                                child: Text(
+                                  'Confirm Item',
+                                  style: TextStyle(
+                                    color: yellow,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w800,
+                                  ),
                                 ),
-                              );
-                              widget.cardTileList.add(CardTile(
-                                  cardModel:
-                                      cardState.at(cardState.length - 1)));
-                              cardState.addNewScreen = !cardState.addNewScreen;
-                              print(CardModel.cardModelsX.toString());
-                              sharedPref.save(cardState.newTitle,
-                                  cardState.at(cardState.length - 1).toJson());
-                            } else {
-                              print('Not added');
-                              print('Tried to add title ${cardState.newTitle}');
-                            }
-                          });
-                        },
-                        child: Icon(
-                          Icons.check_box,
-                          size: 80,
-                          color: yellow,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    Transform.translate(
-                      offset: Offset(
-                          MediaQuery.of(context).size.width *
-                              0.25 *
-                              addNewIconAnimation.value,
-                          0),
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            if (!cardState.addNewScreen) {
-                              cardState.addNewScreen = true;
-                              addNewIconController.forward();
-                            }
-                          });
-                        },
-                        child: Icon(
-                          Icons.add_box,
-                          size: 80,
-                          color: yellow,
+                      Transform.translate(
+                        offset: Offset(
+                            0,
+                            MediaQuery.of(context).size.height *
+                                0.2 *
+                                addNewIconAnimation.value),
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              if (!cardState.addNewScreen) {
+                                cardState.addNewScreen = true;
+                                addNewIconController.forward();
+                              }
+                            });
+                          },
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.add_box,
+                                size: 80,
+                                color: yellow,
+                              ),
+                              Offstage(
+                                offstage: !cardState.homeRightBarOpen,
+                                child: Text(
+                                  'Add Item',
+                                  style: TextStyle(
+                                    color: yellow,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    Offstage(
-                      offstage: cardState.addNewScreen ||
-                          CardModel.cardModelsX.length > 1,
-                      child: Transform.translate(
-                        offset:
-                            Offset(-MediaQuery.of(context).size.width * 0.3, 0),
-                        child: Text('Press \'+\' to add items -->',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 25,
-                              fontWeight: FontWeight.w900,
-                              fontFamily: 'IndieFlower',
-                            )),
+                      Offstage(
+                        offstage: cardState.addNewScreen ||
+                            CardModel.cardModelsX.length > 1,
+                        child: Transform.translate(
+                          offset: Offset(
+                              -MediaQuery.of(context).size.width * 0.3, 0),
+                          child: Text('Press \'+\' to add items -->',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 25,
+                                fontWeight: FontWeight.w900,
+                                fontFamily: 'IndieFlower',
+                              )),
+                        ),
                       ),
-                    ),
-                    Offstage(
-                      // todo: moves up when shown, try to disable that
-                      // todo: has a red background while screen is moving, try to change it
-                      offstage: !cardState.addNewScreen,
-                      child: Transform.translate(
-                        offset:
-                            Offset(-MediaQuery.of(context).size.width * 0.3, 0),
-                        child: Container(
-                          color: red1,
-                          child: Text(
-                            'Press \'✓\' to add item -->',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 25,
-                              fontWeight: FontWeight.w900,
-                              fontFamily: 'IndieFlower',
+                      Offstage(
+                        // todo: moves up when shown, try to disable that
+                        // todo: has a red background while screen is moving, try to change it
+                        offstage: !cardState.addNewScreen,
+                        child: Transform.translate(
+                          offset: Offset(
+                              -MediaQuery.of(context).size.width * 0.3, 0),
+                          child: Container(
+                            color: red1,
+                            child: Text(
+                              'Press \'✓\' to add item -->',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 25,
+                                fontWeight: FontWeight.w900,
+                                fontFamily: 'IndieFlower',
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

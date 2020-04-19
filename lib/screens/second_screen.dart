@@ -276,100 +276,97 @@ class _SecondScreenState extends State<SecondScreen>
                       width: width * 0.2,
                       height:
                           height * (timerRunning ? 0.5 : 0.8) - safeAreaPadding - spacingBetweenContainers,
-                      child: Container(
-                        height: height * 0.5,
-                        child: Column(
-//                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Column(
-                              children: <Widget>[
-                                GestureDetector(
-                                  onTap: () {
-                                    cardState.subtract(widget.cardTile.cardModel);
-                                    sharedPref.save(
-                                        widget.cardTile.cardModel.title,
-                                        widget.cardTile.cardModel.toJson());
-                                  },
-                                  child: Icon(
-                                    Icons.remove,
-                                    size: 40,
-                                    color: grey,
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    cardState.add(widget.cardTile.cardModel);
-                                    sharedPref.save(
-                                        widget.cardTile.cardModel.title,
-                                        widget.cardTile.cardModel.toJson());
-                                  },
-                                  child: Icon(
-                                    Icons.add,
-                                    size: 40,
-                                    color: grey,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Material(
-                              child: AnimatedContainer(
-                                duration: Duration(milliseconds: 500),
-                                decoration: BoxDecoration(
-                                  color: timerRunning ? white : yellow,
-                                  border: Border.all(
-                                    width: 0,
-                                    color: timerRunning ? darkYellow : yellow,
-                                  ),
-                                ),
-                                child: Column(
-                                  children: [
-                                    IconButton(
-                                      // todo: program it to be disabled if at 0 I guess
-                                      icon: Icon(Icons.replay),
-                                      iconSize: 60,
-                                      color: timerRunning ? red1 : grey,
-                                      onPressed: () {
-                                        print('Stop pressed');
-                                        timerDurationController.value = 0.0;
-                                        playPauseIconController.reverse();
-                                      },
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        if (playPauseIconController.status ==
-                                            AnimationStatus.dismissed) {
-                                          print('Play pressed');
-                                          timerDurationController.forward();
-                                          timerScaleController.forward();
-                                          playPauseIconController.forward();
-                                        } else {
-                                          print('Pause pressed');
-                                          timerDurationController.stop();
-                                          timerScaleController
-                                              .reverse(); // todo doesn't do reverse curve
-                                          playPauseIconController.reverse();
-                                        }
-                                      },
-                                      child: AnimatedIcon(
-                                        icon: AnimatedIcons.play_pause,
-                                        progress: playPauseIconAnimation,
-                                        size: 60,
-                                        color: timerRunning ? red1 : grey,
-                                      ),
-                                    ),
-                                  ],
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Column(
+                            children: <Widget>[
+                              GestureDetector(
+                                onTap: () {
+                                  cardState.subtract(widget.cardTile.cardModel);
+                                  sharedPref.save(
+                                      widget.cardTile.cardModel.title,
+                                      widget.cardTile.cardModel.toJson());
+                                },
+                                child: Icon(
+                                  Icons.remove,
+                                  size: 40,
+                                  color: grey,
                                 ),
                               ),
+                              GestureDetector(
+                                onTap: () {
+                                  cardState.add(widget.cardTile.cardModel);
+                                  sharedPref.save(
+                                      widget.cardTile.cardModel.title,
+                                      widget.cardTile.cardModel.toJson());
+                                },
+                                child: Icon(
+                                  Icons.add,
+                                  size: 40,
+                                  color: grey,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Material(
+                            child: AnimatedContainer(
+                              duration: Duration(milliseconds: 500),
+                              decoration: BoxDecoration(
+                                color: timerRunning ? white : yellow,
+                                border: Border.all(
+                                  width: 0,
+                                  color: timerRunning ? darkYellow : yellow,
+                                ),
+                              ),
+                              child: Column(
+                                children: [
+                                  IconButton(
+                                    // todo: program it to be disabled if at 0 I guess
+                                    icon: Icon(Icons.replay),
+                                    iconSize: 60,
+                                    color: timerRunning ? red1 : grey,
+                                    onPressed: () {
+                                      print('Stop pressed');
+                                      timerDurationController.value = 0.0;
+                                      playPauseIconController.reverse();
+                                    },
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      if (playPauseIconController.status ==
+                                          AnimationStatus.dismissed) {
+                                        print('Play pressed');
+                                        timerDurationController.forward();
+                                        timerScaleController.forward();
+                                        playPauseIconController.forward();
+                                      } else {
+                                        print('Pause pressed');
+                                        timerDurationController.stop();
+                                        timerScaleController
+                                            .reverse(); // todo doesn't do reverse curve
+                                        playPauseIconController.reverse();
+                                      }
+                                    },
+                                    child: AnimatedIcon(
+                                      icon: AnimatedIcons.play_pause,
+                                      progress: playPauseIconAnimation,
+                                      size: 60,
+                                      color: timerRunning ? red1 : grey,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                            SizedBox(height: height * 0.05),
-                            Icon(
-                              Icons.settings,
-                              size: 40,
-                              color: grey,
-                            ),
-                            SizedBox(height: 10),
-                          ],
-                        ),
+                          ),
+                          SizedBox(height: height * 0.05),
+                          Icon(
+                            Icons.settings,
+                            size: 40,
+                            color: grey,
+                          ),
+                          SizedBox(height: 10),
+                        ],
                       ),
                     ),
                   ),

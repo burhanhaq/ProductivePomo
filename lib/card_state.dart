@@ -20,6 +20,7 @@ class CardState with ChangeNotifier {
   String _newSeconds = '10';
 
   bool _isClearTitleTextEditingController = false;
+  bool _homeRightBarOpen = false;
 
 //  SharedPref sharedPref = SharedPref(); // todo implement this maybe to speed things up
 
@@ -51,6 +52,8 @@ class CardState with ChangeNotifier {
 
   bool get isClearTitleTextEditingController =>
       _isClearTitleTextEditingController;
+
+  bool get homeRightBarOpen => _homeRightBarOpen;
 
 
   clearCardModelsList() {
@@ -141,6 +144,11 @@ class CardState with ChangeNotifier {
 
   void clearTitleTextEditingControllerSwitch() {
     _isClearTitleTextEditingController = !_isClearTitleTextEditingController;
+    notifyListeners();
+  }
+
+  set homeRightBarOpen(bool val) {
+    _homeRightBarOpen = val;
     notifyListeners();
   }
 }
