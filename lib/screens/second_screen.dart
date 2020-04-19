@@ -142,7 +142,6 @@ class _SecondScreenState extends State<SecondScreen>
                               constraints: BoxConstraints(
                                 maxHeight: height * 0.5,
                               ),
-                              // todo overflows when score > goal, add second AnimatedContainer maybe
                               duration: Duration(milliseconds: 500),
                               height: height *
                                   (timerRunning ? 0.2 : 0.5) *
@@ -161,7 +160,6 @@ class _SecondScreenState extends State<SecondScreen>
                               constraints: BoxConstraints(
                                 maxHeight: height * (timerRunning ? 0.2 : 0.5),
                               ),
-                              // todo overflows when score > goal, add second AnimatedContainer maybe
                               duration: Duration(milliseconds: 500),
                               height: height *
                                   (timerRunning ? 0.2 : 0.5) *

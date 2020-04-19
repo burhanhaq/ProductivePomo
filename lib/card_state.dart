@@ -30,10 +30,10 @@ class CardState with ChangeNotifier {
 
   int get firstPageGoal => _pageGoal;
 
-  int get length => _cardModels.length;
+  int get length => cardModels.length;
 
   int get selectedIndex {
-    return _selectedIndex; // todo check this
+    return _selectedIndex;
   }
 
   bool get addNewScreen => _addNewScreen;
@@ -62,53 +62,52 @@ class CardState with ChangeNotifier {
 
 
   clearCardModelsList() {
-    _cardModels.clear();
+    cardModels.clear();
     notifyListeners();
   }
 
   CardModel at(int i) { // todo see if this is needed
-    return _cardModels[i];
+    return cardModels[i];
   }
 
   void subtract(CardModel model) {
-    int i = _cardModels.indexOf(model);
-    if (_cardModels[i].score > 0) --_cardModels[i].score;
+    int i = cardModels.indexOf(model);
+    if (cardModels[i].score > 0) --cardModels[i].score;
     notifyListeners();
   }
 
   void add(CardModel model) async {
-    int i = _cardModels.indexOf(model);
-    ++_cardModels[i].score;
+    int i = cardModels.indexOf(model);
+    ++cardModels[i].score;
     notifyListeners();
   }
 
-  List<CardModel> _cardModels = CardModel.cardModelsX; // todo duplicates
   List<CardModel> get cardModels => CardModel.cardModelsX;
 
   addToCardModelsList(CardModel model) {
-    _cardModels.add(model);
+    cardModels.add(model);
     notifyListeners();
   }
 
   set selectTile(CardModel model) {
-    int i = _cardModels.indexOf(model);
+    int i = cardModels.indexOf(model);
     _confirmDeleteIndex = -1;
 
     if (model == null) {
       _pageGoal = null;
       _pageScore = null;
       _selectedIndex = null;
-      for (int j = 0; j < _cardModels.length; j++) {
-        _cardModels[j].selected = false;
+      for (int j = 0; j < cardModels.length; j++) {
+        cardModels[j].selected = false;
       }
     } else {
       _selectedIndex = i;
-      _pageGoal = _cardModels[i].goal;
-      _pageScore = _cardModels[i].score;
-      for (int j = 0; j < _cardModels.length; j++) {
-        _cardModels[j].selected = false;
+      _pageGoal = cardModels[i].goal;
+      _pageScore = cardModels[i].score;
+      for (int j = 0; j < cardModels.length; j++) {
+        cardModels[j].selected = false;
       }
-      _cardModels[i].selected = true;
+      cardModels[i].selected = true;
     }
     notifyListeners();
   }

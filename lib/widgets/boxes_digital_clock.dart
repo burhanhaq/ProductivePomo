@@ -32,21 +32,16 @@ class _BoxesDigitalClockState extends State<BoxesDigitalClock> {
   @override
   Widget build(BuildContext context) {
     setTimerValues();
-    return Wrap(
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Row(
-//          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Digit(num: tensMin),
-            SizedBox(width: 5),
-            Digit(num: onesMin),
-            SizedBox(width: 10),
-            Digit(num: tensSec, extraPadding: -8),
-            SizedBox(width: 5),
-            Digit(num: onesSec, extraPadding: -8),
-          ],
-        ),
+        Digit(num: tensMin),
+        SizedBox(width: 5),
+        Digit(num: onesMin),
+        SizedBox(width: 10),
+        Digit(num: tensSec, extraPadding: -8),
+        SizedBox(width: 5),
+        Digit(num: onesSec, extraPadding: -8),
       ],
     );
   }
@@ -425,7 +420,7 @@ class _DigitState extends State<Digit> {
 
 class BoxContainer extends StatefulWidget {
   bool isActive;
-  double extraPadding = 0;
+  double extraPadding = 0; // not being used
 
   BoxContainer({@required this.isActive, @required this.extraPadding}) {
     if (extraPadding == null) extraPadding = 0;

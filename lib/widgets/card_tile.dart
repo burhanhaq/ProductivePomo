@@ -169,6 +169,7 @@ class _CardTileState extends State<CardTile>
   @override
   void dispose() {
     sharedPref = null;
+    cardScreenController.dispose();
     super.dispose();
   }
 }
