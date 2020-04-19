@@ -97,56 +97,53 @@ class _CardTileState extends State<CardTile>
           duration: Duration(milliseconds: 200),
           margin: EdgeInsets.fromLTRB( // todo set values
               screenWidth * 0.07, 20.0, screenWidth * 0.04, 0.0),
+          padding: EdgeInsets.only(right: 7),
           curve: Curves.fastOutSlowIn,
           width: double.infinity,
-          height: isCardSelected ? 200 : 100,
+          height: isCardSelected ? 150 : 100,
           decoration: BoxDecoration(
             color: isCardSelected ? red1 : yellow,
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(3),
-              topLeft: Radius.circular(3),
-            ),
+            borderRadius: BorderRadius.all(Radius.circular(3)),
           ),
-          child: Padding(
-            padding: EdgeInsets.only(bottom: 10, right: 10),
-            child: Column(
-              mainAxisAlignment: isCardSelected
-                  ? MainAxisAlignment.spaceBetween
-                  : MainAxisAlignment.center,
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Icon(
-                      Icons.chevron_left,
-                      size: 60,
-                      color: isCardSelected ? white : grey,
-                    ),
-                    Text(
-                      prefScore == null ? '-7' : prefScore.toString(),
-                      style: isCardSelected
-                          ? kScore.copyWith(color: white)
-                          : kScore,
-                    ),
-                    Expanded(
-                      child: Text(
-                        widget.cardModel.title.length > 12
-                            ? title.substring(0, 12) + '..'
-                            : title,
-                        textAlign: TextAlign.end,
-                        maxLines: 2,
-                        style: isCardSelected
-                            ? kLabel.copyWith(color: white)
-                            : kLabel,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Column(
+                children: [
+                  Row(
+                    children: <Widget>[
+                      Icon(
+                        Icons.chevron_left,
+                        size: 35,
+                        color: isCardSelected ? white : grey,
                       ),
-                    ),
-                  ],
-                ),
-                Offstage(
-                  child: Text('brhn.dev', style: kLabel.copyWith(color: white)),
-                  offstage: !isCardSelected,
-                ),
-              ],
-            ),
+                      Spacer(),
+                      Text(
+                        prefScore == null ? '-7' : prefScore.toString(),
+                        style: isCardSelected
+                            ? kScore.copyWith(color: white)
+                            : kScore,
+                      ),
+                    ],
+                  ),
+
+                  Text(
+                    widget.cardModel.title.length > 12
+                        ? title.substring(0, 12) + '..'
+                        : title,
+                    textAlign: TextAlign.end,
+                    maxLines: 2,
+                    style: isCardSelected
+                        ? kLabel.copyWith(color: white)
+                        : kLabel,
+                  ),
+                ],
+              ),
+              Offstage(
+                child: Text('brhn.dev', style: kLabel.copyWith(color: white)),
+                offstage: !isCardSelected,
+              ),
+            ],
           ),
         ),
       ),

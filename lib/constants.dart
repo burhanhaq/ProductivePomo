@@ -12,7 +12,7 @@ const kLabel = TextStyle(
 
 const kScore = TextStyle(
   color: Colors.black,
-  fontSize: 40,
+  fontSize: 30,
   fontWeight: FontWeight.bold,
   decoration: TextDecoration.none,
   letterSpacing: 1.0,
