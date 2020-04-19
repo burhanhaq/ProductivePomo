@@ -376,7 +376,6 @@ class _SecondScreenState extends State<SecondScreen>
                         (timerScaleAnimation.value) *
                             (timerRunning ? 0.5 : 0.0),
                     child: BoxesDigitalClock(
-                      // todo show it increase when page opens
                       min: widget.cardTile.cardModel.minutes,
                       sec: widget.cardTile.cardModel.seconds,
                       timerController: timerDurationController,

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
@@ -14,11 +15,38 @@ class BoxesDigitalClock extends StatefulWidget {
   _BoxesDigitalClockState createState() => _BoxesDigitalClockState();
 }
 
-class _BoxesDigitalClockState extends State<BoxesDigitalClock> {
+class _BoxesDigitalClockState extends State<BoxesDigitalClock>
+    with SingleTickerProviderStateMixin {
+  var backwardTimerController;
+  var backwardTimerAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    backwardTimerController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 1000),
+    );
+    backwardTimerAnimation = CurvedAnimation(
+      parent: backwardTimerController,
+      curve: Curves.easeOutCirc,
+    );
+    backwardTimerController.forward();
+  }
+
   int tensMin = 0;
   int onesMin = 0;
   int tensSec = 0;
   int onesSec = 0;
+
+  setInitialTimerValue() {
+    Duration duration = Duration(minutes: widget.min, seconds: widget.sec) *
+        backwardTimerAnimation.value;
+    tensMin = (duration.inMinutes / 10).floor() % 10;
+    onesMin = duration.inMinutes % 10;
+    tensSec = ((duration.inSeconds % 60) / 10).floor() % 10;
+    onesSec = (duration.inSeconds % 60) % 10;
+  }
 
   setTimerValues() {
     Duration duration = Duration(minutes: widget.min, seconds: widget.sec) *
@@ -31,7 +59,11 @@ class _BoxesDigitalClockState extends State<BoxesDigitalClock> {
 
   @override
   Widget build(BuildContext context) {
-    setTimerValues();
+    if (!backwardTimerController.isAnimating) {
+      setTimerValues();
+    } else {
+      setInitialTimerValue();
+    }
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -44,6 +76,12 @@ class _BoxesDigitalClockState extends State<BoxesDigitalClock> {
         Digit(num: onesSec, extraPadding: -8),
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    backwardTimerController.dispose();
+    super.dispose();
   }
 }
 
@@ -419,7 +457,7 @@ class _DigitState extends State<Digit> {
 }
 
 class BoxContainer extends StatefulWidget {
-  bool isActive;
+  final bool isActive;
   double extraPadding = 0; // not being used
 
   BoxContainer({@required this.isActive, @required this.extraPadding}) {

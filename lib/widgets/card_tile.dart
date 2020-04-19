@@ -96,6 +96,7 @@ class _CardTileState extends State<CardTile>
         child: AnimatedContainer(
           duration: Duration(milliseconds: 200),
           // todo animates really slow sometimes, consider size transition
+          // todo when HomeRightBar opens text overflows
           margin: EdgeInsets.fromLTRB(
               screenWidth * 0.07, 20.0, screenWidth * 0.04, 0.0),
           padding: EdgeInsets.only(right: 7),
