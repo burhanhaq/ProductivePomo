@@ -116,29 +116,54 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
           color: Theme.of(context).accentColor,
           child: Row(
             children: <Widget>[
-              Flexible(
+              Expanded(
                 child: Stack(
-                  alignment: Alignment.center,
+                  overflow: Overflow.visible,
                   children: <Widget>[
-                    GestureDetector(
-                      onTap: () {
-                        cardState.selectTile = null;
-                        cardState.closeHomeRightBar();
-                        cardState.tappedEmptyAreaUnderListView = true;
-                      },
-                      onHorizontalDragUpdate: (details) {
-                        setState(() {
-                          if (details.delta.dx < 0) {
-                            cardState.openHomeRightBar();
-                          } else {
-                            cardState.closeHomeRightBar();
-                          }
-                        });
-                      },
-                      child: ListView(
-                        // todo add person's name above this
-                        physics: BouncingScrollPhysics(),
-                        children: cardTileList,
+                    Positioned(
+                      top: 0,
+                      child: Container(
+                        alignment: Alignment.center,
+                        width: MediaQuery.of(context).size.width * 0.72,
+                        height: MediaQuery.of(context).size.height * 0.1,
+                        color: Colors.grey[850], // todo pick a good color
+                        child: Text(
+                          'Name',
+                          style: TextStyle(
+                            fontSize: 40,
+                            fontWeight: FontWeight.bold,
+                            color: white,
+                            fontFamily: 'IndieFlower',
+                            decoration: TextDecoration.none,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: MediaQuery.of(context).size.height * 0.08,
+                      child: GestureDetector(
+                        onTap: () {
+                          cardState.selectTile = null;
+                          cardState.closeHomeRightBar();
+                          cardState.tappedEmptyAreaUnderListView = true;
+                        },
+                        onHorizontalDragUpdate: (details) {
+                          setState(() {
+                            if (details.delta.dx < 0) {
+                              cardState.openHomeRightBar();
+                            } else {
+                              cardState.closeHomeRightBar();
+                            }
+                          });
+                        },
+                        child: SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.88,
+                          width: MediaQuery.of(context).size.width * 0.72,
+                          child: ListView(
+                            physics: BouncingScrollPhysics(),
+                            children: cardTileList,
+                          ),
+                        ),
                       ),
                     ),
                     Positioned(
@@ -431,9 +456,7 @@ class _HomeRightBarState extends State<HomeRightBar>
                 : (0.25 +
                     (rightBarAnimation.value < 0.5
                         ? rightBarAnimation.value
-                        : (1 - rightBarAnimation.value)))
-            // todo maybe limit to if < 2 items
-            ),
+                        : (1 - rightBarAnimation.value)))),
         child: Padding(
           padding: EdgeInsets.only(top: 20, bottom: 20, left: 10),
           child: Column(
@@ -536,17 +559,19 @@ class _HomeRightBarState extends State<HomeRightBar>
                     child: GestureDetector(
                       onTap: () {
                         setState(() {
-                          // todo add confirmation to delete, like a double tap
                           // todo add scale transition
-
-                          if (cardState.confirmDeleteIndex == cardState.selectedIndex) { // second tap
+                          if (cardState.confirmDeleteIndex ==
+                              cardState.selectedIndex) {
+                            // second tap
                             sharedPref.remove(cardState
                                 .cardModels[cardState.selectedIndex].title);
                             CardModel.cardModelsX
                                 .removeAt(cardState.selectedIndex);
                             cardState.selectTile = null;
-                          } else { // first tap for confirmation
-                            cardState.confirmDeleteIndex = cardState.selectedIndex;
+                          } else {
+                            // first tap for confirmation
+                            cardState.confirmDeleteIndex =
+                                cardState.selectedIndex;
                           }
                         });
                       },
@@ -555,7 +580,10 @@ class _HomeRightBarState extends State<HomeRightBar>
                           Icon(
                             Icons.delete,
                             size: 80,
-                            color: cardState.selectedIndex == cardState.confirmDeleteIndex ? blue : yellow,
+                            color: cardState.selectedIndex ==
+                                    cardState.confirmDeleteIndex
+                                ? blue
+                                : yellow,
                           ),
                           Offstage(
                             offstage: !cardState.homeRightBarOpen,
@@ -576,10 +604,8 @@ class _HomeRightBarState extends State<HomeRightBar>
                     // todo add scale transition/size transition
                     offstage: !cardState.addNewScreen,
                     // todo this can't be seen right now
-//                  offstage: false,
                     child: GestureDetector(
                       onTap: () {
-                        // todo implement clearing text fields when hit
                         setState(() {
                           addNewIconController.reverse();
                           if (cardState.addNewScreen) {
@@ -634,7 +660,7 @@ class _HomeRightBarState extends State<HomeRightBar>
                                 (1 - addNewIconAnimation.value)),
                         child: GestureDetector(
                           onTap: () async {
-                            // todo add some initial goal value if null, or maybe make it a number drop down
+                            // todo maybe make it a number drop down
                             var keys = await sharedPref.getKeys();
                             setState(() {
                               bool canAddNewScreen = cardState.addNewScreen &&

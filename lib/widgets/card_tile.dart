@@ -118,7 +118,7 @@ class _CardTileState extends State<CardTile>
             boxShadow: [
               BoxShadow(
                 color: Colors.black,
-                blurRadius: 20,
+                blurRadius: 10,
                 spreadRadius: 2,
                 offset: Offset(7, 7),
               ),

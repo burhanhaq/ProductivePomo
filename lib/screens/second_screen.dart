@@ -325,7 +325,6 @@ class _SecondScreenState extends State<SecondScreen>
                                     iconSize: 60,
                                     color: timerRunning ? red1 : grey,
                                     onPressed: () {
-                                      print('Stop pressed');
                                       timerDurationController.value = 0.0;
                                       playPauseIconController.reverse();
                                     },
@@ -333,13 +332,11 @@ class _SecondScreenState extends State<SecondScreen>
                                   GestureDetector(
                                     onTap: () {
                                       if (playPauseIconController.status ==
-                                          AnimationStatus.dismissed) {
-                                        print('Play pressed');
+                                          AnimationStatus.dismissed) { // play pressed
                                         timerDurationController.forward();
                                         timerScaleController.forward();
                                         playPauseIconController.forward();
-                                      } else {
-                                        print('Pause pressed');
+                                      } else { // pause pressed
                                         timerDurationController.stop();
                                         timerScaleController
                                             .reverse(); // todo doesn't do reverse curve
