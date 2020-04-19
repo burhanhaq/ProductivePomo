@@ -125,8 +125,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         cardState.selectTile = null;
                         cardState.closeHomeRightBar();
                         cardState.tappedEmptyAreaUnderListView = true;
-//                        cardState.tappedEmptyAreaUnderListView = !cardState.tappedEmptyAreaUnderListView;
-                        print('tapped everywhere');
                       },
                       onHorizontalDragUpdate: (details) {
                         setState(() {
@@ -199,6 +197,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   void dispose() {
     addSectionController.dispose();
+    loadingIndicatorController.dispose();
     super.dispose();
   }
 }
@@ -539,11 +538,16 @@ class _HomeRightBarState extends State<HomeRightBar>
                         setState(() {
                           // todo add confirmation to delete, like a double tap
                           // todo add scale transition
-                          sharedPref.remove(cardState
-                              .cardModels[cardState.selectedIndex].title);
-                          CardModel.cardModelsX
-                              .removeAt(cardState.selectedIndex);
-                          cardState.selectTile = null;
+
+                          if (cardState.confirmDeleteIndex == cardState.selectedIndex) { // second tap
+                            sharedPref.remove(cardState
+                                .cardModels[cardState.selectedIndex].title);
+                            CardModel.cardModelsX
+                                .removeAt(cardState.selectedIndex);
+                            cardState.selectTile = null;
+                          } else { // first tap for confirmation
+                            cardState.confirmDeleteIndex = cardState.selectedIndex;
+                          }
                         });
                       },
                       child: Row(
@@ -551,7 +555,7 @@ class _HomeRightBarState extends State<HomeRightBar>
                           Icon(
                             Icons.delete,
                             size: 80,
-                            color: yellow,
+                            color: cardState.selectedIndex == cardState.confirmDeleteIndex ? blue : yellow,
                           ),
                           Offstage(
                             offstage: !cardState.homeRightBarOpen,
@@ -702,6 +706,7 @@ class _HomeRightBarState extends State<HomeRightBar>
                               if (!cardState.addNewScreen) {
                                 cardState.addNewScreen = true;
                                 cardState.closeHomeRightBar();
+                                cardState.selectTile = null;
                                 addNewIconController.forward();
                               }
                             });

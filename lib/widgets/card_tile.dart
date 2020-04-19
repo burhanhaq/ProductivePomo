@@ -95,24 +95,24 @@ class _CardTileState extends State<CardTile>
             0),
         child: AnimatedContainer(
           duration: Duration(milliseconds: 200),
+          // todo animates really slow sometimes, consider size transition
           margin: EdgeInsets.fromLTRB(
-              // todo set values
-              screenWidth * 0.07,
-              20.0,
-              screenWidth * 0.04,
-              0.0),
+              screenWidth * 0.07, 20.0, screenWidth * 0.04, 0.0),
           padding: EdgeInsets.only(right: 7),
           curve: Curves.fastOutSlowIn,
           width: double.infinity,
           height: isCardSelected ? 150 : 100,
           decoration: BoxDecoration(
             color: isCardSelected ? red1 : yellow,
-//            borderRadius: BorderRadius.circular(30),
             borderRadius: BorderRadius.only(
               topRight: Radius.circular(3),
               topLeft: Radius.circular(3),
               bottomRight: Radius.circular(3),
               bottomLeft: Radius.circular(3),
+            ),
+            border: Border.all(
+              width: cardState.selectedIndex == cardState.confirmDeleteIndex ? 2 : 0,
+              color: yellow,
             ),
             boxShadow: [
               BoxShadow(

@@ -13,6 +13,7 @@ class CardState with ChangeNotifier {
 
   int _selectedIndex;
   bool _addNewScreen = false;
+  int _confirmDeleteIndex = -1;
 
   String _newTitle = ''; // todo add to init perhaps
   String _newGoal = '1';
@@ -36,6 +37,8 @@ class CardState with ChangeNotifier {
   }
 
   bool get addNewScreen => _addNewScreen;
+
+  int get confirmDeleteIndex => _confirmDeleteIndex;
 
   String get newTitle => _newTitle;
 
@@ -89,6 +92,7 @@ class CardState with ChangeNotifier {
 
   set selectTile(CardModel model) {
     int i = _cardModels.indexOf(model);
+    _confirmDeleteIndex = -1;
 
     if (model == null) {
       _pageGoal = null;
@@ -111,6 +115,11 @@ class CardState with ChangeNotifier {
 
   set addNewScreen(bool val) {
     _addNewScreen = val;
+    notifyListeners();
+  }
+
+  set confirmDeleteIndex(int val) {
+    _confirmDeleteIndex = val;
     notifyListeners();
   }
 
