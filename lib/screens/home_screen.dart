@@ -123,8 +123,18 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                     GestureDetector(
                       onTap: () {
                         cardState.selectTile = null;
-                        cardState.homeRightBarOpen = false;
+                        cardState.closeHomeRightBar();
+                        cardState.tappedEmptyAreaUnderListView = true;
                       },
+                      onHorizontalDragUpdate: (details) {
+                      setState(() {
+                        if (details.delta.dx < 0) {
+                          cardState.openHomeRightBar();
+                        } else {
+                          cardState.closeHomeRightBar();
+                        }
+                      });
+                    },
                       child: ListView(
                         // todo add person's name above this
 //                            shrinkWrap: true,
@@ -338,8 +348,12 @@ class _HomeRightBarState extends State<HomeRightBar>
     with TickerProviderStateMixin {
   AnimationController addNewIconController;
   Animation addNewIconAnimation;
-  AnimationController closeIconController;
+  AnimationController
+      closeIconController; // not being used for the moment. might change later
   Animation closeIconAnimation;
+  var rightBarController;
+  var rightBarAnimation;
+  var rightBarStatus = AnimationStatus.dismissed;
   SharedPref sharedPref = SharedPref();
 
   @override
@@ -365,31 +379,58 @@ class _HomeRightBarState extends State<HomeRightBar>
     )..addListener(() {
         setState(() {});
       });
+    rightBarController = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 150));
+    rightBarAnimation =
+        CurvedAnimation(parent: rightBarController, curve: Curves.elasticInOut)
+          ..addListener(() {
+            setState(() {});
+          })
+          ..addStatusListener((status) {
+            setState(() {
+              rightBarStatus = status;
+            });
+          });
   }
 
   @override
   Widget build(BuildContext context) {
     final cardState = Provider.of<CardState>(context);
+    if (cardState.tappedEmptyAreaUnderListView && rightBarStatus == AnimationStatus.dismissed) {
+      rightBarController.forward(from: 0.0);
+    }
+    if (rightBarStatus == AnimationStatus.completed) {
+      rightBarStatus = AnimationStatus.dismissed;
+    }
+
     return GestureDetector(
       onTap: () {
         setState(() {
-          cardState.homeRightBarOpen = !cardState.homeRightBarOpen;
-        });
-      },
-    onHorizontalDragUpdate: (details) {
-        setState(() {
-          if (details.delta.dx < 0) {
-            cardState.homeRightBarOpen = true;
+          if (cardState.homeRightBarOpen) {
+            cardState.closeHomeRightBar();
           } else {
-            cardState.homeRightBarOpen = false;
+            cardState.openHomeRightBar();
           }
         });
-        print(details.delta.dx);
-    },
+      },
+      onHorizontalDragUpdate: (details) {
+        setState(() {
+          if (details.delta.dx < 0) {
+            cardState.openHomeRightBar();
+          } else {
+            cardState.closeHomeRightBar();
+          }
+        });
+      },
       child: AnimatedContainer(
         duration: Duration(milliseconds: 100),
         color: red1,
-        width: MediaQuery.of(context).size.width * (cardState.homeRightBarOpen ? 0.55 : 0.25),
+        width: MediaQuery.of(context).size.width *
+            (cardState.homeRightBarOpen
+                ? 0.55
+                : (0.25 +  (rightBarAnimation.value < 0.5 ? rightBarAnimation.value : (1-rightBarAnimation.value)))
+            // todo maybe limit to if < 2 items
+            ),
         child: Padding(
           padding: EdgeInsets.only(top: 20, bottom: 20, left: 10),
           child: Column(
@@ -585,7 +626,6 @@ class _HomeRightBarState extends State<HomeRightBar>
                                 (1 - addNewIconAnimation.value)),
                         child: GestureDetector(
                           onTap: () async {
-                            // todo implement clearing text fields when hit
                             // todo add some initial goal value if null, or maybe make it a number drop down
                             var keys = await sharedPref.getKeys();
                             setState(() {
@@ -683,42 +723,6 @@ class _HomeRightBarState extends State<HomeRightBar>
                           ),
                         ),
                       ),
-                      Offstage(
-                        offstage: cardState.addNewScreen ||
-                            CardModel.cardModelsX.length > 1,
-                        child: Transform.translate(
-                          offset: Offset(
-                              -MediaQuery.of(context).size.width * 0.3, 0),
-                          child: Text('Press \'+\' to add items -->',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 25,
-                                fontWeight: FontWeight.w900,
-                                fontFamily: 'IndieFlower',
-                              )),
-                        ),
-                      ),
-                      Offstage(
-                        // todo: moves up when shown, try to disable that
-                        // todo: has a red background while screen is moving, try to change it
-                        offstage: !cardState.addNewScreen,
-                        child: Transform.translate(
-                          offset: Offset(
-                              -MediaQuery.of(context).size.width * 0.3, 0),
-                          child: Container(
-                            color: red1,
-                            child: Text(
-                              'Press \'✓\' to add item -->',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 25,
-                                fontWeight: FontWeight.w900,
-                                fontFamily: 'IndieFlower',
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                 ],
@@ -734,6 +738,7 @@ class _HomeRightBarState extends State<HomeRightBar>
   void dispose() {
     addNewIconController.dispose();
     closeIconController.dispose();
+    rightBarController.dispose();
     super.dispose();
   }
 }

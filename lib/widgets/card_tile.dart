@@ -64,23 +64,24 @@ class _CardTileState extends State<CardTile>
       onHorizontalDragUpdate: (details) {
         if (details.primaryDelta < 0) {
           cardState.selectTile = widget.cardModel;
+          cardState.closeHomeRightBar();
           cardScreenController.forward(from: 0.0);
           Navigator.push(
             context,
             SecondScreenNavigation(
-              widget:
-                  SecondScreen(cardTile: widget),
+              widget: SecondScreen(cardTile: widget),
             ),
           );
         }
       },
       onTap: () {
-        if (widget.cardModel.selected) { // tapped second time
+        cardState.closeHomeRightBar();
+        if (widget.cardModel.selected) {
+          // tapped second time
           Navigator.push(
             context,
             SecondScreenNavigation(
-              widget:
-              SecondScreen(cardTile: widget),
+              widget: SecondScreen(cardTile: widget),
             ),
           );
         }
@@ -94,7 +95,8 @@ class _CardTileState extends State<CardTile>
             0),
         child: AnimatedContainer(
           duration: Duration(milliseconds: 200),
-          margin: EdgeInsets.fromLTRB(screenWidth * 0.07, 20.0, 0.0, 0.0),
+          margin: EdgeInsets.fromLTRB( // todo set values
+              screenWidth * 0.07, 20.0, screenWidth * 0.04, 0.0),
           curve: Curves.fastOutSlowIn,
           width: double.infinity,
           height: isCardSelected ? 200 : 100,

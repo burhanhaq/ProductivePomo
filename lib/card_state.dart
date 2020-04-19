@@ -21,6 +21,7 @@ class CardState with ChangeNotifier {
 
   bool _isClearTitleTextEditingController = false;
   bool _homeRightBarOpen = false;
+  bool _tappedEmptyAreaUnderListView = false;
 
 //  SharedPref sharedPref = SharedPref(); // todo implement this maybe to speed things up
 
@@ -54,6 +55,7 @@ class CardState with ChangeNotifier {
       _isClearTitleTextEditingController;
 
   bool get homeRightBarOpen => _homeRightBarOpen;
+  bool get tappedEmptyAreaUnderListView => _tappedEmptyAreaUnderListView;
 
 
   clearCardModelsList() {
@@ -147,8 +149,18 @@ class CardState with ChangeNotifier {
     notifyListeners();
   }
 
-  set homeRightBarOpen(bool val) {
-    _homeRightBarOpen = val;
+  openHomeRightBar() {
+    _homeRightBarOpen = true;
+    notifyListeners();
+  }
+
+  closeHomeRightBar() {
+    _homeRightBarOpen = false;
+    notifyListeners();
+  }
+
+  set tappedEmptyAreaUnderListView(bool val) {
+    _tappedEmptyAreaUnderListView = val;
     notifyListeners();
   }
 }
