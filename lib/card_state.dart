@@ -11,7 +11,7 @@ class CardState with ChangeNotifier {
      _newTitle = '';
      _newGoal = '10';
      _newMinutes = '30';
-     _newSeconds = '10';
+     _newSeconds = '03';
      notifyListeners();
   }
   int _pageScore;
@@ -30,7 +30,7 @@ class CardState with ChangeNotifier {
   bool _homeRightBarOpen = false;
   bool _tappedEmptyAreaUnderListView = false;
 
-//  SharedPref sharedPref = SharedPref(); // todo implement this maybe to speed things up
+//  SharedPref sharedPrefCS = SharedPref(); // todo implement this maybe to speed things up
 
   int get firstPageScore => _pageScore;
 
@@ -66,10 +66,6 @@ class CardState with ChangeNotifier {
   clearCardModelsList() {
     cardModels.clear();
     notifyListeners();
-  }
-
-  CardModel at(int i) { // todo see if this is needed
-    return cardModels[i];
   }
 
   void subtract(CardModel model) {

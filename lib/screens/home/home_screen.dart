@@ -107,7 +107,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         }
       } else {
         loadingIndicatorController.forward();
-        loadingIndicatorCount++;
+        ++loadingIndicatorCount;
       }
     }
 

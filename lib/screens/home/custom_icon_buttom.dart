@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../constants.dart';
-import '../../widgets/card_tile.dart';
-import '../../card_state.dart';
-import '../../models/card_model.dart';
-import '../../shared_pref.dart';
 
 class CustomIconButton extends StatefulWidget {
   final String name;

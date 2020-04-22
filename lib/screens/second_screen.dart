@@ -21,7 +21,7 @@ class SecondScreen extends StatefulWidget {
 
 class _SecondScreenState extends State<SecondScreen>
     with TickerProviderStateMixin {
-  SharedPref sharedPref = SharedPref();
+//  SharedPref sharedPref = SharedPref();
   var timerDurationController;
   var playPauseIconController;
   var playPauseIconAnimation;
@@ -320,7 +320,6 @@ class _SecondScreenState extends State<SecondScreen>
                               child: Column(
                                 children: [
                                   IconButton(
-                                    // todo: program it to be disabled if at 0 I guess
                                     icon: Icon(Icons.replay),
                                     iconSize: 60,
                                     color: timerRunning ? red1 : grey,
