@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
@@ -113,7 +114,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     return SafeArea(
       child: Material(
         child: Container(
-          color: Theme.of(context).accentColor,
+          color: grey,
           child: Row(
             children: <Widget>[
               Expanded(
@@ -126,7 +127,21 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         alignment: Alignment.center,
                         width: MediaQuery.of(context).size.width * 0.72,
                         height: MediaQuery.of(context).size.height * 0.1,
-                        color: Colors.grey[850], // todo pick a good color
+                        decoration: BoxDecoration(
+//                          color: Colors.grey[850], // todo pick a good color
+                          gradient: LinearGradient(
+                            colors: [
+                              grey2, grey
+                            ],
+                            stops: [
+                              0.7, 1.0
+                            ],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+
+                          ),
+
+                        ),
                         child: Text(
                           'Name',
                           style: TextStyle(
@@ -510,7 +525,7 @@ class _HomeRightBarState extends State<HomeRightBar>
               Column(
                 children: [
                   Offstage(
-                    offstage: !cardState.devMode,
+                    offstage: kReleaseMode,
                     child: GestureDetector(
                       onTap: () {
                         setState(() {
@@ -540,32 +555,35 @@ class _HomeRightBarState extends State<HomeRightBar>
                       ),
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        sharedPref.removeAll();
-                        cardState.clearCardModelsList();
-                      });
-                    },
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.do_not_disturb_on,
-                          size: 80,
-                          color: yellow,
-                        ),
-                        Offstage(
-                          offstage: !cardState.homeRightBarOpen,
-                          child: Text(
-                            'Delete All',
-                            style: TextStyle(
-                              color: yellow,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w800,
+                  Offstage(
+                    offstage: kReleaseMode,
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          sharedPref.removeAll();
+                          cardState.clearCardModelsList();
+                        });
+                      },
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.do_not_disturb_on,
+                            size: 80,
+                            color: yellow,
+                          ),
+                          Offstage(
+                            offstage: !cardState.homeRightBarOpen,
+                            child: Text(
+                              'Delete All',
+                              style: TextStyle(
+                                color: yellow,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w800,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   Offstage(
