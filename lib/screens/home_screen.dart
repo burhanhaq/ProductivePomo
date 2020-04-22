@@ -240,7 +240,7 @@ class _AddNewCardSectionState extends State<AddNewCardSection> {
     var cardState = Provider.of<CardState>(context);
     if (cardState.isClearTitleTextEditingController) {
       titleTextController.clear();
-      cardState.clearTitleTextEditingControllerSwitch();
+//      cardState.clearTitleTextEditingControllerSwitch();
     }
     var minutesList = List.generate(
         13,
@@ -319,6 +319,7 @@ class _AddNewCardSectionState extends State<AddNewCardSection> {
                       children: [
                         DropdownButton(
                           icon: Icon(Icons.arrow_drop_down, size: 0),
+//focusColor: red1,
                           dropdownColor: red1,
                           onChanged: (inputValue) {
                             setState(() {
@@ -338,7 +339,7 @@ class _AddNewCardSectionState extends State<AddNewCardSection> {
                         ),
                         DropdownButton(
                           icon: Icon(Icons.arrow_drop_down, size: 0),
-                          dropdownColor: red1,
+                          focusColor: red1,
                           onChanged: (inputValue) {
                             setState(() {
                               cardState.newSeconds = inputValue;
@@ -674,11 +675,12 @@ class _HomeRightBarState extends State<HomeRightBar>
                             0,
                             MediaQuery.of(context).size.height *
                                 0.2 *
-                                (1 - addNewIconAnimation.value)),
+                                (1 - addNewIconAnimation.value),
+                        ),
                         child: GestureDetector(
                           onTap: () async {
                             // todo maybe make it a number drop down
-                            var keys = await sharedPref.getKeys();
+                            var keys = await sharedPref.getKeys(); // todo maybe i can perform this with cardList instead
                             setState(() {
                               bool canAddNewScreen = cardState.addNewScreen &&
                                   cardState.newTitle.isNotEmpty &&
@@ -687,15 +689,14 @@ class _HomeRightBarState extends State<HomeRightBar>
                               if (canAddNewScreen) {
                                 addNewIconController.reverse();
                                 cancelIconScaleController.reverse();
-                                cardState
-                                    .clearTitleTextEditingControllerSwitch();
+//                                cardState.clearTitleTextEditingControllerSwitch();
                                 cardState.addToCardModelsList(
                                   CardModel(
                                     title: cardState.newTitle,
                                     score: 0,
                                     goal:
                                         int.tryParse(cardState.newGoal) == null
-                                            ? '-2'
+                                            ? '777'
                                             : int.tryParse(cardState.newGoal),
                                     minutes: int.parse(cardState.newMinutes),
                                     seconds: int.parse(cardState.newSeconds),

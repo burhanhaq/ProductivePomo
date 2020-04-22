@@ -116,12 +116,19 @@ class _CardTileState extends State<CardTile>
               color: yellow,
             ),
             boxShadow: [
-              BoxShadow(
-                color: Colors.black,
-                blurRadius: 10,
-                spreadRadius: 2,
-                offset: Offset(7, 7),
-              ),
+             isCardSelected ? BoxShadow(
+               color: Colors.black,
+               blurRadius: 10,
+               spreadRadius: 2,
+               offset: Offset(7, 7),
+             ) :
+             BoxShadow(
+//               color: Colors.black,
+               blurRadius: 0,
+               spreadRadius: 0,
+               offset: Offset(0, 0),
+
+             ),
             ],
           ),
           child: Column(
@@ -157,7 +164,7 @@ class _CardTileState extends State<CardTile>
               ),
               Spacer(),
               Offstage(
-                child: Text('brhn.dev', style: kLabel.copyWith(color: white)),
+                child: Text('brhn.dev', style: kLabel.copyWith(color: white, fontSize: 20)),
                 offstage: !isCardSelected,
               ),
             ],

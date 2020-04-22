@@ -142,10 +142,10 @@ class CardState with ChangeNotifier {
     notifyListeners();
   }
 
-  void clearTitleTextEditingControllerSwitch() {
-    _isClearTitleTextEditingController = !_isClearTitleTextEditingController;
-    notifyListeners();
-  }
+//  void clearTitleTextEditingControllerSwitch() {
+//    _isClearTitleTextEditingController = !_isClearTitleTextEditingController;
+//    notifyListeners();
+//  }
 
   openHomeRightBar() {
     _homeRightBarOpen = true;
