@@ -7,11 +7,12 @@ import 'models/card_model.dart';
 
 class CardState with ChangeNotifier {
 
-  resetAddNewScreenVariables() {
+  resetNewVariables() {
      _newTitle = '';
      _newGoal = '10';
      _newMinutes = '30';
      _newSeconds = '10';
+     notifyListeners();
   }
   int _pageScore;
   int _pageGoal;

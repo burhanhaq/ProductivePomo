@@ -18,6 +18,7 @@ const kScore = TextStyle(
   letterSpacing: 1.0,
 );
 
+// not a constant
 var kSliderThemeData = SliderThemeData(
   valueIndicatorTextStyle:
   TextStyle(fontSize: 22, color: red1, fontWeight: FontWeight.w500),
@@ -59,3 +60,11 @@ const Color trans = Colors.transparent;
 const Color pink = Color(0xff85203b);
 const Color orange = Color(0xffff9f68);
 const Color darkPurple = Color(0xff492540);
+
+
+// Home Screen Constants
+const kHomeRightBarClosedMul = 0.25;
+const kHomeRightBarOpenMul = 0.55;
+const kHomeYellowDividerMul = 0.03;
+const kGreyAreaMul = 0.72;
+const kAddNewSectionMul = 0.72;
