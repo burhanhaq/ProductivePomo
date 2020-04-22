@@ -18,7 +18,7 @@ const kScore = TextStyle(
   letterSpacing: 1.0,
 );
 
-const kSliderThemeData = SliderThemeData(
+var kSliderThemeData = SliderThemeData(
   valueIndicatorTextStyle:
   TextStyle(fontSize: 22, color: red1, fontWeight: FontWeight.w500),
   inactiveTrackColor: red12,
@@ -27,6 +27,7 @@ const kSliderThemeData = SliderThemeData(
   inactiveTickMarkColor: yellow,
   thumbColor: yellow,
   valueIndicatorColor: yellow,
+  overlayColor: yellow.withOpacity(0.1),
 );
 
 const kAddNewSectionTextStyle = TextStyle(

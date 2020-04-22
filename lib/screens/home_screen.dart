@@ -259,9 +259,8 @@ class _AddNewCardSectionState extends State<AddNewCardSection> {
         width: sectionWidth,
         color: red1,
         child: Padding(
-          padding: EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 30),
+          padding: EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 20),
           child: Column(
-//            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Column(
                 children: <Widget>[
@@ -272,19 +271,18 @@ class _AddNewCardSectionState extends State<AddNewCardSection> {
                       child: Text('Name', style: kAddNewSectionTextStyle),
                     ),
                   ),
-                  TextField( // todo implement clear
+                  TextField( // todo implement clear on hit
                     enabled: cardState.addNewScreen,
                     controller: titleTextController,
                     autofocus: false,
                     style: TextStyle(
                       color: white,
                       fontSize: 30,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w400,
                     ),
                     decoration: InputDecoration(
                       hintStyle: TextStyle(color: yellow),
-                      hintText: 'Title',
-                      fillColor: blue,
+                    focusColor: blue,
                     ),
                     onChanged: (value) {
                       setState(() {
@@ -303,7 +301,7 @@ class _AddNewCardSectionState extends State<AddNewCardSection> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                      Padding(padding: EdgeInsets.only(left: 20),child: Text('Duration', style: kAddNewSectionTextStyle)),
+                      Padding(padding: EdgeInsets.only(left: 20),child: Text('Duration (min)', style: kAddNewSectionTextStyle)),
                       SliderTheme(
                         data: kSliderThemeData,
                         child: Slider(
