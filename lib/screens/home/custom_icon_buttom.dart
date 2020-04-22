@@ -15,6 +15,7 @@ class CustomIconButton extends StatefulWidget {
   final bool offstage;
   final bool textOffstage;
   final Function func;
+  final Color c;
 
   CustomIconButton({
     @required this.name,
@@ -22,6 +23,7 @@ class CustomIconButton extends StatefulWidget {
     this.offstage = false,
     @required this.textOffstage,
     @required this.func,
+    this.c = yellow,
   });
 
   @override
@@ -42,7 +44,7 @@ class _CustomIconButtonState extends State<CustomIconButton> {
               Icon(
                 widget.iconData,
                 size: 60,
-                color: yellow,
+                color: widget.c,
               ),
               SizedBox(width: 8),
               Offstage(

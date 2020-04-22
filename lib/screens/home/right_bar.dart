@@ -132,14 +132,14 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                         decoration: TextDecoration.none,
                       ),
                     ),
-                    Container(height: 10, width: 80, color: yellow),
+                    Container(height: 6, width: 60, color: yellow),
                     Text(
                       cardState.firstPageGoal == null
                           ? 'y'
                           : cardState.firstPageGoal.toString(),
                       style: TextStyle(
                         color: yellow,
-                        fontSize: 50,
+                        fontSize: 30,
                         decoration: TextDecoration.none,
                       ),
                     ),
@@ -165,7 +165,6 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                     func: () => deleteAllIconF(cardState),
                   ),
                   ScaleTransition(
-                    // todo fix blue color
                     scale: deleteIconScaleAnimation,
                     child: CustomIconButton(
                       name: 'Delete Item',
@@ -173,6 +172,9 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                       offstage: cardState.selectedIndex == null,
                       textOffstage: !cardState.homeRightBarOpen,
                       func: () => deleteIconF(cardState),
+                      c: cardState.selectedIndex == cardState.confirmDeleteIndex
+                          ? blue
+                          : yellow,
                     ),
                   ),
                   ScaleTransition(
@@ -195,11 +197,12 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                               0.2 *
                               (1 - addNewIconAnimation.value),
                         ),
-                        child:  CustomIconButton(
+                        child: CustomIconButton(
                           name: 'Confirm Item',
                           iconData: Icons.check_box,
                           textOffstage: !cardState.homeRightBarOpen,
                           func: () => checkBoxIconF(cardState),
+                          c: canAddScreen(cardState) ? yellow : red2,
                         ),
                       ),
                       Transform.translate(
@@ -226,14 +229,20 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
     );
   }
 
-  checkBoxIconF(CardState cardState) async {
-    var keys = await sharedPref
-        .getKeys(); // todo maybe i can perform this with cardList instead
+  bool canAddScreen(CardState cardState) {
+//    var keys = await sharedPref.getKeys(); // maybe i can perform this with cardList instead
+    var keys = [];
+    CardModel.cardModelsX.forEach((element) {
+      keys.add(element.title.toLowerCase());
+    });
+    return cardState.addNewScreen &&
+        cardState.newTitle.isNotEmpty &&
+        !keys.contains(cardState.newTitle);
+  }
+
+  checkBoxIconF(CardState cardState) {
     setState(() {
-      bool canAddNewScreen = cardState.addNewScreen &&
-          cardState.newTitle.isNotEmpty &&
-          !keys.contains(
-              cardState.newTitle); // todo add animation for duplicate entry
+      bool canAddNewScreen = canAddScreen(cardState);
       if (canAddNewScreen) {
         addNewIconController.reverse();
         cancelIconScaleController.reverse();
@@ -256,7 +265,7 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
             cardState.newTitle, cardState.at(cardState.length - 1).toJson());
         cardState.resetNewVariables();
       } else {
-        // todo add animation for incorrect entry and maybe explain why
+        print('can not add');
       }
     });
   }
@@ -281,20 +290,20 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
   }
 
   deleteIconF(CardState cardState) {
-      if (cardState.confirmDeleteIndex == cardState.selectedIndex) {
-        // second tap
-        sharedPref.remove(cardState.cardModels[cardState.selectedIndex].title);
-        CardModel.cardModelsX.removeAt(cardState.selectedIndex);
-        cardState.selectTile = null;
-      } else {
-        // first tap for confirmation
-        cardState.confirmDeleteIndex = cardState.selectedIndex;
-      }
+    if (cardState.confirmDeleteIndex == cardState.selectedIndex) {
+      // second tap
+      sharedPref.remove(cardState.cardModels[cardState.selectedIndex].title);
+      CardModel.cardModelsX.removeAt(cardState.selectedIndex);
+      cardState.selectTile = null;
+    } else {
+      // first tap for confirmation
+      cardState.confirmDeleteIndex = cardState.selectedIndex;
+    }
   }
 
   deleteAllIconF(CardState cardState) {
-      sharedPref.removeAll();
-      cardState.clearCardModelsList();
+    sharedPref.removeAll();
+    cardState.clearCardModelsList();
   }
 
   @override

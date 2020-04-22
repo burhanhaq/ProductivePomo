@@ -64,7 +64,7 @@ const Color darkPurple = Color(0xff492540);
 
 // Home Screen Constants
 const kHomeRightBarClosedMul = 0.2;
-const kHomeRightBarOpenMul = 0.44;
+const kHomeRightBarOpenMul = 0.48;
 const kHomeYellowDividerMul = 0.02;
 const kGreyAreaMul = 0.78;
 const kAddNewSectionMul = 0.78;
