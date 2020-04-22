@@ -130,17 +130,11 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         decoration: BoxDecoration(
 //                          color: Colors.grey[850], // todo pick a good color
                           gradient: LinearGradient(
-                            colors: [
-                              grey2, grey
-                            ],
-                            stops: [
-                              0.7, 1.0
-                            ],
+                            colors: [grey2, grey],
+                            stops: [0.7, 1.0],
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
-
                           ),
-
                         ),
                         child: Text(
                           'Name',
@@ -257,116 +251,91 @@ class _AddNewCardSectionState extends State<AddNewCardSection> {
       titleTextController.clear();
 //      cardState.clearTitleTextEditingControllerSwitch();
     }
-    var minutesList = List.generate(
-        13,
-        (index) => DropdownMenuItem(
-            child: Text(
-                index == 0 || index == 1 ? '0${index * 5}' : '${index * 5}',
-                style: TextStyle(fontSize: 30, color: yellow)),
-            value: '${index * 5}'));
-    var secondsList = List.generate(
-        12,
-        (index) => DropdownMenuItem(
-            child: Text(
-                index == 0 || index == 1 ? '0${index * 5}' : '${index * 5}',
-                style: TextStyle(fontSize: 30, color: yellow)),
-            value: '${index * 5}'));
+    var sectionWidth = MediaQuery.of(context).size.width * 0.72;
+    var sectionHeight = MediaQuery.of(context).size.height;
     return SafeArea(
       child: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width * 0.72,
+        height: sectionHeight,
+        width: sectionWidth,
         color: red1,
         child: Padding(
-          padding: EdgeInsets.only(left: 20, right: 20, bottom: 200),
+          padding: EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 30),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.start,
+//            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-//              Text('Title', style: TextStyle(color: yellow, fontSize: 100)), // todo adding would be cool
-              TextField(
-                enabled: cardState.addNewScreen,
-                controller: titleTextController,
-                autofocus: false,
-                style: TextStyle(
-                  color: white,
-                  fontSize: 30,
-                  fontWeight: FontWeight.w600,
-                ),
-                decoration: InputDecoration(
-                  hintStyle: TextStyle(color: yellow),
-                  hintText: 'Title',
-                  fillColor: blue,
-                ),
-                onChanged: (value) {
-                  setState(() {
-                    cardState.newTitle = value;
-                  });
-                },
-              ),
-              TextField(
-                enabled: cardState.addNewScreen,
-                autofocus: false,
-                keyboardType: TextInputType.numberWithOptions(decimal: false),
-                style: TextStyle(
-                    color: white, fontSize: 30, fontWeight: FontWeight.w600),
-                decoration: InputDecoration(
-                  hintStyle: TextStyle(color: yellow),
-                  hintText: 'Goal',
-                  fillColor: blue,
-                ),
-                onChanged: (value) {
-                  setState(() {
-                    cardState.newGoal = value;
-                  });
-                },
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+              Column(
                 children: <Widget>[
-                  Text('Duration',
-                      style: TextStyle(
-                          color: yellow,
-                          fontSize: 30,
-                          fontWeight: FontWeight.w600)),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        DropdownButton(
-                          icon: Icon(Icons.arrow_drop_down, size: 0),
-//focusColor: red1,
-                          dropdownColor: red1,
-                          onChanged: (inputValue) {
-                            setState(() {
-                              cardState.newMinutes = inputValue;
-                            });
-                          },
-                          value: cardState.newMinutes.toString(),
-                          items: minutesList,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 5),
-                          child: Text(':',
-                              style: TextStyle(
-                                  color: yellow,
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.w900)),
-                        ),
-                        DropdownButton(
-                          icon: Icon(Icons.arrow_drop_down, size: 0),
-                          focusColor: red1,
-                          onChanged: (inputValue) {
-                            setState(() {
-                              cardState.newSeconds = inputValue;
-                            });
-                          },
-                          value: cardState.newSeconds.toString(),
-                          items: secondsList,
-                        ),
-                      ],
+                  SizedBox(
+                    height: sectionHeight * 0.2,
+                    child: FittedBox(
+                      fit: BoxFit.contain,
+                      child: Text('Name', style: kAddNewSectionTextStyle),
                     ),
                   ),
+                  TextField( // todo implement clear
+                    enabled: cardState.addNewScreen,
+                    controller: titleTextController,
+                    autofocus: false,
+                    style: TextStyle(
+                      color: white,
+                      fontSize: 30,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    decoration: InputDecoration(
+                      hintStyle: TextStyle(color: yellow),
+                      hintText: 'Title',
+                      fillColor: blue,
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        cardState.newTitle = value;
+                      });
+                    },
+                  ),
                 ],
+              ),
+              Spacer(),
+              Container(
+                height: sectionHeight * 0.6,
+                child: RotatedBox(
+                  quarterTurns: 3,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Padding(padding: EdgeInsets.only(left: 20),child: Text('Duration', style: kAddNewSectionTextStyle)),
+                      SliderTheme(
+                        data: kSliderThemeData,
+                        child: Slider(
+                          value: double.tryParse(cardState.newMinutes),
+                          onChanged: (value) {
+                            if (value != null)
+                              cardState.newMinutes = value.round().toInt().toString();
+                          },
+                          divisions: 59,
+                          label: cardState.newMinutes,
+                          max: 60,
+                          min: 1,
+                        ),
+                      ),
+                      Padding(padding: EdgeInsets.only(left: 20),child: Text('Goal', style: kAddNewSectionTextStyle)),
+                      SliderTheme(
+                        data: kSliderThemeData,
+                        child: Slider(
+                          value: double.tryParse(cardState.newGoal),
+                          onChanged: (value) {
+                            if (value != null)
+                              cardState.newGoal = value.round().toInt().toString();
+                          },
+                          divisions: 29,
+                          label: cardState.newGoal,
+                          max: 30,
+                          min: 1,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),
@@ -374,6 +343,7 @@ class _AddNewCardSectionState extends State<AddNewCardSection> {
       ),
     );
   }
+
 }
 
 class HomeRightBar extends StatefulWidget {
@@ -435,10 +405,14 @@ class _HomeRightBarState extends State<HomeRightBar>
               rightBarStatus = status;
             });
           });
-    deleteIconScaleController = AnimationController(vsync: this, duration: Duration(milliseconds: 200));
-    deleteIconScaleAnimation = CurvedAnimation(parent: deleteIconScaleController, curve: Curves.bounceIn);
-    cancelIconScaleController = AnimationController(vsync: this, duration: Duration(milliseconds: 200));
-    cancelIconScaleAnimation = CurvedAnimation(parent: cancelIconScaleController, curve: Curves.bounceIn);
+    deleteIconScaleController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 200));
+    deleteIconScaleAnimation = CurvedAnimation(
+        parent: deleteIconScaleController, curve: Curves.bounceIn);
+    cancelIconScaleController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 200));
+    cancelIconScaleAnimation = CurvedAnimation(
+        parent: cancelIconScaleController, curve: Curves.bounceIn);
   }
 
   @override
@@ -647,11 +621,11 @@ class _HomeRightBarState extends State<HomeRightBar>
                             } else {
                               cancelIconController.forward();
                             }
-                            cardState.newTitle =
-                                ''; // todo create init or something
-                            cardState.newGoal = '';
-                            cardState.newMinutes = '30';
-                            cardState.newSeconds = '10';
+//                            cardState.newTitle = '';
+//                            cardState.newGoal = '10';
+//                            cardState.newMinutes = '30';
+//                            cardState.newSeconds = '10';
+                            cardState.resetAddNewScreenVariables();
                             cardState.addNewScreen = !cardState.addNewScreen;
                           }
                         });
@@ -690,15 +664,16 @@ class _HomeRightBarState extends State<HomeRightBar>
                     children: [
                       Transform.translate(
                         offset: Offset(
-                            0,
-                            MediaQuery.of(context).size.height *
-                                0.2 *
-                                (1 - addNewIconAnimation.value),
+                          0,
+                          MediaQuery.of(context).size.height *
+                              0.2 *
+                              (1 - addNewIconAnimation.value),
                         ),
                         child: GestureDetector(
                           onTap: () async {
                             // todo maybe make it a number drop down
-                            var keys = await sharedPref.getKeys(); // todo maybe i can perform this with cardList instead
+                            var keys = await sharedPref
+                                .getKeys(); // todo maybe i can perform this with cardList instead
                             setState(() {
                               bool canAddNewScreen = cardState.addNewScreen &&
                                   cardState.newTitle.isNotEmpty &&
@@ -730,6 +705,7 @@ class _HomeRightBarState extends State<HomeRightBar>
                                     cardState
                                         .at(cardState.length - 1)
                                         .toJson());
+                                cardState.resetAddNewScreenVariables();
                               } else {
                                 // todo add animation for incorrect entry and maybe explain why
                               }

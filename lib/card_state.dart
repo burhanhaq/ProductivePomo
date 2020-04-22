@@ -4,10 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:pomodoro_app/shared_pref.dart';
 
 import 'models/card_model.dart';
-import 'widgets/card_tile.dart';
 
 class CardState with ChangeNotifier {
-  bool devMode = true;
+
+  resetAddNewScreenVariables() {
+     _newTitle = '';
+     _newGoal = '10';
+     _newMinutes = '30';
+     _newSeconds = '10';
+  }
   int _pageScore;
   int _pageGoal;
 
@@ -15,10 +20,10 @@ class CardState with ChangeNotifier {
   bool _addNewScreen = false;
   int _confirmDeleteIndex = -1;
 
-  String _newTitle = ''; // todo add to init perhaps
-  String _newGoal = '1';
-  String _newMinutes = '30';
-  String _newSeconds = '10';
+  String _newTitle;
+  String _newGoal;
+  String _newMinutes;
+  String _newSeconds;
 
   bool _isClearTitleTextEditingController = false;
   bool _homeRightBarOpen = false;
@@ -43,10 +48,6 @@ class CardState with ChangeNotifier {
   String get newTitle => _newTitle;
 
   String get newGoal {
-    if (_newGoal == '') {
-      _newGoal = '1';
-      notifyListeners();
-    }
     return _newGoal;
   }
 

@@ -18,6 +18,23 @@ const kScore = TextStyle(
   letterSpacing: 1.0,
 );
 
+const kSliderThemeData = SliderThemeData(
+  valueIndicatorTextStyle:
+  TextStyle(fontSize: 22, color: red1, fontWeight: FontWeight.w500),
+  inactiveTrackColor: red12,
+  activeTrackColor: yellow,
+  activeTickMarkColor: yellow,
+  inactiveTickMarkColor: yellow,
+  thumbColor: yellow,
+  valueIndicatorColor: yellow,
+);
+
+const kAddNewSectionTextStyle = TextStyle(
+    color: yellow,
+    fontSize: 50,
+    fontWeight: FontWeight.w100,
+);
+
 const kLong = 60.0;
 const kShort = 15.0;
 const kRotOffset = kShort / 2;
