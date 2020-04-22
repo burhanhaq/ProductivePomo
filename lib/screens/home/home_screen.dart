@@ -199,7 +199,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                           offset: Offset(
                               -MediaQuery.of(context).size.width *
                                   (1 - addSectionAnimation.value) *
-                                  0.69,
+                                  0.75,
                               0),
                           child: AddNewCard()),
                     ),

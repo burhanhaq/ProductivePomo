@@ -32,6 +32,7 @@ class _CustomIconButtonState extends State<CustomIconButton> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.only(top: 5),
       child: Offstage(
         offstage: widget.offstage,
         child: GestureDetector(
@@ -40,16 +41,17 @@ class _CustomIconButtonState extends State<CustomIconButton> {
             children: [
               Icon(
                 widget.iconData,
-                size: 80,
+                size: 60,
                 color: yellow,
               ),
+              SizedBox(width: 8),
               Offstage(
                 offstage: widget.textOffstage,
                 child: Text(
                   widget.name,
                   style: TextStyle(
                     color: yellow,
-                    fontSize: 20,
+                    fontSize: 16,
                     fontWeight: FontWeight.w800,
                   ),
                 ),

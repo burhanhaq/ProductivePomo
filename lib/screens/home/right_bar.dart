@@ -202,7 +202,6 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                           func: () => checkBoxIconF(cardState),
                         ),
                       ),
-
                       Transform.translate(
                         offset: Offset(
                             0,
@@ -282,7 +281,6 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
   }
 
   deleteIconF(CardState cardState) {
-    setState(() {
       if (cardState.confirmDeleteIndex == cardState.selectedIndex) {
         // second tap
         sharedPref.remove(cardState.cardModels[cardState.selectedIndex].title);
@@ -292,14 +290,11 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
         // first tap for confirmation
         cardState.confirmDeleteIndex = cardState.selectedIndex;
       }
-    });
   }
 
   deleteAllIconF(CardState cardState) {
-    setState(() {
       sharedPref.removeAll();
       cardState.clearCardModelsList();
-    });
   }
 
   @override
