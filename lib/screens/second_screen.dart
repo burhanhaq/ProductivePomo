@@ -130,7 +130,8 @@ class _SecondScreenState extends State<SecondScreen>
                       children: <Widget>[
                         AnimatedContainer(
                           duration: Duration(milliseconds: 500),
-                          height: height * (timerRunning ? 0.2 : 0.5) - spacingBetweenContainers,
+                          height: height * (timerRunning ? 0.2 : 0.5) -
+                              spacingBetweenContainers,
                           width: width * 0.2,
                           color: timerRunning ? darkYellow : yellow,
                         ),
@@ -177,13 +178,17 @@ class _SecondScreenState extends State<SecondScreen>
                           children: [
                             FittedBox(
                               fit: BoxFit.contain,
-                              child: Text(
-                                prefScore == null ? '-3' : prefScore.toString(),
-                                style: TextStyle(
-                                  color: timerRunning
-                                      ? Colors.white
-                                      : Colors.black,
-                                  decoration: TextDecoration.none,
+                              child: AnimatedBorder(
+                                child: Text(
+                                  prefScore == null
+                                      ? '-3'
+                                      : prefScore.toString(),
+                                  style: TextStyle(
+                                    color: timerRunning
+                                        ? Colors.white
+                                        : Colors.black,
+                                    decoration: TextDecoration.none,
+                                  ),
                                 ),
                               ),
                             ),
@@ -194,13 +199,15 @@ class _SecondScreenState extends State<SecondScreen>
                             ),
                             FittedBox(
                               fit: BoxFit.contain,
-                              child: Text(
-                                prefGoal == null ? '-3' : prefGoal.toString(),
-                                style: TextStyle(
-                                  color: timerRunning
-                                      ? Colors.white
-                                      : Colors.black,
-                                  decoration: TextDecoration.none,
+                              child: AnimatedBorder(
+                                child: Text(
+                                  prefGoal == null ? '-3' : prefGoal.toString(),
+                                  style: TextStyle(
+                                    color: timerRunning
+                                        ? Colors.white
+                                        : Colors.black,
+                                    decoration: TextDecoration.none,
+                                  ),
                                 ),
                               ),
                             ),
@@ -219,16 +226,19 @@ class _SecondScreenState extends State<SecondScreen>
                     child: AnimatedContainer(
                       duration: Duration(milliseconds: 500),
                       color: timerRunning ? darkRed : red1,
-                      width: width * (timerRunning ? 0.7 : 0.8) - spacingBetweenContainers,
+                      width: width * (timerRunning ? 0.7 : 0.8) -
+                          spacingBetweenContainers,
                       height: height * 0.2,
                       child: FittedBox(
                         fit: BoxFit.contain,
-                        child: Text(
-                          'Alex',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'IndieFlower',
-                            decoration: TextDecoration.none,
+                        child: AnimatedBorder(
+                          child: Text(
+                            'Alex',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'IndieFlower',
+                              decoration: TextDecoration.none,
+                            ),
                           ),
                         ),
                       ),
@@ -244,7 +254,8 @@ class _SecondScreenState extends State<SecondScreen>
                     child: AnimatedContainer(
                       duration: Duration(milliseconds: 500),
                       height: height * 0.5 - safeAreaPadding,
-                      width: width * (timerRunning ? 0.7 : 0.8) - spacingBetweenContainers,
+                      width: width * (timerRunning ? 0.7 : 0.8) -
+                          spacingBetweenContainers,
                       color: timerRunning ? darkRed : red1,
                       child: Center(
                         child: Text(
@@ -272,8 +283,9 @@ class _SecondScreenState extends State<SecondScreen>
                       duration: Duration(milliseconds: 500),
                       color: timerRunning ? darkYellow : yellow,
                       width: width * 0.2,
-                      height:
-                          height * (timerRunning ? 0.5 : 0.8) - safeAreaPadding - spacingBetweenContainers,
+                      height: height * (timerRunning ? 0.5 : 0.8) -
+                          safeAreaPadding -
+                          spacingBetweenContainers,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -281,7 +293,7 @@ class _SecondScreenState extends State<SecondScreen>
                             children: <Widget>[
                               GestureDetector(
                                 onTap: () {
-                                  cardState.subtract(widget.cardTile.cardModel);
+                                  cardState.subtractScore(widget.cardTile.cardModel);
                                   sharedPref.save(
                                       widget.cardTile.cardModel.title,
                                       widget.cardTile.cardModel.toJson());
@@ -294,7 +306,7 @@ class _SecondScreenState extends State<SecondScreen>
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  cardState.add(widget.cardTile.cardModel);
+                                  cardState.addScore(widget.cardTile.cardModel);
                                   sharedPref.save(
                                       widget.cardTile.cardModel.title,
                                       widget.cardTile.cardModel.toJson());
@@ -331,11 +343,13 @@ class _SecondScreenState extends State<SecondScreen>
                                   GestureDetector(
                                     onTap: () {
                                       if (playPauseIconController.status ==
-                                          AnimationStatus.dismissed) { // play pressed
+                                          AnimationStatus.dismissed) {
+                                        // play pressed
                                         timerDurationController.forward();
                                         timerScaleController.forward();
                                         playPauseIconController.forward();
-                                      } else { // pause pressed
+                                      } else {
+                                        // pause pressed
                                         timerDurationController.stop();
                                         timerScaleController
                                             .reverse(); // todo doesn't do reverse curve
@@ -354,10 +368,15 @@ class _SecondScreenState extends State<SecondScreen>
                             ),
                           ),
                           SizedBox(height: height * 0.05),
-                          Icon(
-                            Icons.settings,
-                            size: 40,
-                            color: grey,
+                          GestureDetector(
+                            onTap: () {
+                                cardState.settingsActive = !cardState.settingsActive;
+                            },
+                            child: Icon(
+                              Icons.settings,
+                              size: 40,
+                              color: cardState.settingsActive ? blue : grey,
+                            ),
                           ),
                           SizedBox(height: 10),
                         ],
@@ -371,10 +390,12 @@ class _SecondScreenState extends State<SecondScreen>
                     scale: 0.5 +
                         (timerScaleAnimation.value) *
                             (timerRunning ? 0.5 : 0.0),
-                    child: BoxesDigitalClock(
-                      min: widget.cardTile.cardModel.minutes,
-                      sec: widget.cardTile.cardModel.seconds,
-                      timerController: timerDurationController,
+                    child: AnimatedBorder(
+                      child: BoxesDigitalClock(
+                        min: widget.cardTile.cardModel.minutes,
+                        sec: widget.cardTile.cardModel.seconds,
+                        timerController: timerDurationController,
+                      ),
                     ),
                   ),
                 ),
@@ -395,5 +416,26 @@ class _SecondScreenState extends State<SecondScreen>
     backgroundOpacityController.dispose();
     timerScaleController.dispose();
     super.dispose();
+  }
+}
+
+class AnimatedBorder extends StatefulWidget {
+  final Widget child;
+  AnimatedBorder({this.child});
+  @override
+  _AnimatedBorderState createState() => _AnimatedBorderState();
+}
+
+class _AnimatedBorderState extends State<AnimatedBorder> {
+  @override
+  Widget build(BuildContext context) {
+    CardState cardState = Provider.of<CardState>(context);
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 170),
+      decoration: BoxDecoration(
+        border: Border.all(color: cardState.settingsActive ? blue : trans, width: 3),
+      ),
+      child: widget.child,
+    );
   }
 }

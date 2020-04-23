@@ -259,10 +259,10 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
           ),
         );
         widget.cardTileList
-            .add(CardTile(cardModel: cardState.cardModels[cardState.length - 1]));
+            .add(CardTile(cardModel: cardState.cardModels[cardState.cardModels.length - 1]));
         cardState.addNewScreen = !cardState.addNewScreen;
         sharedPref.save(
-            cardState.newTitle, cardState.cardModels[cardState.length - 1].toJson());
+            cardState.newTitle, cardState.cardModels[cardState.cardModels.length - 1].toJson());
         cardState.resetNewVariables();
       } else {
         print('can not add');

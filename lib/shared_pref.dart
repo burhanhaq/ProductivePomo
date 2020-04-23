@@ -1,7 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
-SharedPref sharedPref = SharedPref();
+SharedPref sharedPref = SharedPref(); // todo dispose it maybe
 
 class SharedPref {
   read(String key) async {

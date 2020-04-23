@@ -17,10 +17,10 @@ class _AddNewCardState extends State<AddNewCard> {
   @override
   Widget build(BuildContext context) {
     var cardState = Provider.of<CardState>(context);
-    if (cardState.isClearTitleTextEditingController) {
-      titleTextController.clear();
+//    if (cardState.isClearTitleTextEditingController) {
+//      titleTextController.clear();
 //      cardState.clearTitleTextEditingControllerSwitch();
-    }
+//    }
     var sectionWidth = MediaQuery.of(context).size.width * kGreyAreaMul;
     var sectionHeight = MediaQuery.of(context).size.height;
     return SafeArea(

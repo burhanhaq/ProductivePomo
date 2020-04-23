@@ -110,7 +110,7 @@ class _CardTileState extends State<CardTile>
             ),
             border: Border.all(
               width: cardState.selectedIndex == cardState.confirmDeleteIndex ? 2 : 0,
-              color: yellow,
+              color: blue,
             ),
             boxShadow: [
              isCardSelected ? BoxShadow(

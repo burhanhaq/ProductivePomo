@@ -6,41 +6,36 @@ import 'package:pomodoro_app/shared_pref.dart';
 import 'models/card_model.dart';
 
 class CardState with ChangeNotifier {
-
   resetNewVariables() {
-     _newTitle = '';
-     _newGoal = '10';
-     _newMinutes = '30';
-     _newSeconds = '03';
-     notifyListeners();
+    _newTitle = '';
+    _newGoal = '10';
+    _newMinutes = '30';
+    _newSeconds = '03';
+    notifyListeners();
   }
+
+//  SharedPref sharedPrefCS = SharedPref(); // todo implement this maybe to speed things up
+
+  List<CardModel> get cardModels => CardModel.cardModelsX;
+
+  // HOME PAGE 88888888888888888888888888
   int _pageScore;
   int _pageGoal;
-
   int _selectedIndex;
   bool _addNewScreen = false;
   int _confirmDeleteIndex = -1;
-
   String _newTitle;
   String _newGoal;
   String _newMinutes;
   String _newSeconds;
-
-  bool _isClearTitleTextEditingController = false;
   bool _homeRightBarOpen = false;
   bool _tappedEmptyAreaUnderListView = false;
-
-//  SharedPref sharedPrefCS = SharedPref(); // todo implement this maybe to speed things up
 
   int get firstPageScore => _pageScore;
 
   int get firstPageGoal => _pageGoal;
 
-  int get length => cardModels.length;
-
-  int get selectedIndex {
-    return _selectedIndex;
-  }
+  int get selectedIndex => _selectedIndex;
 
   bool get addNewScreen => _addNewScreen;
 
@@ -48,44 +43,18 @@ class CardState with ChangeNotifier {
 
   String get newTitle => _newTitle;
 
-  String get newGoal {
-    return _newGoal;
-  }
+  String get newGoal => _newGoal;
 
   String get newMinutes => _newMinutes;
 
   String get newSeconds => _newSeconds;
 
-  bool get isClearTitleTextEditingController =>
-      _isClearTitleTextEditingController;
+//  bool get isClearTitleTextEditingController =>
+//      _isClearTitleTextEditingController;
 
   bool get homeRightBarOpen => _homeRightBarOpen;
+
   bool get tappedEmptyAreaUnderListView => _tappedEmptyAreaUnderListView;
-
-
-  clearCardModelsList() {
-    cardModels.clear();
-    notifyListeners();
-  }
-
-  void subtract(CardModel model) {
-    int i = cardModels.indexOf(model);
-    if (cardModels[i].score > 0) --cardModels[i].score;
-    notifyListeners();
-  }
-
-  void add(CardModel model) async {
-    int i = cardModels.indexOf(model);
-    ++cardModels[i].score;
-    notifyListeners();
-  }
-
-  List<CardModel> get cardModels => CardModel.cardModelsX;
-
-  addToCardModelsList(CardModel model) {
-    cardModels.add(model);
-    notifyListeners();
-  }
 
   set selectTile(CardModel model) {
     int i = cardModels.indexOf(model);
@@ -158,5 +127,39 @@ class CardState with ChangeNotifier {
   set tappedEmptyAreaUnderListView(bool val) {
     _tappedEmptyAreaUnderListView = val;
     // don't add notifyListeners()
+  }
+
+  // SECOND PAGE 8888888888888888888888888888888888888888888888888888888888888
+  bool _settingsActive = false;
+
+  get settingsActive => _settingsActive;
+
+  set settingsActive(bool val) {
+    _settingsActive = val;
+    notifyListeners();
+  }
+
+  // RANDOM
+
+  clearCardModelsList() {
+    cardModels.clear();
+    notifyListeners();
+  }
+
+  void subtractScore(CardModel model) {
+    int i = cardModels.indexOf(model);
+    if (cardModels[i].score > 0) --cardModels[i].score;
+    notifyListeners();
+  }
+
+  void addScore(CardModel model) async {
+    int i = cardModels.indexOf(model);
+    ++cardModels[i].score;
+    notifyListeners();
+  }
+
+  addToCardModelsList(CardModel model) {
+    cardModels.add(model);
+    notifyListeners();
   }
 }
