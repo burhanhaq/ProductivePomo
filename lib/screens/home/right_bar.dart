@@ -9,6 +9,7 @@ import '../../card_state.dart';
 import '../../models/card_model.dart';
 import '../../shared_pref.dart';
 import 'custom_icon_buttom.dart';
+import '../../database_helper.dart';
 
 class RightBar extends StatefulWidget {
   final List<CardTile> cardTileList;
@@ -68,6 +69,7 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    String tName = 'Work6';
     final cardState = Provider.of<CardState>(context);
     if (cardState.tappedEmptyAreaUnderListView &&
         rightBarStatus == AnimationStatus.dismissed) {
@@ -146,16 +148,69 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                   ],
                 ),
               ),
-              Spacer(),
+//              Spacer(),
               Column(
                 children: [
+                  Offstage(
+                    offstage: !kDebugMode,
+                    child: Column(
+                      children: <Widget>[
+                        GestureDetector(
+                            onTap: () async {
+                              var one = await DatabaseHelper.instance
+                                  .createTable(tName);
+                              var two = await DatabaseHelper.instance
+                                  .insertRecord(tName, {
+                                DatabaseHelper.columnDate: 2017,
+                                DatabaseHelper.columnScore: 1,
+                                DatabaseHelper.columnGoal: 2,
+                                DatabaseHelper.columnDuration: 3,
+                              });
+                              print('one: $one');
+                              print('two: $two');
+                            },
+                            child: Text('Insert')),
+                        SizedBox(height: 40),
+                        GestureDetector(
+                            onTap: () async {
+                              var query = await DatabaseHelper.instance
+                                  .queryRecords(tName);
+                              print('query: $query');
+                            },
+                            child: Text('Query')),
+                        SizedBox(height: 40),
+                        GestureDetector(
+                            onTap: () async {
+                              var update = await DatabaseHelper.instance
+                                  .updateRecord(tName, {
+                                DatabaseHelper.columnDate: 2002,
+                                DatabaseHelper.columnScore: 10,
+                                DatabaseHelper.columnGoal: 20,
+                                DatabaseHelper.columnDuration: 300,
+                              });
+                              print('update: $update');
+                            },
+                            child: Text('Update')),
+                        SizedBox(height: 40),
+                        GestureDetector(
+                            onTap: () async {
+                              var delete = await DatabaseHelper.instance
+                                  .deleteRecord(tName, 200);
+                              print('delete: $delete');
+                            },
+                            child: Text('Delete')),
+                        SizedBox(height: 40),
+                      ],
+                    ),
+                  ),
                   CustomIconButton(
                     name: 'Print All',
                     iconData: Icons.grain,
                     offstage: kReleaseMode,
                     textOffstage: !cardState.homeRightBarOpen,
-                    func: () => print(
-                        'cardModelsX: ${CardModel.cardModelsX.toString()}'),
+                    func: () {
+                      print('cardModelsX: ${CardModel.cardModelsX.toString()}');
+                    },
                   ),
                   CustomIconButton(
                     name: 'Delete All',
@@ -237,7 +292,7 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
     });
     return cardState.addNewScreen &&
         cardState.newTitle.isNotEmpty &&
-        !keys.contains(cardState.newTitle);
+        !keys.contains(cardState.newTitle.toLowerCase());
   }
 
   checkBoxIconF(CardState cardState) {
@@ -258,11 +313,11 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
             seconds: int.parse(cardState.newSeconds),
           ),
         );
-        widget.cardTileList
-            .add(CardTile(cardModel: cardState.cardModels[cardState.cardModels.length - 1]));
+        widget.cardTileList.add(CardTile(
+            cardModel: cardState.cardModels[cardState.cardModels.length - 1]));
         cardState.addNewScreen = !cardState.addNewScreen;
-        sharedPref.save(
-            cardState.newTitle, cardState.cardModels[cardState.cardModels.length - 1].toJson());
+        sharedPref.save(cardState.newTitle,
+            cardState.cardModels[cardState.cardModels.length - 1].toJson());
         cardState.resetNewVariables();
       } else {
         print('can not add');
