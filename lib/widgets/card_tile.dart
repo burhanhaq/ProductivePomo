@@ -112,21 +112,20 @@ class _CardTileState extends State<CardTile>
               width: cardState.selectedIndex == cardState.confirmDeleteIndex ? 2 : 0,
               color: blue,
             ),
-            boxShadow: [
-             isCardSelected ? BoxShadow(
-               color: Colors.black,
-               blurRadius: 10,
-               spreadRadius: 2,
-               offset: Offset(7, 7),
-             ) :
-             BoxShadow(
+//            boxShadow: [
+//             isCardSelected ? BoxShadow(
 //               color: Colors.black,
-               blurRadius: 0,
-               spreadRadius: 0,
-               offset: Offset(0, 0),
-
-             ),
-            ],
+//               blurRadius: 10,
+//               spreadRadius: 2,
+//               offset: Offset(7, 7),
+//             ) :
+//             BoxShadow(
+//               blurRadius: 0,
+//               spreadRadius: 0,
+//               offset: Offset(0, 0),
+//
+//             ),
+//            ],
           ),
           child: Column(
             children: <Widget>[

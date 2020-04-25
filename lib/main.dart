@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'screens/home/home_screen.dart';
 import 'constants.dart';
-import 'screens/second_screen.dart';
+import 'screens/onboarding_screen.dart';
 import 'card_state.dart';
 
 void main() => runApp(App());
@@ -17,12 +17,13 @@ class App extends StatelessWidget {
         primaryColor: yellow,
         accentColor: grey,
       ),
-      initialRoute: Home.id,
+//      initialRoute: Home.id,
+      initialRoute: OnboardingScreen.id,
       routes: {
         Home.id: (context) => ChangeNotifierProvider(
             create: (context) => CardState()..resetNewVariables(), child: Home()),
-//        SecondScreen.id: (context) => ChangeNotifierProvider(
-//            create: (context) => CardState(), child: SecondScreen()),
+        OnboardingScreen.id: (context) => ChangeNotifierProvider(
+            create: (context) => CardState(), child: OnboardingScreen()),
       },
     );
   }
