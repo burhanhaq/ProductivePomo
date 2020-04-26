@@ -69,7 +69,6 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    String tName = 'Work6';
     final cardState = Provider.of<CardState>(context);
     if (cardState.tappedEmptyAreaUnderListView &&
         rightBarStatus == AnimationStatus.dismissed) {
@@ -157,10 +156,9 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                       children: <Widget>[
                         GestureDetector(
                             onTap: () async {
-                              var one = await DatabaseHelper.instance
-                                  .createTable(tName);
+                              var one = await DatabaseHelper.instance;
                               var two = await DatabaseHelper.instance
-                                  .insertRecord(tName, {
+                                  .insertRecord({
                                 DatabaseHelper.columnDate: 2017,
                                 DatabaseHelper.columnScore: 1,
                                 DatabaseHelper.columnGoal: 2,
@@ -174,7 +172,7 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                         GestureDetector(
                             onTap: () async {
                               var query = await DatabaseHelper.instance
-                                  .queryRecords(tName);
+                                  .queryRecords();
                               print('query: $query');
                             },
                             child: Text('Query')),
@@ -182,7 +180,7 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                         GestureDetector(
                             onTap: () async {
                               var update = await DatabaseHelper.instance
-                                  .updateRecord(tName, {
+                                  .updateRecord({
                                 DatabaseHelper.columnDate: 2002,
                                 DatabaseHelper.columnScore: 10,
                                 DatabaseHelper.columnGoal: 20,
@@ -195,7 +193,7 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                         GestureDetector(
                             onTap: () async {
                               var delete = await DatabaseHelper.instance
-                                  .deleteRecord(tName, 200);
+                                  .deleteRecord('Work', 200);
                               print('delete: $delete');
                             },
                             child: Text('Delete')),

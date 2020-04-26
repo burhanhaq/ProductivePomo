@@ -18,6 +18,13 @@ const kScore = TextStyle(
   letterSpacing: 1.0,
 );
 
+const kOnboardingStyle = TextStyle(
+  color: yellow,
+  fontSize: 60,
+  fontWeight: FontWeight.w100,
+  decoration: TextDecoration.none,
+);
+
 // not a constant
 var kSliderThemeData = SliderThemeData(
   valueIndicatorTextStyle:

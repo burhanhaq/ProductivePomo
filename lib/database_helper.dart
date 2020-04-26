@@ -7,7 +7,8 @@ class DatabaseHelper {
   static final _dbName = 'pomoDatabase.db';
   static final _dbVersion = 1;
 
-//  static String tableName = 'Title_Work';
+  static final tableName = 'Big_Table';
+  static final columnTitle = 'title';
   static final columnDate = 'date';
   static final columnScore = 'score';
   static final columnGoal = 'goal';
@@ -40,14 +41,15 @@ class DatabaseHelper {
   _initiateDatabase() async {
     Directory directory = await getApplicationDocumentsDirectory();
     String path = join(directory.path, _dbName);
-    return await openDatabase(path, version: _dbVersion);
+    return await openDatabase(path, version: _dbVersion, onCreate: _onCreate);
   }
 
-  Future<dynamic> createTable(String tableName) async {
-    Database db = await instance.database;
+  Future<void> _onCreate(Database db, int version) async {
+    db = await instance.database;
     return await db.rawQuery('''
     CREATE TABLE IF NOT EXISTS \"$tableName\" (
-    $columnDate INTEGER PRIMARY KEY NOT NULL,
+    $columnTitle TEXT NOT NULL,
+    $columnDate INTEGER NOT NULL,
     $columnScore INTEGER NOT NULL,
     $columnGoal INTEGER NOT NULL,
     $columnDuration INTEGER NOT NULL
@@ -55,27 +57,27 @@ class DatabaseHelper {
     ''');
   }
 
-  Future<int> insertRecord(String tableName, Map<String, dynamic> row) async {
+  Future<int> insertRecord(Map<String, dynamic> row) async { // todo don't insert duplicate
     Database db = await instance.database;
-    await createTable(tableName);
     return await db.insert(tableName, row);
   }
 
-  Future<List<Map<String, dynamic>>> queryRecords(String tableName) async {
+  Future<List<Map<String, dynamic>>> queryRecords() async {
     Database db = await instance.database;
     return await db.query(tableName);
   }
 
-  Future updateRecord(String tableName, Map<String, dynamic> row) async {
+  Future updateRecord(Map<String, dynamic> row) async {
     Database db = await instance.database;
     int date = row[columnDate];
+    String title = row[columnTitle];
     return await db
-        .update(tableName, row, where: '$columnDate = ?', whereArgs: [date]);
+        .update(tableName, row, where: '$columnDate = ? AND $columnTitle = ?', whereArgs: [date, title]);
   }
 
-  Future<int> deleteRecord(String tableName, int date) async {
+  Future<int> deleteRecord(String title, int date) async {
     Database db = await instance.database;
     return await db
-        .delete(tableName, where: '$columnDate = ?', whereArgs: [date]);
+        .delete(tableName, where: '$columnDate = ? AND $columnTitle = ?', whereArgs: [date, title]);
   }
 }
