@@ -1,13 +1,12 @@
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DatabaseHelper {
-  static final _dbName = 'pomoDatabase.db';
+  static final _dbName = 'pomoDatabase1.db';
   static final _dbVersion = 1;
+  static final _tableName = 'Big_Table';
 
-  static final tableName = 'Big_Table';
+  static final columnID = 'id';
   static final columnTitle = 'title';
   static final columnDate = 'date';
   static final columnScore = 'score';
@@ -27,27 +26,24 @@ class DatabaseHelper {
     return _database;
   }
 
-  void printVer(String tableName) async {
+  rando() async {
     Database db = await instance.database;
-
-    try {
-//      createTable('first');
-      db.rawQuery('SELECT name FROM sqlite_master WHERE type=\'table\';');
-    } catch (Exception) {
-      print('does not exist');
-    }
+//    var drop = await db.rawQuery('drop table $_tableName');print(drop);
+//    await _onCreate(db, _dbVersion);
+    var tables = await db
+        .rawQuery('SELECT name FROM sqlite_master WHERE type=\'table\';');
+    print('tables: $tables');
   }
 
   _initiateDatabase() async {
-    Directory directory = await getApplicationDocumentsDirectory();
-    String path = join(directory.path, _dbName);
+    String path = join(await getDatabasesPath(), _dbName);
     return await openDatabase(path, version: _dbVersion, onCreate: _onCreate);
   }
 
   Future<void> _onCreate(Database db, int version) async {
-    db = await instance.database;
     return await db.rawQuery('''
-    CREATE TABLE IF NOT EXISTS \"$tableName\" (
+    CREATE TABLE IF NOT EXISTS \"$_tableName\" (
+    $columnID INTEGER PRIMARY KEY,
     $columnTitle TEXT NOT NULL,
     $columnDate INTEGER NOT NULL,
     $columnScore INTEGER NOT NULL,
@@ -57,27 +53,29 @@ class DatabaseHelper {
     ''');
   }
 
-  Future<int> insertRecord(Map<String, dynamic> row) async { // todo don't insert duplicate
-    Database db = await instance.database;
-    return await db.insert(tableName, row);
-  }
-
   Future<List<Map<String, dynamic>>> queryRecords() async {
     Database db = await instance.database;
-    return await db.query(tableName);
+    return await db.query(_tableName);
   }
 
-  Future updateRecord(Map<String, dynamic> row) async {
+  Future insertOrUpdateRecord(Map<String, dynamic> row) async {
     Database db = await instance.database;
     int date = row[columnDate];
     String title = row[columnTitle];
-    return await db
-        .update(tableName, row, where: '$columnDate = ? AND $columnTitle = ?', whereArgs: [date, title]);
+    var update =  await db.update(_tableName, row,
+        where: '$columnDate = ? AND $columnTitle = ?',
+        whereArgs: [date, title]);
+
+    if (update > 0)
+      return update;
+    else
+      return await db.insert(_tableName, row);
   }
 
   Future<int> deleteRecord(String title, int date) async {
     Database db = await instance.database;
-    return await db
-        .delete(tableName, where: '$columnDate = ? AND $columnTitle = ?', whereArgs: [date, title]);
+    return await db.delete(_tableName,
+        where: '$columnDate = ? AND $columnTitle = ?',
+        whereArgs: [date, title]);
   }
 }

@@ -8,7 +8,7 @@ import '../../widgets/card_tile.dart';
 import '../../card_state.dart';
 import '../../models/card_model.dart';
 import '../../shared_pref.dart';
-import 'custom_icon_buttom.dart';
+import 'custom_icon_button.dart';
 import '../../database_helper.dart';
 
 class RightBar extends StatefulWidget {
@@ -155,16 +155,23 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                     child: Column(
                       children: <Widget>[
                         GestureDetector(
+                          onTap: () async {
+                            var rando = await DatabaseHelper.instance.rando();
+//
+//                            print('Rando: $rando');
+                          },
+                          child: Text('Rando')),
+                        SizedBox(height: 40),
+                        GestureDetector(
                             onTap: () async {
-                              var one = await DatabaseHelper.instance;
                               var two = await DatabaseHelper.instance
-                                  .insertRecord({
-                                DatabaseHelper.columnDate: 2017,
+                                  .insertOrUpdateRecord({
+                                DatabaseHelper.columnTitle: 'two',
+                                DatabaseHelper.columnDate: 2002,
                                 DatabaseHelper.columnScore: 1,
                                 DatabaseHelper.columnGoal: 2,
-                                DatabaseHelper.columnDuration: 3,
+                                DatabaseHelper.columnDuration: 2,
                               });
-                              print('one: $one');
                               print('two: $two');
                             },
                             child: Text('Insert')),
@@ -180,11 +187,12 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                         GestureDetector(
                             onTap: () async {
                               var update = await DatabaseHelper.instance
-                                  .updateRecord({
-                                DatabaseHelper.columnDate: 2002,
-                                DatabaseHelper.columnScore: 10,
-                                DatabaseHelper.columnGoal: 20,
-                                DatabaseHelper.columnDuration: 300,
+                                  .insertOrUpdateRecord({
+                                DatabaseHelper.columnTitle: 'two',
+                                DatabaseHelper.columnDate: 2012,
+                                DatabaseHelper.columnScore: 1,
+                                DatabaseHelper.columnGoal: 2,
+                                DatabaseHelper.columnDuration: 2,
                               });
                               print('update: $update');
                             },
@@ -193,7 +201,7 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                         GestureDetector(
                             onTap: () async {
                               var delete = await DatabaseHelper.instance
-                                  .deleteRecord('Work', 200);
+                                  .deleteRecord('one', 2017);
                               print('delete: $delete');
                             },
                             child: Text('Delete')),
@@ -215,7 +223,7 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                     iconData: Icons.do_not_disturb_on,
                     offstage: kReleaseMode,
                     textOffstage: !cardState.homeRightBarOpen,
-                    func: () => deleteAllIconF(cardState),
+                    func: () => onTapDeleteAllIcon(cardState),
                   ),
                   ScaleTransition(
                     scale: deleteIconScaleAnimation,
@@ -224,7 +232,7 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                       iconData: Icons.delete,
                       offstage: cardState.selectedIndex == null,
                       textOffstage: !cardState.homeRightBarOpen,
-                      func: () => deleteIconF(cardState),
+                      func: () => onTapDeleteIcon(cardState),
                       c: cardState.selectedIndex == cardState.confirmDeleteIndex
                           ? blue
                           : yellow,
@@ -237,7 +245,7 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                       iconData: Icons.cancel,
                       offstage: !cardState.addNewScreen,
                       textOffstage: !cardState.homeRightBarOpen,
-                      func: () => cancelIconF(cardState),
+                      func: () => onTapCancelItem(cardState),
                     ),
                   ),
                   Stack(
@@ -268,7 +276,7 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                           name: 'Add Item',
                           iconData: Icons.add_box,
                           textOffstage: !cardState.homeRightBarOpen,
-                          func: () => addIconF(cardState),
+                          func: () => onTapAddIcon(cardState),
                         ),
                       ),
                     ],
@@ -323,7 +331,7 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
     });
   }
 
-  addIconF(CardState cardState) {
+  onTapAddIcon(CardState cardState) {
     if (!cardState.addNewScreen) {
       cancelIconScaleController.forward();
       cardState.addNewScreen = true;
@@ -333,7 +341,7 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
     }
   }
 
-  cancelIconF(CardState cardState) {
+  onTapCancelItem(CardState cardState) {
     addNewIconController.reverse();
     cancelIconScaleController.reverse();
     if (cardState.addNewScreen) {
@@ -342,7 +350,7 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
     }
   }
 
-  deleteIconF(CardState cardState) {
+  onTapDeleteIcon(CardState cardState) {
     if (cardState.confirmDeleteIndex == cardState.selectedIndex) {
       // second tap
       sharedPref.remove(cardState.cardModels[cardState.selectedIndex].title);
@@ -354,7 +362,7 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
     }
   }
 
-  deleteAllIconF(CardState cardState) {
+  onTapDeleteAllIcon(CardState cardState) {
     sharedPref.removeAll();
     cardState.clearCardModelsList();
   }

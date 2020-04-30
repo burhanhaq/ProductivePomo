@@ -18,13 +18,9 @@ class App extends StatelessWidget {
         primaryColor: yellow,
         accentColor: grey,
       ),
-      initialRoute: OnboardingScreen2.id,
-//      initialRoute: Home.id,
+//      initialRoute: OnboardingScreen2.id,
+      initialRoute: Home.id,
       routes: <String, WidgetBuilder>{
-//        OnboardingScreen2.id: (context) => ChangeNotifierProvider(
-//            create: (context) => CardState()..resetNewVariables(),
-//            child: OnboardingScreen2()),
-//        Home.id: (context) => Home(),
         OnboardingScreen2.id: (context) => OnboardingScreen2(),
         Home.id: (context) => ChangeNotifierProvider(
             create: (context) => CardState()..resetNewVariables(),
