@@ -195,6 +195,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                     ),
                     Positioned(
                       left: 0,
+                      top: 0,
                       child: Transform.translate(
                           offset: Offset(
                               -MediaQuery.of(context).size.width *
