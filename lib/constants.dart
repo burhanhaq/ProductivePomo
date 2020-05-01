@@ -75,3 +75,7 @@ const kHomeRightBarOpenMul = 0.48;
 const kHomeYellowDividerMul = 0.02;
 const kGreyAreaMul = 0.78;
 const kAddNewSectionMul = 0.73;
+
+// Second Screen Constants
+const kMainRadius = 40.0;
+const kSecondaryRadius = 15.0;

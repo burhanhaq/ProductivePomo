@@ -131,14 +131,7 @@ class CardState with ChangeNotifier {
   }
 
   // SECOND PAGE 8888888888888888888888888888888888888888888888888888888888888
-  bool _settingsActive = false;
 
-  get settingsActive => _settingsActive;
-
-  set settingsActive(bool val) {
-    _settingsActive = val;
-    notifyListeners();
-  }
 
   // RANDOM
 
