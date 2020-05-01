@@ -128,12 +128,13 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         width: MediaQuery.of(context).size.width * kGreyAreaMul,
                         height: MediaQuery.of(context).size.height * 0.1,
                         decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [grey2, grey],
-                            stops: [0.7, 1.0],
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                          ),
+                          color: grey,
+//                          gradient: LinearGradient(
+//                            colors: [grey2, grey],
+//                            stops: [0.7, 1.0],
+//                            begin: Alignment.topCenter,
+//                            end: Alignment.bottomCenter,
+//                          ),
                         ),
                         child: Text(
                           'Name',
@@ -194,31 +195,19 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                     ),
                     Positioned(
                       left: 0,
-                      bottom: 0,
                       child: Transform.translate(
                           offset: Offset(
                               -MediaQuery.of(context).size.width *
                                   (1 - addSectionAnimation.value) *
-                                  0.75,
+                                  kAddNewSectionMul,
                               0),
                           child: AddNewCard()),
                     ),
                   ],
                 ),
               ),
-              Container(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width * kHomeYellowDividerMul,
-                decoration: BoxDecoration(
-                  color: yellow,
-                  border: Border.all(width: 0, color: yellow),
-                ),
-              ),
-              Transform.translate(
-                offset: Offset(0, 0),
-                child: RightBar(
-                  cardTileList: cardTileList,
-                ),
+              RightBar(
+                cardTileList: cardTileList,
               ),
             ],
           ),
@@ -234,5 +223,3 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     super.dispose();
   }
 }
-
-

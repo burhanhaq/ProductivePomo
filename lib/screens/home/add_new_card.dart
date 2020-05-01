@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import '../../constants.dart';
 import '../../card_state.dart';
 
-
 class AddNewCard extends StatefulWidget {
   @override
   _AddNewCardState createState() => _AddNewCardState();
@@ -21,7 +20,7 @@ class _AddNewCardState extends State<AddNewCard> {
 //      titleTextController.clear();
 //      cardState.clearTitleTextEditingControllerSwitch();
 //    }
-    var sectionWidth = MediaQuery.of(context).size.width * kGreyAreaMul;
+    var sectionWidth = MediaQuery.of(context).size.width * (kGreyAreaMul- 0.02);
     var sectionHeight = MediaQuery.of(context).size.height;
     return SafeArea(
       child: GestureDetector(
@@ -31,7 +30,10 @@ class _AddNewCardState extends State<AddNewCard> {
         child: Container(
           height: sectionHeight,
           width: sectionWidth,
-          color: red1,
+          decoration: BoxDecoration(
+              color: red1,
+              borderRadius:
+                  BorderRadius.horizontal(right: Radius.circular(30))),
           child: Padding(
             padding: EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 20),
             child: Column(
@@ -45,7 +47,8 @@ class _AddNewCardState extends State<AddNewCard> {
                         child: Text('Name', style: kAddNewSectionTextStyle),
                       ),
                     ),
-                    TextField( // todo implement clear on hit
+                    TextField(
+                      // todo implement clear on hit
                       keyboardType: TextInputType.text,
                       textCapitalization: TextCapitalization.sentences,
                       enabled: cardState.onAddNewScreen,
@@ -77,14 +80,18 @@ class _AddNewCardState extends State<AddNewCard> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
-                        Padding(padding: EdgeInsets.only(left: 20),child: Text('Duration (min)', style: kAddNewSectionTextStyle)),
+                        Padding(
+                            padding: EdgeInsets.only(left: 20),
+                            child: Text('Duration (min)',
+                                style: kAddNewSectionTextStyle)),
                         SliderTheme(
                           data: kSliderThemeData,
                           child: Slider(
                             value: double.tryParse(cardState.newMinutes),
                             onChanged: (value) {
                               if (value != null)
-                                cardState.newMinutes = value.round().toInt().toString();
+                                cardState.newMinutes =
+                                    value.round().toInt().toString();
                             },
                             divisions: 59,
                             label: cardState.newMinutes,
@@ -92,14 +99,18 @@ class _AddNewCardState extends State<AddNewCard> {
                             min: 1,
                           ),
                         ),
-                        Padding(padding: EdgeInsets.only(left: 20),child: Text('Goal', style: kAddNewSectionTextStyle)),
+                        Padding(
+                            padding: EdgeInsets.only(left: 20),
+                            child:
+                                Text('Goal', style: kAddNewSectionTextStyle)),
                         SliderTheme(
                           data: kSliderThemeData,
                           child: Slider(
                             value: double.tryParse(cardState.newGoal),
                             onChanged: (value) {
                               if (value != null)
-                                cardState.newGoal = value.round().toInt().toString();
+                                cardState.newGoal =
+                                    value.round().toInt().toString();
                             },
                             divisions: 29,
                             label: cardState.newGoal,
@@ -118,5 +129,4 @@ class _AddNewCardState extends State<AddNewCard> {
       ),
     );
   }
-
 }

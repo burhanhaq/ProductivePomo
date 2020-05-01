@@ -74,4 +74,4 @@ const kHomeRightBarClosedMul = 0.2;
 const kHomeRightBarOpenMul = 0.48;
 const kHomeYellowDividerMul = 0.02;
 const kGreyAreaMul = 0.78;
-const kAddNewSectionMul = 0.78;
+const kAddNewSectionMul = 0.75;

@@ -102,190 +102,204 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
           }
         });
       },
-      child: AnimatedContainer(
-        duration: Duration(milliseconds: 120),
-        color: red1,
-        width: MediaQuery.of(context).size.width *
-            (cardState.homeRightBarOpen
-                ? kHomeRightBarOpenMul
-                : (kHomeRightBarClosedMul +
-                    (rightBarAnimation.value < 0.5
-                        ? rightBarAnimation.value
-                        : (1 - rightBarAnimation.value)))),
-        child: Padding(
-          padding: EdgeInsets.only(top: 20, bottom: 20, left: 10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Offstage(
-                offstage: cardState.selectedIndex == null,
-                child: Column(
-                  children: [
-                    Text(
-                      // todo: need to update this when we get back from SecondScreen
-                      cardState.firstPageScore == null
-                          ? 'x'
-                          : cardState.firstPageScore.toString(),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 50,
-                        decoration: TextDecoration.none,
-                      ),
-                    ),
-                    Container(height: 6, width: 60, color: yellow),
-                    Text(
-                      cardState.firstPageGoal == null
-                          ? 'y'
-                          : cardState.firstPageGoal.toString(),
-                      style: TextStyle(
-                        color: yellow,
-                        fontSize: 30,
-                        decoration: TextDecoration.none,
-                      ),
-                    ),
-                  ],
-                ),
+      child: Stack(
+        alignment: Alignment.centerRight,
+        children: <Widget>[
+          YellowUnderlay(),
+          AnimatedContainer(
+            duration: Duration(milliseconds: 120),
+            decoration: BoxDecoration(
+              color: red1,
+              borderRadius: BorderRadius.horizontal(
+                left: Radius.circular(30),
               ),
-//              Spacer(),
-              Column(
+            ),
+            width: MediaQuery.of(context).size.width *
+                (cardState.homeRightBarOpen
+                    ? kHomeRightBarOpenMul
+                    : (kHomeRightBarClosedMul +
+                        (rightBarAnimation.value < 0.5
+                            ? rightBarAnimation.value
+                            : (1 - rightBarAnimation.value)))),
+            child: Padding(
+              padding: EdgeInsets.only(top: 20, bottom: 20, left: 10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Offstage(
-                    offstage: !kDebugMode,
+                    offstage: cardState.selectedIndex == null,
                     child: Column(
-                      children: <Widget>[
-                        GestureDetector(
-                          onTap: () async {
-                            var rando = await DatabaseHelper.instance.rando();
-//
-//                            print('Rando: $rando');
-                          },
-                          child: Text('Rando')),
-                        SizedBox(height: 40),
-                        GestureDetector(
-                            onTap: () async {
-                              var two = await DatabaseHelper.instance
-                                  .insertOrUpdateRecord({
-                                DatabaseHelper.columnTitle: 'two',
-                                DatabaseHelper.columnDate: 2002,
-                                DatabaseHelper.columnScore: 1,
-                                DatabaseHelper.columnGoal: 2,
-                                DatabaseHelper.columnDuration: 2,
-                              });
-                              print('two: $two');
-                            },
-                            child: Text('Insert')),
-                        SizedBox(height: 40),
-                        GestureDetector(
-                            onTap: () async {
-                              var query = await DatabaseHelper.instance
-                                  .queryRecords();
-                              print('query: $query');
-                            },
-                            child: Text('Query')),
-                        SizedBox(height: 40),
-                        GestureDetector(
-                            onTap: () async {
-                              var update = await DatabaseHelper.instance
-                                  .insertOrUpdateRecord({
-                                DatabaseHelper.columnTitle: 'two',
-                                DatabaseHelper.columnDate: 2012,
-                                DatabaseHelper.columnScore: 1,
-                                DatabaseHelper.columnGoal: 2,
-                                DatabaseHelper.columnDuration: 2,
-                              });
-                              print('update: $update');
-                            },
-                            child: Text('Update')),
-                        SizedBox(height: 40),
-                        GestureDetector(
-                            onTap: () async {
-                              var delete = await DatabaseHelper.instance
-                                  .deleteRecord('one', 2017);
-                              print('delete: $delete');
-                            },
-                            child: Text('Delete')),
-                        SizedBox(height: 40),
+                      children: [
+                        Text(
+                          // todo: need to update this when we get back from SecondScreen
+                          cardState.firstPageScore == null
+                              ? 'x'
+                              : cardState.firstPageScore.toString(),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 50,
+                            decoration: TextDecoration.none,
+                          ),
+                        ),
+                        Container(height: 6, width: 60, color: yellow),
+                        Text(
+                          cardState.firstPageGoal == null
+                              ? 'y'
+                              : cardState.firstPageGoal.toString(),
+                          style: TextStyle(
+                            color: yellow,
+                            fontSize: 30,
+                            decoration: TextDecoration.none,
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                  CustomIconButton(
-                    name: 'Print All',
-                    iconData: Icons.grain,
-                    offstage: kReleaseMode,
-                    textOffstage: !cardState.homeRightBarOpen,
-                    func: () {
-                      print('cardModelsX: ${CardModel.cardModelsX.toString()}');
-                    },
-                  ),
-                  CustomIconButton(
-                    name: 'Delete All',
-                    iconData: Icons.do_not_disturb_on,
-                    offstage: kReleaseMode || !cardState.homeRightBarOpen,
-                    textOffstage: !cardState.homeRightBarOpen,
-                    func: () => onTapDeleteAllIcon(cardState),
-                  ),
-                  ScaleTransition(
-                    scale: deleteIconScaleAnimation,
-                    child: CustomIconButton(
-                      name: 'Delete Item',
-                      iconData: Icons.delete,
-                      offstage: cardState.selectedIndex == null,
-                      textOffstage: !cardState.homeRightBarOpen,
-                      func: () => onTapDeleteIcon(cardState),
-                      c: cardState.selectedIndex == cardState.confirmDeleteIndex
-                          ? blue
-                          : yellow,
-                    ),
-                  ),
-                  ScaleTransition(
-                    scale: cancelIconScaleAnimation,
-                    child: CustomIconButton(
-                      name: 'Cancel',
-                      iconData: Icons.cancel,
-                      offstage: !cardState.onAddNewScreen,
-                      textOffstage: !cardState.homeRightBarOpen,
-                      func: () => onTapCancelItem(cardState),
-                    ),
-                  ),
-                  Stack(
-                    alignment: Alignment.center,
+//              Spacer(),
+                  Column(
                     children: [
-                      Transform.translate(
-                        offset: Offset(
-                          0,
-                          MediaQuery.of(context).size.height *
-                              0.2 *
-                              (1 - addNewIconAnimation.value),
-                        ),
-                        child: CustomIconButton(
-                          name: 'Confirm Item',
-                          iconData: Icons.check_box,
-                          textOffstage: !cardState.homeRightBarOpen,
-                          func: () => checkBoxIconF(cardState),
-                          c: canAddItem(cardState) ? yellow : red2,
+                      Offstage(
+                        offstage: !kDebugMode,
+                        child: Column(
+                          children: <Widget>[
+                            GestureDetector(
+                                onTap: () async {
+                                  var rando =
+                                      await DatabaseHelper.instance.rando();
+//
+//                            print('Rando: $rando');
+                                },
+                                child: Text('Rando')),
+                            SizedBox(height: 40),
+                            GestureDetector(
+                                onTap: () async {
+                                  var two = await DatabaseHelper.instance
+                                      .insertOrUpdateRecord({
+                                    DatabaseHelper.columnTitle: 'two',
+                                    DatabaseHelper.columnDate: 2002,
+                                    DatabaseHelper.columnScore: 1,
+                                    DatabaseHelper.columnGoal: 2,
+                                    DatabaseHelper.columnDuration: 2,
+                                  });
+                                  print('two: $two');
+                                },
+                                child: Text('Insert')),
+                            SizedBox(height: 40),
+                            GestureDetector(
+                                onTap: () async {
+                                  var query = await DatabaseHelper.instance
+                                      .queryRecords();
+                                  print('query: $query');
+                                },
+                                child: Text('Query')),
+                            SizedBox(height: 40),
+                            GestureDetector(
+                                onTap: () async {
+                                  var update = await DatabaseHelper.instance
+                                      .insertOrUpdateRecord({
+                                    DatabaseHelper.columnTitle: 'two',
+                                    DatabaseHelper.columnDate: 2012,
+                                    DatabaseHelper.columnScore: 1,
+                                    DatabaseHelper.columnGoal: 2,
+                                    DatabaseHelper.columnDuration: 2,
+                                  });
+                                  print('update: $update');
+                                },
+                                child: Text('Update')),
+                            SizedBox(height: 40),
+                            GestureDetector(
+                                onTap: () async {
+                                  var delete = await DatabaseHelper.instance
+                                      .deleteRecord('one', 2017);
+                                  print('delete: $delete');
+                                },
+                                child: Text('Delete')),
+                            SizedBox(height: 40),
+                          ],
                         ),
                       ),
-                      Transform.translate(
-                        offset: Offset(
-                            0,
-                            MediaQuery.of(context).size.height *
-                                0.2 *
-                                addNewIconAnimation.value),
+                      CustomIconButton(
+                        name: 'Print All',
+                        iconData: Icons.grain,
+                        offstage: kReleaseMode,
+                        textOffstage: !cardState.homeRightBarOpen,
+                        func: () {
+                          print(
+                              'cardModelsX: ${CardModel.cardModelsX.toString()}');
+                        },
+                      ),
+                      CustomIconButton(
+                        name: 'Delete All',
+                        iconData: Icons.do_not_disturb_on,
+                        offstage: kReleaseMode || !cardState.homeRightBarOpen,
+                        textOffstage: !cardState.homeRightBarOpen,
+                        func: () => onTapDeleteAllIcon(cardState),
+                      ),
+                      ScaleTransition(
+                        scale: deleteIconScaleAnimation,
                         child: CustomIconButton(
-                          name: 'Add Item',
-                          iconData: Icons.add_box,
+                          name: 'Delete Item',
+                          iconData: Icons.delete,
+                          offstage: cardState.selectedIndex == null,
                           textOffstage: !cardState.homeRightBarOpen,
-                          func: () => onTapAddIcon(cardState),
+                          func: () => onTapDeleteIcon(cardState),
+                          c: cardState.selectedIndex ==
+                                  cardState.confirmDeleteIndex
+                              ? blue
+                              : yellow,
                         ),
+                      ),
+                      ScaleTransition(
+                        scale: cancelIconScaleAnimation,
+                        child: CustomIconButton(
+                          name: 'Cancel',
+                          iconData: Icons.cancel,
+                          offstage: !cardState.onAddNewScreen,
+                          textOffstage: !cardState.homeRightBarOpen,
+                          func: () => onTapCancelItem(cardState),
+                        ),
+                      ),
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Transform.translate(
+                            offset: Offset(
+                              0,
+                              MediaQuery.of(context).size.height *
+                                  0.2 *
+                                  (1 - addNewIconAnimation.value),
+                            ),
+                            child: CustomIconButton(
+                              name: 'Confirm Item',
+                              iconData: Icons.check_box,
+                              textOffstage: !cardState.homeRightBarOpen,
+                              func: () => checkBoxIconF(cardState),
+                              c: canAddItem(cardState) ? yellow : red2,
+                            ),
+                          ),
+                          Transform.translate(
+                            offset: Offset(
+                                0,
+                                MediaQuery.of(context).size.height *
+                                    0.2 *
+                                    addNewIconAnimation.value),
+                            child: CustomIconButton(
+                              name: 'Add Item',
+                              iconData: Icons.add_box,
+                              textOffstage: !cardState.homeRightBarOpen,
+                              func: () => onTapAddIcon(cardState),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ],
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -324,7 +338,8 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
         sharedPref.save(cardState.newTitle,
             cardState.cardModels[cardState.cardModels.length - 1].toJson());
         cardState.resetNewVariables();
-      } else { // todo play cant add animation maybe
+      } else {
+        // todo play cant add animation maybe
         print('can not add');
       }
     });
@@ -352,7 +367,8 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
   onTapDeleteIcon(CardState cardState) async {
     if (cardState.confirmDeleteIndex == cardState.selectedIndex) {
       // second tap
-      String titleToDelete = cardState.cardModels[cardState.selectedIndex].title;
+      String titleToDelete =
+          cardState.cardModels[cardState.selectedIndex].title;
       sharedPref.remove(titleToDelete);
 //      await DatabaseHelper.instance.deleteRecord(titleToDelete, date);
       CardModel.cardModelsX.removeAt(cardState.selectedIndex);
@@ -375,5 +391,27 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
     cancelIconScaleController.dispose();
     deleteIconScaleController.dispose();
     super.dispose();
+  }
+}
+
+class YellowUnderlay extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    CardState cardState = Provider.of<CardState>(context);
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 120),
+//      width: MediaQuery.of(context).size.width *
+//          (kHomeRightBarClosedMul + kHomeYellowDividerMul),
+      decoration: BoxDecoration(
+        color: yellow,
+        borderRadius: BorderRadius.horizontal(
+          left: Radius.circular(25),
+        ),
+      ),
+          width: MediaQuery.of(context).size.width *
+              ((cardState.homeRightBarOpen
+                  ? kHomeRightBarOpenMul
+                  : kHomeRightBarClosedMul) + kHomeYellowDividerMul),
+    );
   }
 }
