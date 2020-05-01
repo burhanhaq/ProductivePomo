@@ -92,7 +92,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         loadingIndicator = false;
       }
     }
-    if (cardState.addNewScreen) {
+    if (cardState.onAddNewScreen) {
       addSectionController.forward();
     } else {
       addSectionController.reverse();

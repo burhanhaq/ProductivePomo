@@ -30,6 +30,7 @@ class CardState with ChangeNotifier {
   String _newSeconds;
   bool _homeRightBarOpen = false;
   bool _tappedEmptyAreaUnderListView = false;
+//  bool _isClearTitleTextEditingController = false;
 
   int get firstPageScore => _pageScore;
 
@@ -37,7 +38,7 @@ class CardState with ChangeNotifier {
 
   int get selectedIndex => _selectedIndex;
 
-  bool get addNewScreen => _addNewScreen;
+  bool get onAddNewScreen => _addNewScreen;
 
   int get confirmDeleteIndex => _confirmDeleteIndex;
 
@@ -79,7 +80,7 @@ class CardState with ChangeNotifier {
     notifyListeners();
   }
 
-  set addNewScreen(bool val) {
+  set onAddNewScreen(bool val) {
     _addNewScreen = val;
     notifyListeners();
   }
@@ -109,8 +110,8 @@ class CardState with ChangeNotifier {
     notifyListeners();
   }
 
-//  void clearTitleTextEditingControllerSwitch() {
-//    _isClearTitleTextEditingController = !_isClearTitleTextEditingController;
+//  set isClearTitleTextEditingController(bool val) { // todo implement this
+//    _isClearTitleTextEditingController = val;
 //    notifyListeners();
 //  }
 

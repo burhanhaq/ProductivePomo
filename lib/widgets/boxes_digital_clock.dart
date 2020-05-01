@@ -302,10 +302,10 @@ class Digit extends StatefulWidget {
 
 class _DigitState extends State<Digit> {
   double spacing = 0.3;
+  double zeroPadding = 0; // useless so far
 
   @override
   Widget build(BuildContext context) {
-    double zeroPadding = 0; // useless so far
     bool zero = widget.boolList[0];
     bool one = widget.boolList[1];
     bool two = widget.boolList[2];

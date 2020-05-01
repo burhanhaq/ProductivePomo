@@ -199,15 +199,13 @@ class _SecondScreenState extends State<SecondScreen>
                             ),
                             FittedBox(
                               fit: BoxFit.contain,
-                              child: AnimatedBorder(
-                                child: Text(
-                                  prefGoal == null ? '-3' : prefGoal.toString(),
-                                  style: TextStyle(
-                                    color: timerRunning
-                                        ? Colors.white
-                                        : Colors.black,
-                                    decoration: TextDecoration.none,
-                                  ),
+                              child: Text(
+                                prefGoal == null ? '-3' : prefGoal.toString(),
+                                style: TextStyle(
+                                  color: timerRunning
+                                      ? Colors.white
+                                      : Colors.black,
+                                  decoration: TextDecoration.none,
                                 ),
                               ),
                             ),
@@ -225,7 +223,7 @@ class _SecondScreenState extends State<SecondScreen>
                         width * 0.8 * (1 - horizontalBarsAnimation.value), 0),
                     child: AnimatedContainer(
                       duration: Duration(milliseconds: 500),
-                      color: timerRunning ? darkRed : red1,
+                      color: timerRunning ? darkRed : red12,
                       width: width * (timerRunning ? 0.7 : 0.8) -
                           spacingBetweenContainers,
                       height: height * 0.2,

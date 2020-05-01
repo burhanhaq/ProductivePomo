@@ -221,7 +221,7 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                   CustomIconButton(
                     name: 'Delete All',
                     iconData: Icons.do_not_disturb_on,
-                    offstage: kReleaseMode,
+                    offstage: kReleaseMode || !cardState.homeRightBarOpen,
                     textOffstage: !cardState.homeRightBarOpen,
                     func: () => onTapDeleteAllIcon(cardState),
                   ),
@@ -243,7 +243,7 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                     child: CustomIconButton(
                       name: 'Cancel',
                       iconData: Icons.cancel,
-                      offstage: !cardState.addNewScreen,
+                      offstage: !cardState.onAddNewScreen,
                       textOffstage: !cardState.homeRightBarOpen,
                       func: () => onTapCancelItem(cardState),
                     ),
@@ -263,7 +263,7 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                           iconData: Icons.check_box,
                           textOffstage: !cardState.homeRightBarOpen,
                           func: () => checkBoxIconF(cardState),
-                          c: canAddScreen(cardState) ? yellow : red2,
+                          c: canAddItem(cardState) ? yellow : red2,
                         ),
                       ),
                       Transform.translate(
@@ -290,21 +290,20 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
     );
   }
 
-  bool canAddScreen(CardState cardState) {
-//    var keys = await sharedPref.getKeys(); // maybe i can perform this with cardList instead
+  bool canAddItem(CardState cardState) {
     var keys = [];
     CardModel.cardModelsX.forEach((element) {
       keys.add(element.title.toLowerCase());
     });
-    return cardState.addNewScreen &&
+    return cardState.onAddNewScreen &&
         cardState.newTitle.isNotEmpty &&
         !keys.contains(cardState.newTitle.toLowerCase());
   }
 
   checkBoxIconF(CardState cardState) {
     setState(() {
-      bool canAddNewScreen = canAddScreen(cardState);
-      if (canAddNewScreen) {
+      bool canAddNewItem = canAddItem(cardState);
+      if (canAddNewItem) {
         addNewIconController.reverse();
         cancelIconScaleController.reverse();
 //                                cardState.clearTitleTextEditingControllerSwitch();
@@ -321,20 +320,20 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
         );
         widget.cardTileList.add(CardTile(
             cardModel: cardState.cardModels[cardState.cardModels.length - 1]));
-        cardState.addNewScreen = !cardState.addNewScreen;
+        cardState.onAddNewScreen = false;
         sharedPref.save(cardState.newTitle,
             cardState.cardModels[cardState.cardModels.length - 1].toJson());
         cardState.resetNewVariables();
-      } else {
+      } else { // todo play cant add animation maybe
         print('can not add');
       }
     });
   }
 
   onTapAddIcon(CardState cardState) {
-    if (!cardState.addNewScreen) {
+    if (!cardState.onAddNewScreen) {
       cancelIconScaleController.forward();
-      cardState.addNewScreen = true;
+      cardState.onAddNewScreen = true;
       cardState.closeHomeRightBar();
       cardState.selectTile = null;
       addNewIconController.forward();
@@ -344,16 +343,18 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
   onTapCancelItem(CardState cardState) {
     addNewIconController.reverse();
     cancelIconScaleController.reverse();
-    if (cardState.addNewScreen) {
+    if (cardState.onAddNewScreen) {
       cardState.resetNewVariables();
-      cardState.addNewScreen = !cardState.addNewScreen;
+      cardState.onAddNewScreen = !cardState.onAddNewScreen;
     }
   }
 
-  onTapDeleteIcon(CardState cardState) {
+  onTapDeleteIcon(CardState cardState) async {
     if (cardState.confirmDeleteIndex == cardState.selectedIndex) {
       // second tap
-      sharedPref.remove(cardState.cardModels[cardState.selectedIndex].title);
+      String titleToDelete = cardState.cardModels[cardState.selectedIndex].title;
+      sharedPref.remove(titleToDelete);
+//      await DatabaseHelper.instance.deleteRecord(titleToDelete, date);
       CardModel.cardModelsX.removeAt(cardState.selectedIndex);
       cardState.selectTile = null;
     } else {

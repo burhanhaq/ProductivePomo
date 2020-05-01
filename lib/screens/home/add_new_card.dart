@@ -48,7 +48,7 @@ class _AddNewCardState extends State<AddNewCard> {
                     TextField( // todo implement clear on hit
                       keyboardType: TextInputType.text,
                       textCapitalization: TextCapitalization.sentences,
-                      enabled: cardState.addNewScreen,
+                      enabled: cardState.onAddNewScreen,
                       controller: titleTextController,
                       autofocus: false,
                       style: TextStyle(
