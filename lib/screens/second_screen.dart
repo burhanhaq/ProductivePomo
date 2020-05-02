@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -10,7 +9,7 @@ import '../models/card_model.dart';
 import '../widgets/boxes_digital_clock.dart';
 
 class SecondScreen extends StatefulWidget {
-  static final id = 'SecondScreen';
+//  static final id = 'SecondScreen';
   final CardTile cardTile;
 
   SecondScreen({@required this.cardTile});
@@ -25,23 +24,25 @@ class _SecondScreenState extends State<SecondScreen>
   var timerDurationController;
   var playPauseIconController;
   var playPauseIconAnimation;
+  var replayIconRotationController;
+  var replayIconRotationAnimation;
 
-  String prefTitle;
-  int prefScore;
-  int prefGoal;
+  var prefTitle;
+  var prefScore;
+  var prefGoal;
 
   loadSharedPrefs() async {
     try {
       CardModel model = CardModel.fromJson(
           await sharedPref.read(widget.cardTile.cardModel.title));
       setState(() {
-        prefTitle = model.title;
-        prefScore = model.score;
-        prefGoal = model.goal;
+//        prefTitle = model.title;
+//        prefScore = model.score;
+//        prefGoal = model.goal;
       });
     } catch (Exception) {
-      print('Exception in SecondScreen');
-      print(Exception.toString());
+//      print('Exception in SecondScreen');
+//      print(Exception.toString());
     }
   }
 
@@ -64,204 +65,212 @@ class _SecondScreenState extends State<SecondScreen>
       curve: Curves.bounceIn,
       parent: playPauseIconController,
     );
+    replayIconRotationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 300),
+    );
+    replayIconRotationAnimation = CurvedAnimation(
+      curve: Curves.easeInBack,
+      parent: replayIconRotationController,
+    );
   }
-
+bool added = false;
   @override
   Widget build(BuildContext context) {
     loadSharedPrefs();
+  setState(() {
+    prefTitle = widget.cardTile.cardModel.title;
+    prefScore = widget.cardTile.cardModel.score;
+    prefGoal = widget.cardTile.cardModel.goal;
+  });
+    CardState cardState = Provider.of<CardState>(context);
     bool timerRunning = timerDurationController.isAnimating;
+//    if (timerDurationController.value == 1.0 && !added) {
+//      cardState.addScore(widget.cardTile.cardModel);
+//      sharedPref.save(widget.cardTile.cardModel.title,
+//          widget.cardTile.cardModel.toJson());
+//      added = true;
+//    }
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
-    return ChangeNotifierProvider(
-      create: (context) => CardState(),
-      child: Consumer<CardState>(
-        builder: (context, cardState, _) => SafeArea(
-          child: Container(
-            color: grey2,
-            padding: const EdgeInsets.all(5.0),
-            child: Column(
+    return SafeArea(
+      child: Container(
+        color: grey2,
+        padding: const EdgeInsets.all(7.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Row(
               children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Container(
-                      height: height * 0.2,
-                      width: width * 0.7,
-                      decoration: BoxDecoration(
-                        color: red12,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(kSecondaryRadius),
-                          topRight: Radius.circular(kSecondaryRadius),
-                          bottomLeft: Radius.circular(kSecondaryRadius),
-                          bottomRight: Radius.circular(kMainRadius),
-                        ),
+                Container(
+                  height: height * 0.2,
+                  width: width * 0.7,
+                  decoration: BoxDecoration(
+                    color: red12,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(kSecondaryRadius),
+                      topRight: Radius.circular(kSecondaryRadius),
+                      bottomLeft: Radius.circular(kSecondaryRadius),
+                      bottomRight: Radius.circular(kMainRadius),
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      prefTitle == null ? 'null' : prefTitle.toUpperCase(),
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        letterSpacing: 2,
+                        color: grey2,
+                        decoration: TextDecoration.none,
                       ),
-                      child: Center(
+                    ),
+                  ),
+                ),
+                Spacer(),
+                Container(
+                  height: height * 0.2,
+                  width: width * 0.2,
+                  decoration: BoxDecoration(
+                    color: red12,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(kSecondaryRadius),
+                      topRight: Radius.circular(kSecondaryRadius),
+                      bottomLeft: Radius.circular(kMainRadius),
+                      bottomRight: Radius.circular(kSecondaryRadius),
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FittedBox(
+                        fit: BoxFit.contain,
                         child: Text(
-                          prefTitle == null ? 'null' : prefTitle.toUpperCase(),
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
+                          prefScore == null ? '-3' : prefScore.toString(),
                           style: TextStyle(
-                            letterSpacing: 2,
-                            fontSize: 20,
-                            color: Colors.white,
+                            color: grey2,
                             decoration: TextDecoration.none,
                           ),
                         ),
                       ),
-                    ),
-                    Spacer(),
-                    Container(
-                      height: height * 0.2,
-                      width: width * 0.2,
-                      decoration: BoxDecoration(
-                        color: red12,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(kSecondaryRadius),
-                          topRight: Radius.circular(kSecondaryRadius),
-                          bottomLeft: Radius.circular(kMainRadius),
-                          bottomRight: Radius.circular(kSecondaryRadius),
-                        ),
+                      Container(
+                        height: 5,
+                        width: 65,
+                        color: grey2,
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          FittedBox(
-                            fit: BoxFit.contain,
-                            child: Text(
-                              prefScore == null ? '-3' : prefScore.toString(),
-                              style: TextStyle(
-                                color: grey2,
-                                decoration: TextDecoration.none,
-                              ),
-                            ),
-                          ),
-                          Container(
-                            height: 5,
-                            width: 65,
+                      FittedBox(
+                        fit: BoxFit.contain,
+                        child: Text(
+                          prefGoal == null ? '-3' : prefGoal.toString(),
+                          style: TextStyle(
                             color: grey2,
-                          ),
-                          FittedBox(
-                            fit: BoxFit.contain,
-                            child: Text(
-                              prefGoal == null ? '-3' : prefGoal.toString(),
-                              style: TextStyle(
-                                color: grey2,
-                                decoration: TextDecoration.none,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                Spacer(),
-                BoxesDigitalClock(
-                  min: widget.cardTile.cardModel.minutes,
-                  sec: widget.cardTile.cardModel.seconds,
-                  timerController: timerDurationController,
-                ),
-                Spacer(),
-                Row(
-                  children: <Widget>[
-                    Spacer(),
-                    Material(
-                      color: trans,
-                      child: AnimatedContainer(
-                        duration: Duration(milliseconds: 2000),
-                        padding: const EdgeInsets.all(25.0),
-                        decoration: BoxDecoration(
-                          color: yellow,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(kMainRadius),
-                            topRight: Radius.circular(kSecondaryRadius),
-                            bottomLeft: Radius.circular(kSecondaryRadius),
-                            bottomRight: Radius.circular(kSecondaryRadius),
+                            decoration: TextDecoration.none,
                           ),
                         ),
-                        child: Column(
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                cardState
-                                    .subtractScore(widget.cardTile.cardModel);
-                                sharedPref.save(
-                                    widget.cardTile.cardModel.title,
-                                    widget.cardTile.cardModel.toJson());
-                              },
-                              child: Offstage(
-                                offstage: timerRunning,
-                                child: CustomIconButtonStyle(
-                                  child: Icon(
-                                    Icons.remove,
-                                    size: 40,
-                                    color: grey,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                cardState.addScore(widget.cardTile.cardModel);
-                                sharedPref.save(
-                                    widget.cardTile.cardModel.title,
-                                    widget.cardTile.cardModel.toJson());
-                              },
-                              child: Offstage(
-                                offstage: timerRunning,
-                                child: CustomIconButtonStyle(
-                                  child: Icon(
-                                    Icons.add,
-                                    size: 40,
-                                    color: grey,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                timerDurationController.value = 0.0;
-                                playPauseIconController.reverse();
-                              },
-                              child: CustomIconButtonStyle(
-                                child: Icon(
-                                  Icons.replay,
-                                  size: 50,
-                                  color: timerRunning ? red1 : grey,
-                                ),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                if (playPauseIconController.status ==
-                                    AnimationStatus.dismissed) {
-                                  // play pressed
-                                  timerDurationController.forward();
-                                  playPauseIconController.forward();
-                                } else {
-                                  // pause pressed
-                                  timerDurationController.stop();
-                                  playPauseIconController.reverse();
-                                }
-                              },
-                              child: CustomIconButtonStyle(
-                                child: AnimatedIcon(
-                                  icon: AnimatedIcons.play_pause,
-                                  progress: playPauseIconAnimation,
-                                  size: 50,
-                                  color: timerRunning ? red1 : grey,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
-          ),
+            Spacer(),
+            BoxesDigitalClock(
+              min: widget.cardTile.cardModel.minutes,
+              sec: widget.cardTile.cardModel.seconds,
+              timerController: timerDurationController,
+            ),
+            Spacer(),
+            Row(
+              children: <Widget>[
+                Spacer(),
+                Material(
+                  color: trans,
+                  child: Container(
+                    padding: const EdgeInsets.all(25.0),
+                    decoration: BoxDecoration(
+                      color: yellow2,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(kMainRadius),
+                        topRight: Radius.circular(kSecondaryRadius),
+                        bottomLeft: Radius.circular(kSecondaryRadius),
+                        bottomRight: Radius.circular(kSecondaryRadius),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        InkWell(
+                          onTap: () => cardState.onTapSubIcon(widget.cardTile.cardModel),
+                          child: Offstage(
+                            offstage: false,
+                            child: CustomIconButtonStyle(
+                              child: Icon(
+                                Icons.remove,
+                                size: 40,
+                                color: red1,
+                              ),
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () => cardState.onTapAddIcon(widget.cardTile.cardModel),
+                          child: Offstage(
+                            offstage: false,
+                            child: CustomIconButtonStyle(
+                              child: Icon(
+                                Icons.add,
+                                size: 40,
+                                color: red1,
+                              ),
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            if (playPauseIconController.status ==
+                                AnimationStatus.dismissed) {
+                              // play pressed
+                              timerDurationController.forward();
+                              playPauseIconController.forward();
+                            } else {
+                              // pause pressed
+                              timerDurationController.stop();
+                              playPauseIconController.reverse();
+                            }
+                          },
+                          child: CustomIconButtonStyle(
+                            child: AnimatedIcon(
+                              icon: AnimatedIcons.play_pause,
+                              progress: playPauseIconAnimation,
+                              size: 100,
+                              color: timerRunning ? grey : grey,
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            timerDurationController.value = 0.0;
+                            playPauseIconController.reverse();
+                            replayIconRotationController.reverse(from: 1.0);
+                            added = false;
+                          },
+                          child: CustomIconButtonStyle(
+                            child: RotationTransition(
+                              turns: replayIconRotationAnimation,
+                              child: Icon(
+                                Icons.replay,
+                                size: 50,
+                                color: timerRunning ? grey : grey,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -277,18 +286,20 @@ class _SecondScreenState extends State<SecondScreen>
 
 class CustomIconButtonStyle extends StatelessWidget {
   final Widget child;
+
   CustomIconButtonStyle({@required this.child});
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 60,
-      height: 60,
+      padding: const EdgeInsets.all(4.0),
       margin: const EdgeInsets.all(5.0),
       alignment: Alignment.center,
       child: child,
       decoration: BoxDecoration(
         color: yellow,
-        shape: BoxShape.circle,
+//        shape: BoxShape.circle,
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
         boxShadow: [
           BoxShadow(
             color: Colors.black12,
@@ -299,5 +310,24 @@ class CustomIconButtonStyle extends StatelessWidget {
         ],
       ),
     );
+//    return Container(
+//      width: 60,
+//      height: 60,
+//      margin: const EdgeInsets.all(5.0),
+//      alignment: Alignment.center,
+//      child: child,
+//      decoration: BoxDecoration(
+//        color: yellow,
+//        shape: BoxShape.circle,
+//        boxShadow: [
+//          BoxShadow(
+//            color: Colors.black12,
+//            spreadRadius: 0.4,
+//            blurRadius: 5.0,
+//            offset: Offset(0.0, 3.0),
+//          ),
+//        ],
+//      ),
+//    );
   }
 }

@@ -131,7 +131,19 @@ class CardState with ChangeNotifier {
   }
 
   // SECOND PAGE 8888888888888888888888888888888888888888888888888888888888888
+  void onTapAddIcon(CardModel cardModel) {
+    addScore(cardModel);
+    sharedPref.save(cardModel.title,
+        cardModel.toJson());
+//    notifyListeners();
+  }
 
+  void onTapSubIcon(CardModel cardModel) {
+    subtractScore(cardModel);
+    sharedPref.save(cardModel.title,
+        cardModel.toJson());
+//    notifyListeners();
+  }
 
   // RANDOM
 

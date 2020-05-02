@@ -66,6 +66,7 @@ class _BoxesDigitalClockState extends State<BoxesDigitalClock>
     }
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Digit(num: tensMin),
         SizedBox(width: 5),
