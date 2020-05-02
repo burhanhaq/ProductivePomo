@@ -59,32 +59,8 @@ class _CardTileState extends State<CardTile>
     bool isCardSelected = widget.cardModel.selected;
     loadSharedPrefs();
     return GestureDetector(
-      onHorizontalDragUpdate: (details) {
-        if (details.primaryDelta < 0) {
-          cardState.selectTile = widget.cardModel;
-          cardState.closeHomeRightBar();
-          cardScreenController.forward(from: 0.0);
-          Navigator.push(
-            context,
-            SecondScreenNavigation(
-              widget: SecondScreen(cardTile: widget),
-            ),
-          );
-        }
-      },
-      onTap: () {
-        cardState.closeHomeRightBar();
-        if (widget.cardModel.selected) {
-          // tapped second time
-          Navigator.push(
-            context,
-            SecondScreenNavigation(
-              widget: SecondScreen(cardTile: widget),
-            ),
-          );
-        }
-        cardState.selectTile = widget.cardModel;
-      },
+      onHorizontalDragUpdate: (details) => cardState.onHorizontalDragUpdateCardTile(details, widget, context, cardScreenController),
+      onTap: () => cardState.onTapCardTile(widget, context),
       child: Transform.translate(
         offset: Offset(
             cardScreenAnimation.value < 0.5
@@ -109,7 +85,9 @@ class _CardTileState extends State<CardTile>
               bottomLeft: Radius.circular(3),
             ),
             border: Border.all(
-              width: cardState.selectedIndex == cardState.confirmDeleteIndex ? 2 : 0,
+              width: cardState.selectedIndex == cardState.confirmDeleteIndex
+                  ? 2
+                  : 0,
               color: blue,
             ),
 //            boxShadow: [
@@ -160,8 +138,35 @@ class _CardTileState extends State<CardTile>
               ),
               Spacer(),
               Offstage(
-                child: Text('brhn.dev', style: kLabel.copyWith(color: white, fontSize: 20)),
                 offstage: !isCardSelected,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 5.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      InkWell(
+                        onTap: () => cardState.onTapSubSecond(widget.cardModel),
+                        child: CustomIconButtonStyle(
+                          child: Icon(
+                            Icons.remove,
+                            size: 40,
+                            color: red1,
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () => cardState.onTapAddSecond(widget.cardModel),
+                        child: CustomIconButtonStyle(
+                          child: Icon(
+                            Icons.add,
+                            size: 40,
+                            color: red1,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),

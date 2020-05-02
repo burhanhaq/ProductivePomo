@@ -84,24 +84,9 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
     }
 
     return GestureDetector(
-      onTap: () {
-        setState(() {
-          if (cardState.homeRightBarOpen) {
-            cardState.closeHomeRightBar();
-          } else {
-            cardState.openHomeRightBar();
-          }
-        });
-      },
-      onHorizontalDragUpdate: (details) {
-        setState(() {
-          if (details.delta.dx < 0) {
-            cardState.openHomeRightBar();
-          } else {
-            cardState.closeHomeRightBar();
-          }
-        });
-      },
+      onTap: () => cardState.onTapRightBar(),
+      onHorizontalDragUpdate: (details) =>
+          cardState.onHorizontalDragUpdateRightBar(details),
       child: Stack(
         alignment: Alignment.centerRight,
         children: <Widget>[
@@ -234,7 +219,7 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                         iconData: Icons.do_not_disturb_on,
                         offstage: kReleaseMode || !cardState.homeRightBarOpen,
                         textOffstage: !cardState.homeRightBarOpen,
-                        func: () => onTapDeleteAllIcon(cardState),
+                        func: () => cardState.onTapDeleteAllRightBar(),
                       ),
                       ScaleTransition(
                         scale: deleteIconScaleAnimation,
@@ -243,7 +228,7 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                           iconData: Icons.delete,
                           offstage: cardState.selectedIndex == null,
                           textOffstage: !cardState.homeRightBarOpen,
-                          func: () => onTapDeleteIcon(cardState),
+                          func: () => cardState.onTapDeleteRightBar(),
                           c: cardState.selectedIndex ==
                                   cardState.confirmDeleteIndex
                               ? blue
@@ -257,7 +242,8 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                           iconData: Icons.cancel,
                           offstage: !cardState.onAddNewScreen,
                           textOffstage: !cardState.homeRightBarOpen,
-                          func: () => onTapCancelItem(cardState),
+                          func: () => cardState.onTapCancelRightBar(
+                              addNewIconController, cancelIconScaleController),
                         ),
                       ),
                       Stack(
@@ -274,8 +260,11 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                               name: 'Confirm Item',
                               iconData: Icons.check_box,
                               textOffstage: !cardState.homeRightBarOpen,
-                              func: () => checkBoxIconF(cardState),
-                              c: canAddItem(cardState) ? yellow : red2,
+                              func: () => cardState.onTapCheckBoxRightBar(
+                                  widget.cardTileList,
+                                  addNewIconController,
+                                  cancelIconScaleController),
+                              c: cardState.canAddItem() ? yellow : red2,
                             ),
                           ),
                           Transform.translate(
@@ -288,7 +277,9 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                               name: 'Add Item',
                               iconData: Icons.add_box,
                               textOffstage: !cardState.homeRightBarOpen,
-                              func: () => onTapAddIcon(cardState),
+                              func: () => cardState.onTapAddRightBar(
+                                  addNewIconController,
+                                  cancelIconScaleController),
                             ),
                           ),
                         ],
@@ -302,86 +293,6 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
         ],
       ),
     );
-  }
-
-  bool canAddItem(CardState cardState) {
-    var keys = [];
-    CardModel.cardModelsX.forEach((element) {
-      keys.add(element.title.toLowerCase());
-    });
-    return cardState.onAddNewScreen &&
-        cardState.newTitle.isNotEmpty &&
-        !keys.contains(cardState.newTitle.toLowerCase());
-  }
-
-  checkBoxIconF(CardState cardState) {
-    setState(() {
-      bool canAddNewItem = canAddItem(cardState);
-      if (canAddNewItem) {
-        addNewIconController.reverse();
-        cancelIconScaleController.reverse();
-//                                cardState.clearTitleTextEditingControllerSwitch();
-        cardState.addToCardModelsList(
-          CardModel(
-            title: cardState.newTitle,
-            score: 0,
-            goal: int.tryParse(cardState.newGoal) == null
-                ? '777'
-                : int.tryParse(cardState.newGoal),
-            minutes: int.parse(cardState.newMinutes),
-            seconds: int.parse(cardState.newSeconds),
-          ),
-        );
-        widget.cardTileList.add(CardTile(
-            cardModel: cardState.cardModels[cardState.cardModels.length - 1]));
-        cardState.onAddNewScreen = false;
-        sharedPref.save(cardState.newTitle,
-            cardState.cardModels[cardState.cardModels.length - 1].toJson());
-        cardState.resetNewVariables();
-      } else {
-        // todo play cant add animation maybe
-        print('can not add');
-      }
-    });
-  }
-
-  onTapAddIcon(CardState cardState) {
-    if (!cardState.onAddNewScreen) {
-      cancelIconScaleController.forward();
-      cardState.onAddNewScreen = true;
-      cardState.closeHomeRightBar();
-      cardState.selectTile = null;
-      addNewIconController.forward();
-    }
-  }
-
-  onTapCancelItem(CardState cardState) {
-    addNewIconController.reverse();
-    cancelIconScaleController.reverse();
-    if (cardState.onAddNewScreen) {
-      cardState.resetNewVariables();
-      cardState.onAddNewScreen = !cardState.onAddNewScreen;
-    }
-  }
-
-  onTapDeleteIcon(CardState cardState) async {
-    if (cardState.confirmDeleteIndex == cardState.selectedIndex) {
-      // second tap
-      String titleToDelete =
-          cardState.cardModels[cardState.selectedIndex].title;
-      sharedPref.remove(titleToDelete);
-//      await DatabaseHelper.instance.deleteRecord(titleToDelete, date);
-      CardModel.cardModelsX.removeAt(cardState.selectedIndex);
-      cardState.selectTile = null;
-    } else {
-      // first tap for confirmation
-      cardState.confirmDeleteIndex = cardState.selectedIndex;
-    }
-  }
-
-  onTapDeleteAllIcon(CardState cardState) {
-    sharedPref.removeAll();
-    cardState.clearCardModelsList();
   }
 
   @override
@@ -408,10 +319,11 @@ class YellowUnderlay extends StatelessWidget {
           left: Radius.circular(25),
         ),
       ),
-          width: MediaQuery.of(context).size.width *
-              ((cardState.homeRightBarOpen
+      width: MediaQuery.of(context).size.width *
+          ((cardState.homeRightBarOpen
                   ? kHomeRightBarOpenMul
-                  : kHomeRightBarClosedMul) + kHomeYellowDividerMul),
+                  : kHomeRightBarClosedMul) +
+              kHomeYellowDividerMul),
     );
   }
 }

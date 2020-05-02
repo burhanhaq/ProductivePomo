@@ -151,20 +151,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                     Positioned(
                       top: MediaQuery.of(context).size.height * 0.08,
                       child: GestureDetector(
-                        onTap: () {
-                          cardState.selectTile = null;
-                          cardState.closeHomeRightBar();
-                          cardState.tappedEmptyAreaUnderListView = true;
-                        },
-                        onHorizontalDragUpdate: (details) {
-                          setState(() {
-                            if (details.delta.dx < 0) {
-                              cardState.openHomeRightBar();
-                            } else {
-                              cardState.closeHomeRightBar();
-                            }
-                          });
-                        },
+                        onTap: () => cardState.onTapEmptyAreaUnderListView(),
+                        onHorizontalDragUpdate: (details) => cardState.onHorizontalDragUpdateRightBar(details),
                         child: SizedBox(
                           height: MediaQuery.of(context).size.height * 0.88,
                           width: MediaQuery.of(context).size.width * kGreyAreaMul,
@@ -195,7 +183,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                     ),
                     Positioned(
                       left: 0,
-                      top: 0,
                       child: Transform.translate(
                           offset: Offset(
                               -MediaQuery.of(context).size.width *
