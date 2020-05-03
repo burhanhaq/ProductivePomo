@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:core';
 
-DateTime date = DateTime.now();
+DateTime dateTime = DateTime.now();
 
 const kLabel = TextStyle(
   color: Colors.black,

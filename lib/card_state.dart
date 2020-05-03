@@ -7,6 +7,7 @@ import 'models/card_model.dart';
 import 'widgets/card_tile.dart';
 import 'screens/second_screen.dart';
 import 'screen_navigation/second_screen_navigation.dart';
+import 'database_helper.dart';
 
 class CardState with ChangeNotifier {
   resetNewVariables() {
@@ -16,8 +17,6 @@ class CardState with ChangeNotifier {
     _newSeconds = '03';
     notifyListeners();
   }
-
-//  SharedPref sharedPrefCS = SharedPref(); // todo implement this maybe to speed things up
 
   List<CardModel> get cardModels => CardModel.cardModelsX;
 
@@ -52,9 +51,6 @@ class CardState with ChangeNotifier {
   String get newMinutes => _newMinutes;
 
   String get newSeconds => _newSeconds;
-
-//  bool get isClearTitleTextEditingController =>
-//      _isClearTitleTextEditingController;
 
   bool get tappedEmptyAreaUnderListView => _tappedEmptyAreaUnderListView;
 
@@ -136,7 +132,8 @@ class CardState with ChangeNotifier {
     selectTile = widget.cardModel;
   }
 
-  void onHorizontalDragUpdateCardTile(var details, var widget, var context, var cardScreenController) {
+  void onHorizontalDragUpdateCardTile(
+      var details, var widget, var context, var cardScreenController) {
     if (details.primaryDelta < 0) {
       selectTile = widget.cardModel;
       closeHomeRightBar();
@@ -149,11 +146,6 @@ class CardState with ChangeNotifier {
       );
     }
   }
-
-//  set isClearTitleTextEditingController(bool val) { // todo implement this
-//    _isClearTitleTextEditingController = val;
-//    notifyListeners();
-//  }
 
   // RIGHT BAR 8888888888888888888888888888888888888888888888888888888888888
   bool _homeRightBarOpen = false;
@@ -190,21 +182,21 @@ class CardState with ChangeNotifier {
   }
 
   onTapDeleteRightBar() async {
-    if (confirmDeleteIndex == selectedIndex) {
-      // second tap
+    if (confirmDeleteIndex == selectedIndex) { // second tap
       String titleToDelete = cardModels[selectedIndex].title;
-      sharedPref.remove(titleToDelete);
-//      await DatabaseHelper.instance.deleteRecord(titleToDelete, date);
+      String dateToDelete = cardModels[selectedIndex].date;
       CardModel.cardModelsX.removeAt(selectedIndex);
+      var deleted = await DB.instance.deleteRecord(titleToDelete, dateToDelete);
+      print('DB DELETED -- $deleted');
       selectTile = null;
-    } else {
-      // first tap for confirmation
+    } else { // first tap for confirmation
       confirmDeleteIndex = selectedIndex;
     }
   }
 
-  onTapDeleteAllRightBar() {
-    sharedPref.removeAll();
+  onTapDeleteAllRightBar() async {
+//    sharedPref.removeAll();
+//    await DB.instance.recreateTable();
     clearCardModelsList();
   }
 
@@ -219,23 +211,22 @@ class CardState with ChangeNotifier {
   }
 
   onTapCheckBoxRightBar(var cardTileList, var addNewIconController,
-      var cancelIconScaleController) {
+      var cancelIconScaleController) async {
     bool canAddNewItem = canAddItem();
     if (canAddNewItem) {
       addNewIconController.reverse();
       cancelIconScaleController.reverse();
-      addToCardModelsList(
-        CardModel(
-          title: newTitle,
-          score: 0,
-          goal: int.tryParse(newGoal) == null ? '777' : int.tryParse(newGoal),
-          minutes: int.parse(newMinutes),
-          seconds: int.parse(newSeconds),
-        ),
+      var newItem = CardModel(
+        title: newTitle,
+        score: 0,
+        goal: int.tryParse(newGoal) == null ? '777' : int.tryParse(newGoal),
+        minutes: int.parse(newMinutes),
       );
-      cardTileList.add(CardTile(cardModel: cardModels[cardModels.length - 1]));
+      addToCardModelsList(newItem);
+      cardTileList.add(CardTile(cardModel: newItem));
       onAddNewScreen = false;
-      sharedPref.save(newTitle, cardModels[cardModels.length - 1].toJson());
+      var added = await DB.instance.insertOrUpdateRecord(newItem.toJson());
+      print('DB INSERT -- $added');
       resetNewVariables();
     } else {
       // todo play cant add animation maybe
@@ -261,16 +252,18 @@ class CardState with ChangeNotifier {
 
   // CARD TILE 8888888888888888888888888888888888888888888888888888888888888888
 
-  void onTapAddScore(CardModel cardModel) {
+  void onTapAddScore(CardModel cardModel) async {
     addScore(cardModel);
-    sharedPref.save(cardModel.title, cardModel.toJson());
+    var scoreUpdate = await DB.instance.insertOrUpdateRecord(cardModel.toJson());
+    print('DB UPDATE ADD SCORE -- $scoreUpdate');
     _pageScore = cardModel.score;
     notifyListeners();
   }
 
-  void onTapSubtractScore(CardModel cardModel) {
+  void onTapSubtractScore(CardModel cardModel) async {
     subtractScore(cardModel);
-    sharedPref.save(cardModel.title, cardModel.toJson());
+    var scoreUpdate = await DB.instance.insertOrUpdateRecord(cardModel.toJson());
+    print('DB UPDATE SUB SCORE -- $scoreUpdate');
     _pageScore = cardModel.score;
     notifyListeners();
   }

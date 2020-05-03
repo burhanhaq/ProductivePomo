@@ -5,11 +5,10 @@ import '../constants.dart';
 
 class BoxesDigitalClock extends StatefulWidget {
   final int min;
-  final int sec;
   final AnimationController timerController;
 
   BoxesDigitalClock(
-      {@required this.min, @required this.sec, @required this.timerController});
+      {@required this.min, @required this.timerController});
 
   @override
   _BoxesDigitalClockState createState() => _BoxesDigitalClockState();
@@ -40,7 +39,7 @@ class _BoxesDigitalClockState extends State<BoxesDigitalClock>
   int onesSec = 0;
 
   setInitialTimerValue() {
-    Duration duration = Duration(minutes: widget.min, seconds: widget.sec) *
+    Duration duration = Duration(minutes: widget.min) *
         backwardTimerAnimation.value;
     tensMin = (duration.inMinutes / 10).floor() % 10;
     onesMin = duration.inMinutes % 10;
@@ -49,7 +48,7 @@ class _BoxesDigitalClockState extends State<BoxesDigitalClock>
   }
 
   setTimerValues() {
-    Duration duration = Duration(minutes: widget.min, seconds: widget.sec) *
+    Duration duration = Duration(minutes: widget.min) *
         (1 - widget.timerController.value);
     tensMin = (duration.inMinutes / 10).floor() % 10;
     onesMin = duration.inMinutes % 10;

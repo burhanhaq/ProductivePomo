@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import '../constants.dart';
 import '../card_state.dart';
 import '../models/card_model.dart';
-import '../screen_navigation/second_screen_navigation.dart';
 
 class CardTile extends StatefulWidget {
   final CardModel cardModel;
@@ -22,9 +21,6 @@ class _CardTileState extends State<CardTile>
   AnimationController cardScreenController;
   Animation cardScreenAnimation;
 
-//  SharedPref sharedPref = SharedPref();
-  int prefScore;
-
   @override
   void initState() {
     super.initState();
@@ -37,27 +33,12 @@ class _CardTileState extends State<CardTile>
           });
   }
 
-  loadSharedPrefs() async {
-    if (mounted) {
-      try {
-        CardModel model =
-            CardModel.fromJson(await sharedPref.read(widget.cardModel.title));
-        setState(() {
-          prefScore = model.score;
-        });
-      } catch (Exception) {
-        print('Exception in CardTile. Possible Leak!');
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final cardState = Provider.of<CardState>(context);
     final String title = widget.cardModel.title;
     double screenWidth = MediaQuery.of(context).size.width;
     bool isCardSelected = widget.cardModel.selected;
-    loadSharedPrefs();
     return GestureDetector(
       onHorizontalDragUpdate: (details) => cardState.onHorizontalDragUpdateCardTile(details, widget, context, cardScreenController),
       onTap: () => cardState.onTapCardTile(widget, context),
@@ -118,7 +99,7 @@ class _CardTileState extends State<CardTile>
                       ),
                       Spacer(),
                       Text(
-                        prefScore == null ? '-7' : prefScore.toString(),
+                        widget.cardModel.score.toString(),
                         style: isCardSelected
                             ? kScore.copyWith(color: white)
                             : kScore,

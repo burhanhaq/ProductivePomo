@@ -30,7 +30,6 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
   var deleteIconScaleAnimation;
   var cancelIconScaleController;
   var cancelIconScaleAnimation;
-  SharedPref sharedPref = SharedPref();
 
   @override
   void initState() {
@@ -124,10 +123,9 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                                 ? 'x'
                                 : cardState.firstPageScore.toString(),
                             maxLines: 1,
-
                             style: TextStyle(
                               color: Colors.white,
-                            fontSize: 50,
+                              fontSize: 50,
                               decoration: TextDecoration.none,
                             ),
                           ),
@@ -154,58 +152,70 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                         child: Column(
                           children: <Widget>[
                             GestureDetector(
-                                onTap: () async {
-                                  var rando =
-                                      await DatabaseHelper.instance.rando();
-//
-//                            print('Rando: $rando');
-                                },
-                                child: Text('Rando')),
-                            SizedBox(height: 40),
+                              onTap: () async {
+                                await DB.instance.recreateTable();
+                              },
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 20),
+                                child: Text('Recreate table'),
+                              ),
+                            ),
                             GestureDetector(
                                 onTap: () async {
-                                  var two = await DatabaseHelper.instance
-                                      .insertOrUpdateRecord({
-                                    DatabaseHelper.columnTitle: 'two',
-                                    DatabaseHelper.columnDate: 2002,
-                                    DatabaseHelper.columnScore: 1,
-                                    DatabaseHelper.columnGoal: 2,
-                                    DatabaseHelper.columnDuration: 2,
-                                  });
-                                  print('two: $two');
+                                  await DB.instance.rando();
                                 },
-                                child: Text('Insert')),
-                            SizedBox(height: 40),
+                                child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 20),
+                                    child: Text('Rando'))),
                             GestureDetector(
                                 onTap: () async {
-                                  var query = await DatabaseHelper.instance
-                                      .queryRecords();
+//                                  var two = await DB.instance
+//                                      .insertOrUpdateRecord(widget
+//                                              .cardTileList[2].cardModel
+//                                              .toJson()
+//                                          );
+                                },
+                                child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 20),
+                                    child: Text('Insert'))),
+                            GestureDetector(
+                                onTap: () async {
+                                  var query = await DB.instance.queryRecords();
                                   print('query: $query');
                                 },
-                                child: Text('Query')),
-                            SizedBox(height: 40),
+                                child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 20),
+                                    child: Text('Query'))),
                             GestureDetector(
                                 onTap: () async {
-                                  var update = await DatabaseHelper.instance
-                                      .insertOrUpdateRecord({
-                                    DatabaseHelper.columnTitle: 'two',
-                                    DatabaseHelper.columnDate: 2012,
-                                    DatabaseHelper.columnScore: 1,
-                                    DatabaseHelper.columnGoal: 2,
-                                    DatabaseHelper.columnDuration: 2,
+                                  var update =
+                                      await DB.instance.insertOrUpdateRecord({
+                                    DB.columnTitle: 'two',
+                                    DB.columnDate: 2012,
+                                    DB.columnScore: 1,
+                                    DB.columnGoal: 2,
+                                    DB.columnMinutes: 2,
                                   });
                                   print('update: $update');
                                 },
-                                child: Text('Update')),
-                            SizedBox(height: 40),
+                                child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 20),
+                                    child: Text('Update'))),
                             GestureDetector(
                                 onTap: () async {
-                                  var delete = await DatabaseHelper.instance
-                                      .deleteRecord('one', 2017);
-                                  print('delete: $delete');
+//                                  var delete = await DB.instance
+//                                      .deleteRecord('one', '2017');
+//                                  print('delete: $delete');
                                 },
-                                child: Text('Delete')),
-                            SizedBox(height: 40),
+                                child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 20),
+                                    child: Text('Delete'))),
                           ],
                         ),
                       ),

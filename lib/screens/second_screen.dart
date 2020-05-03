@@ -9,7 +9,7 @@ import '../models/card_model.dart';
 import '../widgets/boxes_digital_clock.dart';
 
 class SecondScreen extends StatefulWidget {
-//  static final id = 'SecondScreen';
+  static final id = 'SecondScreen';
   final CardTile cardTile;
 
   SecondScreen({@required this.cardTile});
@@ -20,7 +20,6 @@ class SecondScreen extends StatefulWidget {
 
 class _SecondScreenState extends State<SecondScreen>
     with TickerProviderStateMixin {
-//  SharedPref sharedPref = SharedPref();
   var timerDurationController;
   var playPauseIconController;
   var playPauseIconAnimation;
@@ -36,9 +35,9 @@ class _SecondScreenState extends State<SecondScreen>
       CardModel model = CardModel.fromJson(
           await sharedPref.read(widget.cardTile.cardModel.title));
       setState(() {
-//        prefTitle = model.title;
-//        prefScore = model.score;
-//        prefGoal = model.goal;
+        prefTitle = model.title;
+        prefScore = model.score;
+        prefGoal = model.goal;
       });
     } catch (Exception) {
 //      print('Exception in SecondScreen');
@@ -53,7 +52,6 @@ class _SecondScreenState extends State<SecondScreen>
       vsync: this,
       duration: Duration(
         minutes: widget.cardTile.cardModel.minutes,
-        seconds: widget.cardTile.cardModel.seconds,
       ),
     );
 
@@ -80,19 +78,13 @@ class _SecondScreenState extends State<SecondScreen>
   @override
   Widget build(BuildContext context) {
     loadSharedPrefs();
-    setState(() {
-      prefTitle = widget.cardTile.cardModel.title;
-      prefScore = widget.cardTile.cardModel.score;
-      prefGoal = widget.cardTile.cardModel.goal;
-    });
+//    setState(() {
+      String cardTitle = widget.cardTile.cardModel.title;
+      int cardScore = widget.cardTile.cardModel.score;
+      int cardGoal = widget.cardTile.cardModel.goal;
+//    });
     CardState cardState = Provider.of<CardState>(context);
     bool timerRunning = timerDurationController.isAnimating;
-//    if (timerDurationController.value == 1.0 && !added) {
-//      cardState.addScore(widget.cardTile.cardModel);
-//      sharedPref.save(widget.cardTile.cardModel.title,
-//          widget.cardTile.cardModel.toJson());
-//      added = true;
-//    }
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
     return SafeArea(
@@ -118,7 +110,7 @@ class _SecondScreenState extends State<SecondScreen>
                   ),
                   child: Center(
                     child: Text(
-                      prefTitle == null ? 'null' : prefTitle.toUpperCase(),
+                      cardTitle == null ? 'null' : cardTitle.toUpperCase(),
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -148,7 +140,7 @@ class _SecondScreenState extends State<SecondScreen>
                       FittedBox(
                         fit: BoxFit.contain,
                         child: Text(
-                          prefScore == null ? '-3' : prefScore.toString(),
+                          cardScore == null ? '-3' : cardScore.toString(),
                           style: TextStyle(
                             color: grey2,
                             decoration: TextDecoration.none,
@@ -163,7 +155,7 @@ class _SecondScreenState extends State<SecondScreen>
                       FittedBox(
                         fit: BoxFit.contain,
                         child: Text(
-                          prefGoal == null ? '-3' : prefGoal.toString(),
+                          cardGoal == null ? '-3' : cardGoal.toString(),
                           style: TextStyle(
                             color: grey2,
                             decoration: TextDecoration.none,
@@ -178,7 +170,6 @@ class _SecondScreenState extends State<SecondScreen>
             Spacer(),
             BoxesDigitalClock(
               min: widget.cardTile.cardModel.minutes,
-              sec: widget.cardTile.cardModel.seconds,
               timerController: timerDurationController,
             ),
             Spacer(),

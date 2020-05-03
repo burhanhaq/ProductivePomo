@@ -1,13 +1,13 @@
-import 'package:flutter/cupertino.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
+import 'package:flutter/material.dart';
+
+import 'package:pomodoro_app/constants.dart';
 
 class CardModel {
   String title;
+  String date;
   int score;
   int goal;
   int minutes;
-  int seconds;
   bool selected;
 
   CardModel({
@@ -15,28 +15,31 @@ class CardModel {
     @required this.score,
     @required this.goal,
     @required this.minutes,
-    @required this.seconds,
-    this.selected = false,
-  });
+  }) {
+    this.selected = false;
+    this.date =
+        '${dateTime.year.toString()}-${dateTime.month.toString().padLeft(2,'0')}-${dateTime.day.toString().padLeft(2,'0')}';
+//    print(this.date);
+  }
 
   toString() {
-    return '> ${this.title} - ${this.score}/${this.goal} ${this.minutes}:${this.seconds} ${this.selected}';
+    return '> ${this.title} - ${this.score}/${this.goal} ${this.minutes}:00:P ${this.selected} ${this.date}';
   }
 
   Map<String, dynamic> toJson() => {
         'title': title,
+        'date': date,
         'score': score,
         'goal': goal,
         'minutes': minutes,
-        'seconds': seconds,
       };
 
   CardModel.fromJson(Map<String, dynamic> json)
       : title = json['title'],
+        date = json['date'],
         score = json['score'],
         goal = json['goal'],
-        minutes = json['minutes'],
-        seconds = json['seconds'];
+        minutes = json['minutes'];
 
   static List<CardModel> cardModelsX = [];
 }

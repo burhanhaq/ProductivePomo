@@ -6,9 +6,11 @@ import '../../constants.dart';
 import '../../widgets/card_tile.dart';
 import '../../card_state.dart';
 import '../../models/card_model.dart';
-import '../../shared_pref.dart';
+
+//import '../../shared_pref.dart';
 import 'right_bar.dart';
 import 'add_new_card.dart';
+import '../../database_helper.dart';
 
 class Home extends StatefulWidget {
   static final id = 'Home';
@@ -18,7 +20,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with TickerProviderStateMixin {
-  SharedPref sharedPref = SharedPref();
+//  SharedPref sharedPref = SharedPref();
   List<CardTile> cardTileList = [];
   bool loadingIndicator = true;
   AnimationController addSectionController;
@@ -32,7 +34,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    getCardListFromJson();
+    getCardListFromDB();
 
     addSectionController = AnimationController(
       vsync: this,
@@ -68,15 +70,16 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     loadingIndicatorController.forward();
   }
 
-  getCardListFromJson() async {
-    List<dynamic> prefCardModelList = await sharedPref.get();
-    for (int i = 0; i < prefCardModelList.length; i++) {
+  getCardListFromDB() async {
+//    List<dynamic> prefCardModelList = await sharedPref.get();
+    List<dynamic> cardModelListFromDB = await DB.instance.queryRecords();
+    for (int i = 0; i < cardModelListFromDB.length; i++) {
       CardModel.cardModelsX.add(CardModel(
-        title: prefCardModelList[i]['title'],
-        score: prefCardModelList[i]['score'],
-        goal: prefCardModelList[i]['goal'],
-        minutes: prefCardModelList[i]['minutes'],
-        seconds: prefCardModelList[i]['seconds'],
+        // todo, just FYI, new additions have today's date
+        title: cardModelListFromDB[i]['title'],
+        score: cardModelListFromDB[i]['score'],
+        goal: cardModelListFromDB[i]['goal'],
+        minutes: cardModelListFromDB[i]['minutes'],
       ));
     }
   }
@@ -88,7 +91,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       return CardTile(cardModel: cardState.cardModels[index]);
     });
     if (loadingIndicator) {
-      if (cardTileList.length > 0 && cardTileList[0].cardModel.score < 0) {
+      if (cardTileList.length > 0 && cardTileList[0].cardModel.score >= 0) {
         loadingIndicator = false;
       }
     }
@@ -137,7 +140,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 //                          ),
                         ),
                         child: Text(
-                          '${date.month.toString()} / ${date.day.toString()} / ${date.year.toString()}',
+                          '${dateTime.month.toString()} / ${dateTime.day.toString()} / ${dateTime.year.toString()}',
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -152,10 +155,12 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                       top: MediaQuery.of(context).size.height * 0.08,
                       child: GestureDetector(
                         onTap: () => cardState.onTapEmptyAreaUnderListView(),
-                        onHorizontalDragUpdate: (details) => cardState.onHorizontalDragUpdateRightBar(details),
+                        onHorizontalDragUpdate: (details) =>
+                            cardState.onHorizontalDragUpdateRightBar(details),
                         child: SizedBox(
                           height: MediaQuery.of(context).size.height * 0.88,
-                          width: MediaQuery.of(context).size.width * kGreyAreaMul,
+                          width:
+                              MediaQuery.of(context).size.width * kGreyAreaMul,
                           child: ListView(
                             physics: BouncingScrollPhysics(),
                             children: cardTileList,
@@ -172,10 +177,11 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                             ? 2 * loadingIndicatorAnimation.value
                             : 0,
                         child: Container(
+                          // todo replace with light card or something with an opacity controller maybe
                           height: 15,
                           width: 15,
                           decoration: BoxDecoration(
-                            color: yellow,
+                            color: white,
                             shape: BoxShape.circle,
                           ),
                         ),

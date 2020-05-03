@@ -1,7 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
-class DatabaseHelper {
+class DB {
   static final _dbName = 'pomoDatabase1.db';
   static final _dbVersion = 1;
   static final _tableName = 'Big_Table';
@@ -11,11 +11,11 @@ class DatabaseHelper {
   static final columnDate = 'date';
   static final columnScore = 'score';
   static final columnGoal = 'goal';
-  static final columnDuration = 'duration';
+  static final columnMinutes = 'minutes';
 
-  DatabaseHelper._privateConstructor();
+  DB._privateConstructor();
 
-  static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
+  static final DB instance = DB._privateConstructor();
 
   static Database _database;
 
@@ -24,15 +24,6 @@ class DatabaseHelper {
       _database = await _initiateDatabase();
     }
     return _database;
-  }
-
-  rando() async {
-    Database db = await instance.database;
-//    var drop = await db.rawQuery('drop table $_tableName');print(drop);
-//    await _onCreate(db, _dbVersion);
-    var tables = await db
-        .rawQuery('SELECT name FROM sqlite_master WHERE type=\'table\';');
-    print('tables: $tables');
   }
 
   _initiateDatabase() async {
@@ -45,12 +36,26 @@ class DatabaseHelper {
     CREATE TABLE IF NOT EXISTS \"$_tableName\" (
     $columnID INTEGER PRIMARY KEY,
     $columnTitle TEXT NOT NULL,
-    $columnDate INTEGER NOT NULL,
+    $columnDate TEXT NOT NULL,
     $columnScore INTEGER NOT NULL,
     $columnGoal INTEGER NOT NULL,
-    $columnDuration INTEGER NOT NULL
+    $columnMinutes INTEGER NOT NULL
     );
     ''');
+  }
+
+  recreateTable() async {
+    Database db = await instance.database;
+    await db.rawQuery('drop table $_tableName');
+    await _onCreate(db, _dbVersion);
+    var tables = await db
+        .rawQuery('SELECT name FROM sqlite_master WHERE type=\'table\';');
+    print('tables: $tables');
+    print('New table created');
+  }
+
+  rando() async {
+    Database db = await instance.database;
   }
 
   Future<List<Map<String, dynamic>>> queryRecords() async {
@@ -58,11 +63,12 @@ class DatabaseHelper {
     return await db.query(_tableName);
   }
 
+
   Future insertOrUpdateRecord(Map<String, dynamic> row) async {
     Database db = await instance.database;
-    int date = row[columnDate];
+    String date = row[columnDate];
     String title = row[columnTitle];
-    var update =  await db.update(_tableName, row,
+    var update = await db.update(_tableName, row,
         where: '$columnDate = ? AND $columnTitle = ?',
         whereArgs: [date, title]);
 
@@ -72,7 +78,7 @@ class DatabaseHelper {
       return await db.insert(_tableName, row);
   }
 
-  Future<int> deleteRecord(String title, int date) async {
+  Future<int> deleteRecord(String title, String date) async {
     Database db = await instance.database;
     return await db.delete(_tableName,
         where: '$columnDate = ? AND $columnTitle = ?',
