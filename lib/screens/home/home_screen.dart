@@ -125,6 +125,24 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                   overflow: Overflow.visible,
                   children: <Widget>[
                     Positioned(
+                      left:
+                          MediaQuery.of(context).size.width * kGreyAreaMul / 2,
+                      bottom: 30,
+                      child: Offstage(
+                        offstage: CardModel.cardModelsX.length > 1,
+                        child: Text(
+                          'Swipe Left',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: white,
+                            fontFamily: 'IndieFlower',
+                            decoration: TextDecoration.none,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Positioned(
                       top: 0,
                       child: Container(
                         alignment: Alignment.center,
@@ -140,7 +158,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 //                          ),
                         ),
                         child: Text(
-                          '${dateTime.month.toString()} / ${dateTime.day.toString()} / ${dateTime.year.toString()}',
+                          dateTime.toString(),
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
