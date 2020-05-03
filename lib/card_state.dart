@@ -157,11 +157,15 @@ class CardState with ChangeNotifier {
   onTapDeleteItemRightBar() async {
     if (confirmDeleteIndex == selectedIndex) {
       // second tap
-      String titleToDelete = cardModels[selectedIndex].title;
-      String dateToDelete = cardModels[selectedIndex].date;
+      CardModel modelToDelete = cardModels[selectedIndex];
+//      if (modelToDelete.score == _maxScore) {
+//        _maxScore = 0;
+//        cardModels.forEach((element) {
+//          if (element.score > maxScore) _maxScore = element.score;
+//        });
+//      }
       CardModel.cardModelsX.removeAt(selectedIndex);
-      var deleted = await DB.instance.deleteRecord(titleToDelete, dateToDelete);
-      print('DB DELETED -- $deleted');
+      await DB.instance.deleteRecord(modelToDelete.title, modelToDelete.date);
       selectTile = null;
     } else {
       // first tap for confirmation
@@ -258,14 +262,15 @@ class CardState with ChangeNotifier {
 
   void onTapAddScore(CardModel cardModel) async {
     addScore(cardModel);
-    var scoreUpdate =
-        await DB.instance.insertOrUpdateRecord(cardModel.toJson());
-    print('DB UPDATE ADD SCORE -- $scoreUpdate');
+    await DB.instance.insertOrUpdateRecord(cardModel.toJson());
     _pageScore = cardModel.score;
+//    if (cardModel.score > _maxScore) _maxScore = cardModel.score;
+//    _maxScore = cardModel.score > _maxScore ? cardModel.score : maxScore;
     notifyListeners();
   }
 
   void onTapSubtractScore(CardModel cardModel) async {
+//    _maxScore = cardModel.score == _maxScore ? --_maxScore : maxScore;
     subtractScore(cardModel);
     var scoreUpdate =
         await DB.instance.insertOrUpdateRecord(cardModel.toJson());
@@ -273,6 +278,26 @@ class CardState with ChangeNotifier {
     _pageScore = cardModel.score;
     notifyListeners();
   }
+
+  // ANALYTICS 88888888888888888888888888888888888888888888888888888888888888888
+
+  bool _showAnalytics = true;
+
+  get showAnalytics => _showAnalytics;
+
+  set showAnalytics(bool val) {
+    _showAnalytics = val;
+    notifyListeners();
+  }
+
+//  int _maxScore = 0;
+//
+//  get maxScore => _maxScore;
+//
+//  set maxScore(int val) {
+//    _maxScore = val;
+//    notifyListeners();
+//  }
 
   // SECOND SCREEN 8888888888888888888888888888888888888888888888888888888888888
   void onTapReplaySecond(var timerDurationController,

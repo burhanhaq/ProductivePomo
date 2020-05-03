@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
-
-//import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 
-import '../../constants.dart';
-import '../../card_state.dart';
+import '../../../constants.dart';
+import '../../../card_state.dart';
 
 class CustomIconButton extends StatefulWidget {
   final String name;
   final IconData iconData;
   final bool offstage;
-  final bool textOffstage;
   final Function func;
   final Color c;
 
@@ -18,7 +15,6 @@ class CustomIconButton extends StatefulWidget {
     @required this.name,
     @required this.iconData,
     this.offstage = false,
-    @required this.textOffstage,
     @required this.func,
     this.c = yellow,
   });
@@ -62,7 +58,7 @@ class _CustomIconButtonState extends State<CustomIconButton>
               ),
               SizedBox(width: 8),
               Offstage(
-                offstage: widget.textOffstage,
+                offstage: !cardState.homeRightBarOpen,
                 child: SizeTransition(
                   sizeFactor: textSizeTransitionController,
                   axis: Axis.horizontal,

@@ -7,10 +7,10 @@ import '../../widgets/card_tile.dart';
 import '../../card_state.dart';
 import '../../models/card_model.dart';
 
-//import '../../shared_pref.dart';
-import 'right_bar.dart';
+import 'right_bar/right_bar.dart';
 import 'add_new_card.dart';
 import '../../database_helper.dart';
+import '../../screens/home/analytics/analytics.dart';
 
 class Home extends StatefulWidget {
   static final id = 'Home';
@@ -214,6 +214,13 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                   kAddNewSectionMul,
                               0),
                           child: AddNewCard()),
+                    ),
+                    Positioned(
+                      left: 0,
+                      child: Offstage(
+                        offstage: !cardState.showAnalytics,
+                        child: Analytics(),
+                      ),
                     ),
                   ],
                 ),

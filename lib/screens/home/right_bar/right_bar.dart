@@ -3,13 +3,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../constants.dart';
-import '../../widgets/card_tile.dart';
-import '../../card_state.dart';
-import '../../models/card_model.dart';
-import '../../shared_pref.dart';
+import '../../../constants.dart';
+import '../../../widgets/card_tile.dart';
+import '../../../card_state.dart';
+import '../../../models/card_model.dart';
+import '../../../shared_pref.dart';
 import 'custom_icon_button.dart';
-import '../../database_helper.dart';
+import '../../../database_helper.dart';
 
 class RightBar extends StatefulWidget {
   final List<CardTile> cardTileList;
@@ -151,7 +151,6 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                         name: 'Print All',
                         iconData: Icons.grain,
                         offstage: kReleaseMode,
-                        textOffstage: !cardState.homeRightBarOpen,
                         func: () {
                           print(
                               'cardModelsX: ${CardModel.cardModelsX.toString()}');
@@ -161,8 +160,14 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                         name: 'Delete All',
                         iconData: Icons.do_not_disturb_on,
                         offstage: kReleaseMode || !cardState.homeRightBarOpen,
-                        textOffstage: !cardState.homeRightBarOpen,
                         func: () => cardState.onTapDeleteAllRightBar(),
+                      ),
+                      CustomIconButton(
+                        name: 'Analytics',
+                        iconData: Icons.assessment,
+                        func: () {
+                          cardState.showAnalytics = !cardState.showAnalytics;
+                        },
                       ),
                       ScaleTransition(
                         scale: deleteIconScaleAnimation,
@@ -170,7 +175,6 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                           name: 'Delete Item',
                           iconData: Icons.delete,
                           offstage: cardState.selectedIndex == null,
-                          textOffstage: !cardState.homeRightBarOpen,
                           func: () => cardState.onTapDeleteItemRightBar(),
                           c: cardState.selectedIndex ==
                                   cardState.confirmDeleteIndex
@@ -184,7 +188,6 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                           name: 'Cancel',
                           iconData: Icons.cancel,
                           offstage: !cardState.onAddNewScreen,
-                          textOffstage: !cardState.homeRightBarOpen,
                           func: () => cardState.onTapCancelRightBar(
                               addNewIconController, cancelIconScaleController),
                         ),
@@ -202,7 +205,6 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                             child: CustomIconButton(
                               name: 'Confirm Item',
                               iconData: Icons.check_box,
-                              textOffstage: !cardState.homeRightBarOpen,
                               func: () => cardState.onTapCheckBoxRightBar(
                                   widget.cardTileList,
                                   addNewIconController,
@@ -219,7 +221,6 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                             child: CustomIconButton(
                               name: 'Add Item',
                               iconData: Icons.add_box,
-                              textOffstage: !cardState.homeRightBarOpen,
                               func: () => cardState.onTapAddItemRightBar(
                                   addNewIconController,
                                   cancelIconScaleController),

@@ -20,7 +20,7 @@ class _AddNewCardState extends State<AddNewCard> {
 //      titleTextController.clear();
 //      cardState.clearTitleTextEditingControllerSwitch();
 //    }
-    var sectionWidth = MediaQuery.of(context).size.width * (kGreyAreaMul- 0.02);
+    var sectionWidth = MediaQuery.of(context).size.width * (kGreyAreaMul - 0.02);
     var sectionHeight = MediaQuery.of(context).size.height;
     return SafeArea(
       child: GestureDetector(

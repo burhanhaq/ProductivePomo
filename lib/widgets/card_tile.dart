@@ -213,8 +213,8 @@ class _CardTileState extends State<CardTile> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-//    sharedPref = null;
     cardScreenTranslateController.dispose();
+    iconSizeTransitionController.dispose();
     super.dispose();
   }
 }

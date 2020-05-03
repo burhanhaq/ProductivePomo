@@ -75,6 +75,21 @@ const kHomeYellowDividerMul = 0.02;
 const kGreyAreaMul = 0.78;
 const kAddNewSectionMul = 0.73;
 
+// Analytics Section
+const kMonthsTextStyle = TextStyle(fontSize: 40, color: white);
+var kBlueBorder = BoxDecoration( // not constant
+  border: Border.all(
+    color: blue,
+    width: 1,
+  ),
+);
+var kRedBorder = BoxDecoration( // not constant
+  border: Border.all(
+    color: red12,
+    width: 1,
+  ),
+);
+
 // Second Screen Constants
 const kMainRadius = 40.0;
 const kSecondaryRadius = 15.0;
