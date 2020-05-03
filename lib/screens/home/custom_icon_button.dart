@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
+
+//import 'package:flutter/foundation.dart';
+import 'package:provider/provider.dart';
 
 import '../../constants.dart';
+import '../../card_state.dart';
 
 class CustomIconButton extends StatefulWidget {
   final String name;
@@ -24,9 +27,26 @@ class CustomIconButton extends StatefulWidget {
   _CustomIconButtonState createState() => _CustomIconButtonState();
 }
 
-class _CustomIconButtonState extends State<CustomIconButton> {
+class _CustomIconButtonState extends State<CustomIconButton>
+    with SingleTickerProviderStateMixin {
+  var someController;
+
+  @override
+  void initState() {
+    super.initState();
+    someController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 200),
+    );
+    someController.forward();
+  }
+
   @override
   Widget build(BuildContext context) {
+    CardState cardState = Provider.of<CardState>(context);
+    if (cardState.homeRightBarOpen)
+      someController.forward(from: 0.0);
+
     return Container(
       padding: EdgeInsets.only(top: 5),
       child: Offstage(
@@ -43,12 +63,17 @@ class _CustomIconButtonState extends State<CustomIconButton> {
               SizedBox(width: 8),
               Offstage(
                 offstage: widget.textOffstage,
-                child: Text(
-                  widget.name,
-                  style: TextStyle(
-                    color: yellow,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w800,
+                child: SizeTransition(
+                  sizeFactor: someController,
+                  axis: Axis.horizontal,
+                  axisAlignment: 1,
+                  child: Text(
+                    widget.name,
+                    style: TextStyle(
+                      color: yellow,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                 ),
               ),

@@ -134,7 +134,8 @@ class CardState with ChangeNotifier {
     notifyListeners();
   }
 
-  onTapAddItemRightBar(var addNewIconController, var cancelIconScaleController) {
+  onTapAddItemRightBar(
+      var addNewIconController, var cancelIconScaleController) {
     if (!onAddNewScreen) {
       cancelIconScaleController.forward();
       onAddNewScreen = true;
@@ -154,14 +155,16 @@ class CardState with ChangeNotifier {
   }
 
   onTapDeleteItemRightBar() async {
-    if (confirmDeleteIndex == selectedIndex) { // second tap
+    if (confirmDeleteIndex == selectedIndex) {
+      // second tap
       String titleToDelete = cardModels[selectedIndex].title;
       String dateToDelete = cardModels[selectedIndex].date;
       CardModel.cardModelsX.removeAt(selectedIndex);
       var deleted = await DB.instance.deleteRecord(titleToDelete, dateToDelete);
       print('DB DELETED -- $deleted');
       selectTile = null;
-    } else { // first tap for confirmation
+    } else {
+      // first tap for confirmation
       confirmDeleteIndex = selectedIndex;
     }
   }
@@ -229,15 +232,10 @@ class CardState with ChangeNotifier {
     if (cardModel.selected) {
       // tapped second time
       Navigator.push(
-      context,
-          MaterialPageRoute(builder: (context) => ChangeNotifierProvider(
-            create: (context) => CardState(),
-              child: SecondScreen(cardModel: cardModel))
-
-//        SecondScreenNavigation(
-//          widget:
-//        ),
-      )
+        context,
+        SecondScreenNavigation(
+          widget: SecondScreen(cardModel: cardModel),
+        ),
       );
     }
     selectTile = cardModel;
@@ -260,7 +258,8 @@ class CardState with ChangeNotifier {
 
   void onTapAddScore(CardModel cardModel) async {
     addScore(cardModel);
-    var scoreUpdate = await DB.instance.insertOrUpdateRecord(cardModel.toJson());
+    var scoreUpdate =
+        await DB.instance.insertOrUpdateRecord(cardModel.toJson());
     print('DB UPDATE ADD SCORE -- $scoreUpdate');
     _pageScore = cardModel.score;
     notifyListeners();
@@ -268,7 +267,8 @@ class CardState with ChangeNotifier {
 
   void onTapSubtractScore(CardModel cardModel) async {
     subtractScore(cardModel);
-    var scoreUpdate = await DB.instance.insertOrUpdateRecord(cardModel.toJson());
+    var scoreUpdate =
+        await DB.instance.insertOrUpdateRecord(cardModel.toJson());
     print('DB UPDATE SUB SCORE -- $scoreUpdate');
     _pageScore = cardModel.score;
     notifyListeners();
