@@ -116,15 +116,20 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                     offstage: cardState.selectedIndex == null,
                     child: Column(
                       children: [
-                        Text(
-                          // todo: need to update this when we get back from SecondScreen
-                          cardState.firstPageScore == null
-                              ? 'x'
-                              : cardState.firstPageScore.toString(),
-                          style: TextStyle(
-                            color: Colors.white,
+                        FittedBox(
+                          // todo fix: moves around when score increases
+                          fit: BoxFit.fitHeight,
+                          child: Text(
+                            cardState.firstPageScore == null
+                                ? 'x'
+                                : cardState.firstPageScore.toString(),
+                            maxLines: 1,
+
+                            style: TextStyle(
+                              color: Colors.white,
                             fontSize: 50,
-                            decoration: TextDecoration.none,
+                              decoration: TextDecoration.none,
+                            ),
                           ),
                         ),
                         Container(height: 6, width: 60, color: yellow),

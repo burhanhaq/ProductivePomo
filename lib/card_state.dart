@@ -259,19 +259,23 @@ class CardState with ChangeNotifier {
     }
   }
 
-  // SECOND PAGE 8888888888888888888888888888888888888888888888888888888888888
-  void onTapAddSecond(CardModel cardModel) {
+  // CARD TILE 8888888888888888888888888888888888888888888888888888888888888888
+
+  void onTapAddScore(CardModel cardModel) {
     addScore(cardModel);
     sharedPref.save(cardModel.title, cardModel.toJson());
+    _pageScore = cardModel.score;
     notifyListeners();
   }
 
-  void onTapSubSecond(CardModel cardModel) {
+  void onTapSubtractScore(CardModel cardModel) {
     subtractScore(cardModel);
     sharedPref.save(cardModel.title, cardModel.toJson());
+    _pageScore = cardModel.score;
     notifyListeners();
   }
 
+  // SECOND SCREEN 8888888888888888888888888888888888888888888888888888888888888
   void onTapReplaySecond(var timerDurationController,
       var playPauseIconController, var replayIconRotationController) {
     timerDurationController.value = 0.0;

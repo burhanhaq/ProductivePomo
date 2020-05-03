@@ -145,7 +145,7 @@ class _CardTileState extends State<CardTile>
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
                       InkWell(
-                        onTap: () => cardState.onTapSubSecond(widget.cardModel),
+                        onTap: () => cardState.onTapSubtractScore(widget.cardModel),
                         child: CustomIconButtonStyle(
                           child: Icon(
                             Icons.remove,
@@ -155,7 +155,7 @@ class _CardTileState extends State<CardTile>
                         ),
                       ),
                       InkWell(
-                        onTap: () => cardState.onTapAddSecond(widget.cardModel),
+                        onTap: () => cardState.onTapAddScore(widget.cardModel),
                         child: CustomIconButtonStyle(
                           child: Icon(
                             Icons.add,

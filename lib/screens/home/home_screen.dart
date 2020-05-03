@@ -137,12 +137,12 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 //                          ),
                         ),
                         child: Text(
-                          'Name',
+                          '${date.month.toString()} / ${date.day.toString()} / ${date.year.toString()}',
                           style: TextStyle(
-                            fontSize: 40,
+                            fontSize: 20,
                             fontWeight: FontWeight.bold,
                             color: white,
-                            fontFamily: 'IndieFlower',
+//                            fontFamily: 'IndieFlower',
                             decoration: TextDecoration.none,
                           ),
                         ),
