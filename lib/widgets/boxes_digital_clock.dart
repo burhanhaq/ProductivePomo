@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
@@ -18,6 +17,7 @@ class _BoxesDigitalClockState extends State<BoxesDigitalClock>
     with SingleTickerProviderStateMixin {
   var backwardTimerController;
   var backwardTimerAnimation;
+  var backwardTimerStatus = AnimationStatus.dismissed;
 
   @override
   void initState() {
@@ -25,7 +25,8 @@ class _BoxesDigitalClockState extends State<BoxesDigitalClock>
     backwardTimerController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 1000),
-    );
+    )..addListener(() {setState(() {
+    });});
     backwardTimerAnimation = CurvedAnimation(
       parent: backwardTimerController,
       curve: Curves.easeOutCirc,
@@ -460,7 +461,7 @@ class BoxContainer extends StatefulWidget {
   final bool isActive;
   double extraPadding = 0; // not being used
 
-  BoxContainer({@required this.isActive, @required this.extraPadding}) {
+  BoxContainer({@required this.isActive, this.extraPadding}) {
     if (extraPadding == null) extraPadding = 0;
   }
 

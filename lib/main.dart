@@ -6,6 +6,7 @@ import 'constants.dart';
 import 'screens/onboarding/onboarding_screen.dart';
 import 'screens/onboarding/onboarding_screen_2.dart';
 import 'card_state.dart';
+import 'screens/second_screen.dart';
 
 
 void main() => runApp(App());
@@ -26,6 +27,9 @@ class App extends StatelessWidget {
         Home.id: (context) => ChangeNotifierProvider(
             create: (context) => CardState()..resetNewVariables(),
             child: Home()),
+//        SecondScreen.id: (context) => ChangeNotifierProvider(
+//            create: (context) => CardState()..resetNewVariables(),
+//            child: SecondScreen()),
       },
     );
   }

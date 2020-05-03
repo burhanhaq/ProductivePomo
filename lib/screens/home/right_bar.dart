@@ -243,7 +243,7 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                           iconData: Icons.delete,
                           offstage: cardState.selectedIndex == null,
                           textOffstage: !cardState.homeRightBarOpen,
-                          func: () => cardState.onTapDeleteRightBar(),
+                          func: () => cardState.onTapDeleteItemRightBar(),
                           c: cardState.selectedIndex ==
                                   cardState.confirmDeleteIndex
                               ? blue
@@ -292,7 +292,7 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                               name: 'Add Item',
                               iconData: Icons.add_box,
                               textOffstage: !cardState.homeRightBarOpen,
-                              func: () => cardState.onTapAddRightBar(
+                              func: () => cardState.onTapAddItemRightBar(
                                   addNewIconController,
                                   cancelIconScaleController),
                             ),

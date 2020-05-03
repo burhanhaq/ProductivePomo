@@ -3,16 +3,14 @@ import 'package:provider/provider.dart';
 
 import '../constants.dart';
 import '../card_state.dart';
-import '../widgets/card_tile.dart';
-import '../shared_pref.dart';
 import '../models/card_model.dart';
 import '../widgets/boxes_digital_clock.dart';
 
 class SecondScreen extends StatefulWidget {
   static final id = 'SecondScreen';
-  final CardTile cardTile;
+  final CardModel cardModel;
 
-  SecondScreen({@required this.cardTile});
+  SecondScreen({@required this.cardModel});
 
   @override
   _SecondScreenState createState() => _SecondScreenState();
@@ -21,29 +19,11 @@ class SecondScreen extends StatefulWidget {
 class _SecondScreenState extends State<SecondScreen>
     with TickerProviderStateMixin {
   var timerDurationController;
+  var timerDurationStatus;
   var playPauseIconController;
   var playPauseIconAnimation;
   var replayIconRotationController;
   var replayIconRotationAnimation;
-
-  var prefTitle;
-  var prefScore;
-  var prefGoal;
-
-  loadSharedPrefs() async {
-    try {
-      CardModel model = CardModel.fromJson(
-          await sharedPref.read(widget.cardTile.cardModel.title));
-      setState(() {
-        prefTitle = model.title;
-        prefScore = model.score;
-        prefGoal = model.goal;
-      });
-    } catch (Exception) {
-//      print('Exception in SecondScreen');
-//      print(Exception.toString());
-    }
-  }
 
   @override
   void initState() {
@@ -51,9 +31,11 @@ class _SecondScreenState extends State<SecondScreen>
     timerDurationController = AnimationController(
       vsync: this,
       duration: Duration(
-        minutes: widget.cardTile.cardModel.minutes,
+        minutes: widget.cardModel.minutes,
       ),
-    );
+    )..addListener(() {
+        setState(() {});
+      });
 
     playPauseIconController = AnimationController(
       vsync: this,
@@ -77,13 +59,10 @@ class _SecondScreenState extends State<SecondScreen>
 
   @override
   Widget build(BuildContext context) {
-    loadSharedPrefs();
-//    setState(() {
-      String cardTitle = widget.cardTile.cardModel.title;
-      int cardScore = widget.cardTile.cardModel.score;
-      int cardGoal = widget.cardTile.cardModel.goal;
-//    });
     CardState cardState = Provider.of<CardState>(context);
+    String cardTitle = widget.cardModel.title;
+    int cardScore = widget.cardModel.score;
+    int cardGoal = widget.cardModel.goal;
     bool timerRunning = timerDurationController.isAnimating;
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
@@ -169,7 +148,7 @@ class _SecondScreenState extends State<SecondScreen>
             ),
             Spacer(),
             BoxesDigitalClock(
-              min: widget.cardTile.cardModel.minutes,
+              min: widget.cardModel.minutes,
               timerController: timerDurationController,
             ),
             Spacer(),

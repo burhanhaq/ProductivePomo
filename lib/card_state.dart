@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pomodoro_app/shared_pref.dart';
+import 'package:provider/provider.dart';
 
 import 'models/card_model.dart';
 import 'widgets/card_tile.dart';
@@ -118,35 +119,6 @@ class CardState with ChangeNotifier {
     tappedEmptyAreaUnderListView = true;
   }
 
-  void onTapCardTile(var widget, var context) {
-    closeHomeRightBar();
-    if (widget.cardModel.selected) {
-      // tapped second time
-      Navigator.push(
-        context,
-        SecondScreenNavigation(
-          widget: SecondScreen(cardTile: widget),
-        ),
-      );
-    }
-    selectTile = widget.cardModel;
-  }
-
-  void onHorizontalDragUpdateCardTile(
-      var details, var widget, var context, var cardScreenController) {
-    if (details.primaryDelta < 0) {
-      selectTile = widget.cardModel;
-      closeHomeRightBar();
-      cardScreenController.forward(from: 0.0);
-      Navigator.push(
-        context,
-        SecondScreenNavigation(
-          widget: SecondScreen(cardTile: widget),
-        ),
-      );
-    }
-  }
-
   // RIGHT BAR 8888888888888888888888888888888888888888888888888888888888888
   bool _homeRightBarOpen = false;
 
@@ -162,7 +134,7 @@ class CardState with ChangeNotifier {
     notifyListeners();
   }
 
-  onTapAddRightBar(var addNewIconController, var cancelIconScaleController) {
+  onTapAddItemRightBar(var addNewIconController, var cancelIconScaleController) {
     if (!onAddNewScreen) {
       cancelIconScaleController.forward();
       onAddNewScreen = true;
@@ -181,7 +153,7 @@ class CardState with ChangeNotifier {
     }
   }
 
-  onTapDeleteRightBar() async {
+  onTapDeleteItemRightBar() async {
     if (confirmDeleteIndex == selectedIndex) { // second tap
       String titleToDelete = cardModels[selectedIndex].title;
       String dateToDelete = cardModels[selectedIndex].date;
@@ -251,6 +223,40 @@ class CardState with ChangeNotifier {
   }
 
   // CARD TILE 8888888888888888888888888888888888888888888888888888888888888888
+
+  void onTapCardTile(CardModel cardModel, var context) {
+    closeHomeRightBar();
+    if (cardModel.selected) {
+      // tapped second time
+      Navigator.push(
+      context,
+          MaterialPageRoute(builder: (context) => ChangeNotifierProvider(
+            create: (context) => CardState(),
+              child: SecondScreen(cardModel: cardModel))
+
+//        SecondScreenNavigation(
+//          widget:
+//        ),
+      )
+      );
+    }
+    selectTile = cardModel;
+  }
+
+  void onHorizontalDragUpdateCardTile(
+      var details, CardModel cardModel, var context, var cardScreenController) {
+    if (details.primaryDelta < 0) {
+      selectTile = cardModel;
+      closeHomeRightBar();
+      cardScreenController.forward(from: 0.0);
+      Navigator.push(
+        context,
+        SecondScreenNavigation(
+          widget: SecondScreen(cardModel: cardModel),
+        ),
+      );
+    }
+  }
 
   void onTapAddScore(CardModel cardModel) async {
     addScore(cardModel);

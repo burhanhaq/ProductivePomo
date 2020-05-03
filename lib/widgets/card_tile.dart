@@ -40,8 +40,8 @@ class _CardTileState extends State<CardTile>
     double screenWidth = MediaQuery.of(context).size.width;
     bool isCardSelected = widget.cardModel.selected;
     return GestureDetector(
-      onHorizontalDragUpdate: (details) => cardState.onHorizontalDragUpdateCardTile(details, widget, context, cardScreenController),
-      onTap: () => cardState.onTapCardTile(widget, context),
+      onHorizontalDragUpdate: (details) => cardState.onHorizontalDragUpdateCardTile(details, widget.cardModel, context, cardScreenController),
+      onTap: () => cardState.onTapCardTile(widget.cardModel, context),
       child: Transform.translate(
         offset: Offset(
             cardScreenAnimation.value < 0.5
