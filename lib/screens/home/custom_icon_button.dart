@@ -29,23 +29,23 @@ class CustomIconButton extends StatefulWidget {
 
 class _CustomIconButtonState extends State<CustomIconButton>
     with SingleTickerProviderStateMixin {
-  var someController;
+  var textSizeTransitionController;
 
   @override
   void initState() {
     super.initState();
-    someController = AnimationController(
+    textSizeTransitionController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 200),
     );
-    someController.forward();
+    textSizeTransitionController.forward();
   }
 
   @override
   Widget build(BuildContext context) {
     CardState cardState = Provider.of<CardState>(context);
     if (cardState.homeRightBarOpen)
-      someController.forward(from: 0.0);
+      textSizeTransitionController.forward(from: 0.0);
 
     return Container(
       padding: EdgeInsets.only(top: 5),
@@ -64,7 +64,7 @@ class _CustomIconButtonState extends State<CustomIconButton>
               Offstage(
                 offstage: widget.textOffstage,
                 child: SizeTransition(
-                  sizeFactor: someController,
+                  sizeFactor: textSizeTransitionController,
                   axis: Axis.horizontal,
                   axisAlignment: 1,
                   child: Text(
