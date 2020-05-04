@@ -77,7 +77,7 @@ class _AnalyticsState extends State<Analytics> {
                 ),
                 SizedBox(width: 10),
                 AnimatedContainer(
-                  duration: Duration(milliseconds: 500),
+                  duration: Duration(milliseconds: 200),
                   height: 7,
                   width: cardState.analyticsPage == 1 ? 30 : 15,
                   decoration: BoxDecoration(

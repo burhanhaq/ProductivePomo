@@ -17,12 +17,15 @@ class BottomDateDial extends StatefulWidget {
 }
 
 class _BottomDateDialState extends State<BottomDateDial> {
+  // todo implement scroll controller
   var itemIndex = 0;
+  bool starting = true;
 
   @override
   Widget build(BuildContext context) {
-    if (itemIndex == 0) {
+    if (starting && itemIndex == 0) {
       itemIndex = widget.dateInfo;
+      starting = false;
     }
 //    CardState cardState = Provider.of<CardState>(context);
     var sectionWidth =
@@ -36,7 +39,10 @@ class _BottomDateDialState extends State<BottomDateDial> {
         child: RotatedBox(
           quarterTurns: -1,
           child: ListWheelScrollView(
-            onSelectedItemChanged: (index) async {
+            physics: FixedExtentScrollPhysics(),
+            diameterRatio: 1.5,
+            offAxisFraction: 1.2,
+            onSelectedItemChanged: (index) {
               widget.onSelectedItemChanged(index);
               setState(() {
                 itemIndex = index;

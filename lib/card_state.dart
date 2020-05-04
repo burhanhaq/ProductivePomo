@@ -338,6 +338,13 @@ class CardState with ChangeNotifier {
 
   bool callDB = true;
 
+//  get callDB => _callDB;
+
+//  set callDB(bool val) {
+//    _callDB = val;
+//    notifyListeners();
+//  }
+
   // *************************************************************************************************** SECOND SCREEN
   void onTapReplaySecond(var timerDurationController,
       var playPauseIconController, var replayIconRotationController) {
@@ -364,6 +371,12 @@ class CardState with ChangeNotifier {
   clearCardModelsList() {
     cardModels.clear();
     notifyListeners();
+  }
+
+  p(List x) {
+    print('vv');
+    x.forEach((element) {print(element.toString());});
+    print('^^');
   }
 
   void subtractScore(CardModel model) {

@@ -152,7 +152,7 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                         GestureDetector(
                           onTap: () async {
 //                          var all = await DB.instance.queryRecords();
-                            print('All');
+                            print('--');
                             print(cardState.getDate());
 //                          print(all);
                             print('--');
@@ -169,6 +169,12 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                         iconData: Icons.grain,
                         offstage: kReleaseMode,
                         func: () => cardState.onTapExtraDebugRightBar(),
+                      ),
+                      CustomIconButton(
+                        name: 'Contracts',
+                        iconData: Icons.style,
+                        offstage: kReleaseMode,
+                        func: () {},
                       ),
                       CustomIconButton(
                         name: 'Delete All',

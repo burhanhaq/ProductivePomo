@@ -19,7 +19,27 @@ class DisplayChart extends StatefulWidget {
 var dateFromDB = [];
 var dateFromDBtoCardModelList = [];
 
-class _DisplayChartState extends State<DisplayChart> {
+class _DisplayChartState extends State<DisplayChart>
+    with SingleTickerProviderStateMixin {
+  var loadingController;
+  var loadingStatus = AnimationStatus.completed;
+
+  @override
+  void initState() {
+    super.initState();
+    loadingController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 500),
+    )
+      ..addListener(() {
+        setState(() {});
+      })
+      ..addStatusListener((status) {
+        loadingStatus = status;
+        print(loadingController.value);
+      });
+  }
+
   Future<dynamic> getDBInfo(String date) async {
     dateFromDB = await DB.instance.queryModelsWithDate(date);
 //    x = await DB.instance.queryDatesWithModel('Flutter'); // works
@@ -34,17 +54,33 @@ class _DisplayChartState extends State<DisplayChart> {
 //      return dateFromDBtoCardModelList;
 //    });
 //  }
-
+var count = 0;
   @override
   Widget build(BuildContext context) {
     CardState cardState = Provider.of<CardState>(context);
+    if (count < 3 && dateFromDBtoCardModelList.length == 0 || cardState.callDB) {
+      print('length is 0');
+      if (loadingStatus == AnimationStatus.completed) {
+        loadingController.forward(from: 0.0);
+        ++count;
+        print('forward');
+//      } else {
+//        loadingController.reverse();
+//        print('reverse');
+      }
+    }
     if (cardState.callDB) {
       getDBInfo(cardState.getDate());
-//      cardState.callDB = false;
+      cardState.callDB = false;
+      count = 0;
+//      loadingController.reverse();
       print('called db to update or pull');
+//    } else {
+//      loadingController.reverse();
     }
+    cardState.p(dateFromDBtoCardModelList);
     var displayChartItemList = List.generate(
-      // todo doesn't update state
+      // todo use Stream Builder maybe
       dateFromDBtoCardModelList.length,
       (index) => DisplayChartItem(
         cardModel: dateFromDBtoCardModelList[index],
@@ -54,23 +90,42 @@ class _DisplayChartState extends State<DisplayChart> {
     var sectionWidth =
         MediaQuery.of(context).size.width * (kGreyAreaMul - 0.02);
     var sectionHeight = MediaQuery.of(context).size.height;
-    return Container(
-      padding: EdgeInsets.all(10.0),
-      decoration: BoxDecoration(
-        color: grey2,
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-      ),
-      child: Column(
-        children: <Widget>[
-          Text(widget.title, style: kMonthsTextStyle),
-          SizedBox(
-            height: sectionHeight * 0.5,
-            child: ListView(
-              children: displayChartItemList,
-            ),
+    return Stack(
+      alignment: Alignment.center,
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.all(10.0),
+          decoration: BoxDecoration(
+            color: grey2,
+            borderRadius: BorderRadius.all(Radius.circular(10)),
           ),
-        ],
-      ),
+          child: Column(
+            children: <Widget>[
+              Text(widget.title, style: kMonthsTextStyle),
+              SizedBox(
+                height: sectionHeight * 0.5,
+                child: ListView(
+                  children: displayChartItemList,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Container(
+          width: 50 *
+              (loadingController.value < 0.5
+                  ? (loadingController.value)
+                  : (1 - loadingController.value)),
+          height: 50 *
+              (loadingController.value < 0.5
+                  ? (loadingController.value)
+                  : (1 - loadingController.value)),
+          decoration: BoxDecoration(
+            color: blue,
+            shape: BoxShape.circle,
+          ),
+        ),
+      ],
     );
   }
 }
