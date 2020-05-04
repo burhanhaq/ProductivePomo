@@ -87,7 +87,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final cardState = Provider.of<CardState>(context);
-    cardTileList = List.generate(cardState.cardModels.length, (index) {
+    cardTileList = List.generate(cardState.cardModels.length, (index) { // todo pull only for today, not alllll
       return CardTile(cardModel: cardState.cardModels[index]);
     });
     if (loadingIndicator) {
@@ -158,7 +158,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 //                          ),
                         ),
                         child: Text(
-                          dateTime.toString(),
+                          DateTime.now().toString(),
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,

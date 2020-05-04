@@ -1,14 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:pomodoro_app/shared_pref.dart';
-import 'package:provider/provider.dart';
 
 import 'models/card_model.dart';
 import 'widgets/card_tile.dart';
 import 'screens/second_screen.dart';
 import 'screen_navigation/second_screen_navigation.dart';
 import 'database_helper.dart';
+import 'constants.dart';
 
 class CardState with ChangeNotifier {
   resetNewVariables() {
@@ -21,7 +20,7 @@ class CardState with ChangeNotifier {
 
   List<CardModel> get cardModels => CardModel.cardModelsX;
 
-  // HOME PAGE 88888888888888888888888888
+  // *************************************************************************************************** HOME PAGE
   int _pageScore;
   int _pageGoal;
   int _selectedIndex;
@@ -119,7 +118,7 @@ class CardState with ChangeNotifier {
     tappedEmptyAreaUnderListView = true;
   }
 
-  // RIGHT BAR 8888888888888888888888888888888888888888888888888888888888888
+  // *************************************************************************************************** RIGHT BAR
   bool _homeRightBarOpen = false;
 
   bool get homeRightBarOpen => _homeRightBarOpen;
@@ -132,6 +131,19 @@ class CardState with ChangeNotifier {
   closeHomeRightBar() {
     _homeRightBarOpen = false;
     notifyListeners();
+  }
+
+  onTapExtraDebugRightBar() async {
+    print('v-------------------------------v');
+    cardModels.forEach((element) {
+      print(element.toString());
+    });
+    print('--');
+    var dbRecords = await DB.instance.queryRecords();
+    dbRecords.forEach((element) {
+      print(element.toString());
+    });
+    print('^-------------------------------^');
   }
 
   onTapAddItemRightBar(
@@ -174,7 +186,6 @@ class CardState with ChangeNotifier {
   }
 
   onTapDeleteAllRightBar() async {
-//    sharedPref.removeAll();
 //    await DB.instance.recreateTable();
     clearCardModelsList();
   }
@@ -229,7 +240,7 @@ class CardState with ChangeNotifier {
     }
   }
 
-  // CARD TILE 8888888888888888888888888888888888888888888888888888888888888888
+  // *************************************************************************************************** CARD TILE
 
   void onTapCardTile(CardModel cardModel, var context) {
     closeHomeRightBar();
@@ -279,7 +290,7 @@ class CardState with ChangeNotifier {
     notifyListeners();
   }
 
-  // ANALYTICS 88888888888888888888888888888888888888888888888888888888888888888
+  // *************************************************************************************************** ANALYTICS
 
   bool _showAnalytics = true;
 
@@ -290,16 +301,44 @@ class CardState with ChangeNotifier {
     notifyListeners();
   }
 
-//  int _maxScore = 0;
-//
-//  get maxScore => _maxScore;
-//
-//  set maxScore(int val) {
-//    _maxScore = val;
-//    notifyListeners();
-//  }
+  int _analyticsPage = 0;
 
-  // SECOND SCREEN 8888888888888888888888888888888888888888888888888888888888888
+  get analyticsPage => _analyticsPage;
+
+  set analyticsPage(int index) {
+    _analyticsPage = index;
+    notifyListeners();
+  }
+
+  int day = DateTime.now().day;
+  int month = DateTime.now().month;
+  int year = yearList.indexOf(DateTime.now().year);
+
+  void onDayChange(int index) {
+    day = index + 1;
+    callDB = true;
+    notifyListeners();
+  }
+
+  void onMonthChange(int index) {
+    month = index + 1;
+    callDB = true;
+    notifyListeners();
+  }
+
+  void onYearChange(int index) {
+    year = index;
+    callDB = true;
+    notifyListeners();
+  }
+
+  String getDate() {
+    return '${yearList[year]}-${month.toString().padLeft(2, '0')}-${day.toString().padLeft(2, '0')}';
+  }
+
+  bool callDB = true;
+
+  // *************************************************************************************************** SECOND SCREEN
   void onTapReplaySecond(var timerDurationController,
       var playPauseIconController, var replayIconRotationController) {
     timerDurationController.value = 0.0;
@@ -320,7 +359,7 @@ class CardState with ChangeNotifier {
     }
   }
 
-  // RANDOM
+  // *************************************************************************************************** RANDOM
 
   clearCardModelsList() {
     cardModels.clear();

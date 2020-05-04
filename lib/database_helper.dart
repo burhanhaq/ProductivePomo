@@ -1,6 +1,8 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
+import 'models/card_model.dart';
+
 class DB {
   static final _dbName = 'pomoDatabase1.db';
   static final _dbVersion = 1;
@@ -35,11 +37,11 @@ class DB {
     return await db.rawQuery('''
     CREATE TABLE IF NOT EXISTS \"$_tableName\" (
     $columnID INTEGER PRIMARY KEY,
-    $columnTitle TEXT NOT NULL,
     $columnDate TEXT NOT NULL,
     $columnScore INTEGER NOT NULL,
     $columnGoal INTEGER NOT NULL,
-    $columnMinutes INTEGER NOT NULL
+    $columnMinutes INTEGER NOT NULL,
+    $columnTitle TEXT NOT NULL
     );
     ''');
   }
@@ -61,6 +63,22 @@ class DB {
   Future<List<Map<String, dynamic>>> queryRecords() async {
     Database db = await instance.database;
     return await db.query(_tableName);
+  }
+
+  Future<List<Map<String, dynamic>>> queryModelsWithDate(String date) async { // gets all models with one date
+    Database db = await instance.database;
+    var query = '''
+      SELECT * FROM $_tableName WHERE $columnDate = \'$date\';
+    ''';
+    return await db.rawQuery(query);
+  }
+
+  Future<List<Map<String, dynamic>>> queryDatesWithModel(String title) async { // gets one model with all dates
+    Database db = await instance.database;
+    var query = '''
+      SELECT * FROM $_tableName WHERE $columnTitle = \'$title\';
+    ''';
+    return await db.rawQuery(query);
   }
 
 

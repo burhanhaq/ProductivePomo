@@ -145,16 +145,30 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                     ),
                   ),
 //              Spacer(),
+                  Offstage(
+                    offstage: !kDebugMode,
+                    child: Column(
+                      children: <Widget>[
+                        GestureDetector(
+                          onTap: () async {
+//                          var all = await DB.instance.queryRecords();
+                            print('All');
+                            print(cardState.getDate());
+//                          print(all);
+                            print('--');
+                          },
+                          child: Text('dial date'),
+                        ),
+                      ],
+                    ),
+                  ),
                   Column(
                     children: [
                       CustomIconButton(
                         name: 'Print All',
                         iconData: Icons.grain,
                         offstage: kReleaseMode,
-                        func: () {
-                          print(
-                              'cardModelsX: ${CardModel.cardModelsX.toString()}');
-                        },
+                        func: () => cardState.onTapExtraDebugRightBar(),
                       ),
                       CustomIconButton(
                         name: 'Delete All',

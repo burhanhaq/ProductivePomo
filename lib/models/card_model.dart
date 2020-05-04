@@ -18,12 +18,12 @@ class CardModel {
   }) {
     this.selected = false;
     this.date =
-        '${dateTime.year.toString()}-${dateTime.month.toString().padLeft(2,'0')}-${dateTime.day.toString().padLeft(2,'0')}';
-//    print(this.date);
+        '${DateTime.now().year.toString()}-${DateTime.now().month.toString().padLeft(2,'0')}-${DateTime.now().day.toString().padLeft(2,'0')}';
   }
 
   toString() {
-    return '> ${this.title} - ${this.score}/${this.goal} ${this.minutes}:00:P ${this.selected} ${this.date}';
+//    return '> ${this.title} - ${this.score}/${this.goal} ${this.minutes}:00:P ${this.selected} ${this.date}';
+    return '>       date: ${this.date}- score: ${this.score}, goal: ${this.goal}, minutes: ${this.minutes}, title: ${this.title}';
   }
 
   Map<String, dynamic> toJson() => {

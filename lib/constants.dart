@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:core';
 
-DateTime dateTime = DateTime.now();
+//DateTime DT = DateTime.now(); // removed because stored old date
 
 const kLabel = TextStyle(
   color: Colors.black,
@@ -40,9 +40,9 @@ var kSliderThemeData = SliderThemeData(
 );
 
 const kAddNewSectionTextStyle = TextStyle(
-    color: yellow,
-    fontSize: 50,
-    fontWeight: FontWeight.w100,
+  color: yellow,
+  fontSize: 50,
+  fontWeight: FontWeight.w100,
 );
 
 const kLong = 60.0;
@@ -83,12 +83,25 @@ var kBlueBorder = BoxDecoration( // not constant
     width: 1,
   ),
 );
-var kRedBorder = BoxDecoration( // not constant
-  border: Border.all(
-    color: red12,
-    width: 1,
-  ),
-);
+
+var dayList = List.generate(31, (index) => index + 1);
+var monthList = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec'
+];
+var yearList = [2019, 2020, 2021, 2022];
+
+enum DisplayChartItemType { ScoreOverGoal, MaxScore }
 
 // Second Screen Constants
 const kMainRadius = 40.0;

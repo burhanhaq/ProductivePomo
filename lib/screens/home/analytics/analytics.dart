@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../constants.dart';
 import '../../../card_state.dart';
-import 'display_chart_item.dart';
+import 'display_chart.dart';
 import 'bottom_date_dial.dart';
 
 class Analytics extends StatefulWidget {
@@ -15,35 +15,14 @@ class _AnalyticsState extends State<Analytics> {
   @override
   Widget build(BuildContext context) {
     CardState cardState = Provider.of<CardState>(context);
+    final displayAreaPageController = PageController(
+      initialPage: cardState.analyticsPage,
+    );
     var sectionWidth =
         MediaQuery.of(context).size.width * (kGreyAreaMul - 0.02);
     var sectionHeight = MediaQuery.of(context).size.height;
 
-    var dayList = List.generate(30, (index) => index + 1);
-    var monthList = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec'
-    ];
-    var yearList = [2019, 2020, 2021, 2022];
-//    cardState.cardModels.forEach((element) {
-//      if (element.score > cardState.maxScore)
-//        cardState.maxScore = element.score;
-//    });
-//    cardState.maxScore = 3;
-    var displayChartItemList = List.generate(
-      cardState.cardModels.length,
-      (index) => DisplayChartItem(cardModel: cardState.cardModels[index]),
-    );
+
 
     return GestureDetector(
       onTap: () {
@@ -63,36 +42,116 @@ class _AnalyticsState extends State<Analytics> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SizedBox(height: 20),
             Container(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-              decoration: BoxDecoration(
-                color: grey2,
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-              ),
-              child: SizedBox(
-                height: sectionHeight * 0.5,
-                child: ListView(
-                  children: displayChartItemList,
-                ),
+              width: sectionWidth,
+              height: sectionHeight * 0.6,
+              child: PageView(
+                controller: displayAreaPageController,
+                onPageChanged: (index) {
+                  cardState.analyticsPage = index;
+                },
+                children: <Widget>[
+                  DisplayChart(
+                    title: 'MaxScore',
+                    displayChartItem: DisplayChartItemType.MaxScore,
+                  ),
+                  DisplayChart(
+                    title: 'Score/Goal',
+                    displayChartItem: DisplayChartItemType.ScoreOverGoal,
+                  ),
+                ],
               ),
             ),
-            Spacer(),
-            Column(
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                BottomDateDial(contentList: dayList),
-//                Icon(Icons.keyboard_arrow_up),
-                BottomDateDial(contentList: monthList),
-//                Icon(Icons.eject),
-                BottomDateDial(contentList: yearList),
-//                Icon(Icons.arrow_drop_up),
+                AnimatedContainer(
+                  duration: Duration(milliseconds: 500),
+                  height: 7,
+                  width: cardState.analyticsPage == 0 ? 30 : 15,
+                  decoration: BoxDecoration(
+                    color: cardState.analyticsPage == 0 ? yellow : grey2,
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                  ),
+                ),
+                SizedBox(width: 10),
+                AnimatedContainer(
+                  duration: Duration(milliseconds: 500),
+                  height: 7,
+                  width: cardState.analyticsPage == 1 ? 30 : 15,
+                  decoration: BoxDecoration(
+                    color: cardState.analyticsPage == 1 ? yellow : grey2,
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                  ),
+                ),
               ],
             ),
-            SizedBox(height: 20),
+            Spacer(),
+            Stack(
+              alignment: Alignment.center,
+              children: <Widget>[
+                Opacity(
+                  opacity: 0.1,
+                  child: Container(
+                    width: 150,
+                    height: sectionHeight * 0.24,
+                    decoration: BoxDecoration(
+                      color: grey2,
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
+                  ),
+                ),
+                Column(
+                  children: <Widget>[
+                    BottomDateDial(
+                      contentList: dayList,
+                      onSelectedItemChanged: (val) =>
+                          cardState.onDayChange(val),
+                      dateInfo: DateTime.now().day,
+                    ),
+                    Container(
+                      height: 1,
+                      width: 20,
+                      decoration: BoxDecoration(
+                        color: yellow,
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                      ),
+                    ),
+                    BottomDateDial(
+                      contentList: monthList,
+                      onSelectedItemChanged: (val) =>
+                          cardState.onMonthChange(val),
+                      dateInfo: DateTime.now().month,
+                    ),
+                    Container(
+                      height: 1,
+                      width: 20,
+                      decoration: BoxDecoration(
+                        color: yellow,
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                      ),
+                    ),
+                    BottomDateDial(
+                      contentList: yearList,
+                      onSelectedItemChanged: (val) =>
+                          cardState.onYearChange(val),
+                      dateInfo: yearList.indexOf(DateTime.now().year),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(height: 15.0),
           ],
         ),
       ),
     );
   }
-}
 
+  @override
+  void dispose() {
+//    displayAreaPageController.dispose();
+    super.dispose();
+  }
+}
