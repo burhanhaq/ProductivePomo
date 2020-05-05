@@ -5,6 +5,7 @@ import '../../../constants.dart';
 import '../../../card_state.dart';
 import 'display_chart.dart';
 import 'bottom_date_dial.dart';
+import '../../../database_helper.dart';
 
 class Analytics extends StatefulWidget {
   @override
@@ -85,14 +86,34 @@ class _AnalyticsState extends State<Analytics> {
                 ),
               ],
             ),
-//            Spacer(),
             LayoutBuilder(
               builder: (context, constraints) {
                 if (cardState.analyticsPage == 2) {
-                  return Align(
-                    alignment: Alignment.center,
-                    child: Text('BoomShakalaka'),
-                  );
+                  return FutureBuilder(
+                      future: DB.instance.queryModelNames(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData)
+                          return Center(); // todo return loading indicator maybe
+                        List<Map<String, dynamic>> x = snapshot.data;
+                        List<String> y = [];
+                        x.forEach((element) {
+                          y.add(element['title']);
+                        });
+                        return SizedBox(
+                          height: sectionHeight * 0.3,
+                          child: ListView(
+                            children: List.generate(
+                              y.length,
+                              (index) => GestureDetector(
+                                onTap: () {
+                                  cardState.nameX = y[index];
+                                },
+                                child: Text(y[index]),
+                              ),
+                            ),
+                          ),
+                        );
+                      });
                 } else {
                   return Stack(
                     alignment: Alignment.center,

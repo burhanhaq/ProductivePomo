@@ -337,8 +337,17 @@ class CardState with ChangeNotifier {
     return '${yearList[year]}-${month.toString().padLeft(2, '0')}-${day.toString().padLeft(2, '0')}';
   }
 
+  String _nameX = '';
+
+  get nameX => _nameX;
+
+  set nameX(String val) {
+    _nameX = val;
+    notifyListeners();
+  }
+
   String getNameFromX() {
-    return 'Work';
+    return _nameX;
   }
 
   // *************************************************************************************************** SECOND SCREEN

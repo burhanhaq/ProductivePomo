@@ -89,6 +89,14 @@ class DB {
     return await db.rawQuery(query);
   }
 
+  Future<List<Map<String, dynamic>>> queryModelNames() async { // gets one model with all dates
+    Database db = await instance.database;
+    var query = '''
+      SELECT DISTINCT $columnTitle FROM $_tableName;
+    ''';
+    return await db.rawQuery(query);
+  }
+
 
   Future insertOrUpdateRecord(Map<String, dynamic> row) async {
     Database db = await instance.database;

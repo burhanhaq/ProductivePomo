@@ -150,13 +150,13 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                       children: <Widget>[
                         GestureDetector(
                           onTap: () async {
-//                          var all = await DB.instance.queryRecords();
                             print('--');
-                            cardState.p(await DB.instance.queryRecords());
-//                          print(all);
+                          var all = await DB.instance.queryModelNames();
+//                            cardState.p(await DB.instance.queryRecords());
+                          print(all);
                             print('--');
                           },
-                          child: Text('query db'),
+                          child: Text('query db names'),
                         ),
                       ],
                     ),
