@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:core';
 
-//DateTime DT = DateTime.now(); // removed because stored old date
+String timeNow =
+    '${DateTime.now().year.toString()}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime.now().day.toString().padLeft(2, '0')}';
 
 const kLabel = TextStyle(
   color: Colors.black,
@@ -29,7 +30,7 @@ const kOnboardingStyle = TextStyle(
 // not a constant
 var kSliderThemeData = SliderThemeData(
   valueIndicatorTextStyle:
-  TextStyle(fontSize: 22, color: red1, fontWeight: FontWeight.w500),
+      TextStyle(fontSize: 22, color: red1, fontWeight: FontWeight.w500),
   inactiveTrackColor: red12,
   activeTrackColor: yellow,
   activeTickMarkColor: yellow,
@@ -67,7 +68,6 @@ const Color trans = Colors.transparent;
 const Color pink = Color(0xff85203b);
 const Color orange = Color(0xffff9f68);
 
-
 // Home Screen Screen Size Multiplier Constants
 const kHomeRightBarClosedMul = 0.2;
 const kHomeRightBarOpenMul = 0.48;
@@ -77,7 +77,8 @@ const kAddNewSectionMul = 0.73;
 
 // Analytics Section
 const kMonthsTextStyle = TextStyle(fontSize: 40, color: white);
-var kBlueBorder = BoxDecoration( // not constant
+var kBlueBorder = BoxDecoration(
+  // not constant
   border: Border.all(
     color: blue,
     width: 1,

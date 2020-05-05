@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../screens/second_screen.dart';
-import 'package:pomodoro_app/shared_pref.dart';
 import 'package:provider/provider.dart';
 
 import '../constants.dart';

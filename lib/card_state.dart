@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -31,6 +30,7 @@ class CardState with ChangeNotifier {
   String _newMinutes;
   String _newSeconds;
   bool _tappedEmptyAreaUnderListView = false;
+  int newModelAdded = 0;
 
 //  bool _isClearTitleTextEditingController = false;
 
@@ -65,6 +65,9 @@ class CardState with ChangeNotifier {
       for (int j = 0; j < cardModels.length; j++) {
         cardModels[j].selected = false;
       }
+    } else if (i < 0) {
+      print('Index $i Out Of Range');
+      return;
     } else {
       _selectedIndex = i;
       _pageGoal = cardModels[i].goal;
@@ -170,12 +173,6 @@ class CardState with ChangeNotifier {
     if (confirmDeleteIndex == selectedIndex) {
       // second tap
       CardModel modelToDelete = cardModels[selectedIndex];
-//      if (modelToDelete.score == _maxScore) {
-//        _maxScore = 0;
-//        cardModels.forEach((element) {
-//          if (element.score > maxScore) _maxScore = element.score;
-//        });
-//      }
       CardModel.cardModelsX.removeAt(selectedIndex);
       await DB.instance.deleteRecord(modelToDelete.title, modelToDelete.date);
       selectTile = null;
@@ -206,6 +203,7 @@ class CardState with ChangeNotifier {
     if (canAddNewItem) {
       addNewIconController.reverse();
       cancelIconScaleController.reverse();
+      newModelAdded = 0;
       var newItem = CardModel(
         title: newTitle,
         score: 0,
@@ -292,7 +290,7 @@ class CardState with ChangeNotifier {
 
   // *************************************************************************************************** ANALYTICS
 
-  bool _showAnalytics = true;
+  bool _showAnalytics = false;
 
   get showAnalytics => _showAnalytics;
 
@@ -315,7 +313,9 @@ class CardState with ChangeNotifier {
   int _year = yearList.indexOf(DateTime.now().year);
 
   get day => _day;
+
   get month => _month;
+
   get year => _year;
 
   void onDayChange(int index) {
@@ -333,10 +333,9 @@ class CardState with ChangeNotifier {
     notifyListeners();
   }
 
-  String getDate() {
+  String getDateFromDial() {
     return '${yearList[year]}-${month.toString().padLeft(2, '0')}-${day.toString().padLeft(2, '0')}';
   }
-
 
   // *************************************************************************************************** SECOND SCREEN
   void onTapReplaySecond(var timerDurationController,
@@ -368,7 +367,17 @@ class CardState with ChangeNotifier {
 
   p(List x) {
     print('vv');
-    x.forEach((element) {print(element.toString());});
+    x.forEach((element) {
+      print(element.toString());
+    });
+    print('^^');
+  }
+
+  pCardTile(List<CardTile> x) {
+    print('vv');
+    x.forEach((element) {
+      print(element.cardModel.toString());
+    });
     print('^^');
   }
 

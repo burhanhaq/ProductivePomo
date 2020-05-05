@@ -7,7 +7,6 @@ import '../../../constants.dart';
 import '../../../widgets/card_tile.dart';
 import '../../../card_state.dart';
 import '../../../models/card_model.dart';
-import '../../../shared_pref.dart';
 import 'custom_icon_button.dart';
 import '../../../database_helper.dart';
 
@@ -153,7 +152,7 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                           onTap: () async {
 //                          var all = await DB.instance.queryRecords();
                             print('--');
-                            print(cardState.getDate());
+                            print(cardState.getDateFromDial());
 //                          print(all);
                             print('--');
                           },

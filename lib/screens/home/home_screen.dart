@@ -6,11 +6,11 @@ import '../../constants.dart';
 import '../../widgets/card_tile.dart';
 import '../../card_state.dart';
 import '../../models/card_model.dart';
-
 import 'right_bar/right_bar.dart';
 import 'add_new_card.dart';
 import '../../database_helper.dart';
 import '../../screens/home/analytics/analytics.dart';
+import '../../widgets/loading_indicator.dart';
 
 class Home extends StatefulWidget {
   static final id = 'Home';
@@ -19,22 +19,19 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
+List<CardTile> cardTileList = [];
+
 class _HomeState extends State<Home> with TickerProviderStateMixin {
-//  SharedPref sharedPref = SharedPref();
-  List<CardTile> cardTileList = [];
   bool loadingIndicator = true;
   AnimationController addSectionController;
   Animation addSectionAnimation;
 
-  AnimationController loadingIndicatorController;
-  Animation loadingIndicatorAnimation;
-  AnimationStatus loadingIndicatorStatus = AnimationStatus.dismissed;
   int loadingIndicatorCount = 0;
 
   @override
   void initState() {
     super.initState();
-    getCardListFromDB();
+//    getCardListFromDB();
 
     addSectionController = AnimationController(
       vsync: this,
@@ -50,68 +47,34 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       ..addStatusListener((status) {
         setState(() {});
       });
-
-    loadingIndicatorController = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 200),
-    );
-    loadingIndicatorAnimation = CurvedAnimation(
-      parent: loadingIndicatorController,
-      curve: Curves.linear,
-    )
-      ..addListener(() {
-        setState(() {});
-      })
-      ..addStatusListener((status) {
-        setState(() {
-          loadingIndicatorStatus = status;
-        });
-      });
-    loadingIndicatorController.forward();
   }
 
-  getCardListFromDB() async {
-//    List<dynamic> prefCardModelList = await sharedPref.get();
-    List<dynamic> cardModelListFromDB = await DB.instance.queryRecords();
+  Future<List<CardModel>> getCardListFromDB() async {
+    List<dynamic> cardModelListFromDB =
+        await DB.instance.queryModelsToday(timeNow);
+//    CardModel.cardModelsX.clear();
     for (int i = 0; i < cardModelListFromDB.length; i++) {
-      CardModel.cardModelsX.add(CardModel(
-        // todo, just FYI, new additions have today's date
-        title: cardModelListFromDB[i]['title'],
-        score: cardModelListFromDB[i]['score'],
-        goal: cardModelListFromDB[i]['goal'],
-        minutes: cardModelListFromDB[i]['minutes'],
-      ));
+      var newCardModel = CardModel.fromJson(cardModelListFromDB[i]);
+      if (!CardModel.cardModelsX.contains(newCardModel))
+        CardModel.cardModelsX.add(newCardModel);
     }
+    return CardModel.cardModelsX; // todo not an amazing implementation
   }
 
   @override
   Widget build(BuildContext context) {
     final cardState = Provider.of<CardState>(context);
-    cardTileList = List.generate(cardState.cardModels.length, (index) { // todo pull only for today, not alllll
-      return CardTile(cardModel: cardState.cardModels[index]);
-    });
     if (loadingIndicator) {
-      if (cardTileList.length > 0 && cardTileList[0].cardModel.score >= 0) {
-        loadingIndicator = false;
+      if (cardTileList.length > 0) {
+        setState(() {
+          loadingIndicator = false;
+        });
       }
     }
     if (cardState.onAddNewScreen) {
       addSectionController.forward();
     } else {
       addSectionController.reverse();
-    }
-
-    if (!loadingIndicatorController.isAnimating && loadingIndicator) {
-      if (loadingIndicatorStatus == AnimationStatus.completed) {
-        loadingIndicatorController.reverse();
-        loadingIndicatorCount++;
-        if (loadingIndicatorCount > 10) {
-          loadingIndicator = false;
-        }
-      } else {
-        loadingIndicatorController.forward();
-        ++loadingIndicatorCount;
-      }
     }
 
     return SafeArea(
@@ -129,7 +92,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                           MediaQuery.of(context).size.width * kGreyAreaMul / 2,
                       bottom: 30,
                       child: Offstage(
-                        offstage: CardModel.cardModelsX.length > 1,
+                        offstage: cardTileList.length > 1,
+                        // todo state doesn't update
                         child: Text(
                           'Swipe Left',
                           style: TextStyle(
@@ -179,10 +143,21 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                           height: MediaQuery.of(context).size.height * 0.88,
                           width:
                               MediaQuery.of(context).size.width * kGreyAreaMul,
-                          child: ListView(
-                            physics: BouncingScrollPhysics(),
-                            children: cardTileList,
-                          ),
+                          child: FutureBuilder(
+                              future: getCardListFromDB(),
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData) return Center();
+                                loadingIndicator = false;
+                                cardTileList = List.generate(
+                                    snapshot.data.length, (index) {
+                                  return CardTile(
+                                      cardModel: snapshot.data[index]);
+                                });
+                                return ListView(
+                                  physics: BouncingScrollPhysics(),
+                                  children: cardTileList,
+                                );
+                              }),
                         ),
                       ),
                     ),
@@ -190,19 +165,10 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                       top: 150,
                       left: 0,
                       right: 0,
-                      child: Transform.scale(
-                        scale: loadingIndicator
-                            ? 2 * loadingIndicatorAnimation.value
-                            : 0,
-                        child: Container(
-                          // todo replace with light card or something with an opacity controller maybe
-                          height: 15,
-                          width: 15,
-                          decoration: BoxDecoration(
-                            color: white,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
+                      child: LoadingIndicator(
+                        // state doesn't update
+                        showLoadingIndicator: loadingIndicator,
+                        rotationsToDisableAfter: 2,
                       ),
                     ),
                     Positioned(
@@ -238,7 +204,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   void dispose() {
     addSectionController.dispose();
-    loadingIndicatorController.dispose();
     super.dispose();
   }
 }

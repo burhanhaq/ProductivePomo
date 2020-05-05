@@ -60,9 +60,17 @@ class DB {
     Database db = await instance.database;
   }
 
-  Future<List<Map<String, dynamic>>> queryRecords() async {
+  Future<List<Map<String, dynamic>>> queryRecords() async { // get everything from the table
     Database db = await instance.database;
     return await db.query(_tableName);
+  }
+
+  Future<List<Map<String, dynamic>>> queryModelsToday(String date) async { // gets all models with today's date
+    Database db = await instance.database;
+    var query = '''
+      SELECT * FROM $_tableName WHERE $columnDate = \'$date\';
+    ''';
+    return await db.rawQuery(query);
   }
 
   Future<List<Map<String, dynamic>>> queryModelsWithDate(String date) async { // gets all models with one date

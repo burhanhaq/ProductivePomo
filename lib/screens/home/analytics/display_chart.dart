@@ -61,7 +61,7 @@ class _DisplayChartState extends State<DisplayChart>
               SizedBox(
                 height: sectionHeight * 0.5,
                 child: FutureBuilder(
-                    future: getDBInfo(cardState.getDate()),
+                    future: getDBInfo(cardState.getDateFromDial()),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) return Center();
                       var displayChartItemList = List.generate(
