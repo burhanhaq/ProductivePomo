@@ -152,11 +152,11 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                           onTap: () async {
 //                          var all = await DB.instance.queryRecords();
                             print('--');
-                            print(cardState.getDateFromDial());
+                            cardState.p(await DB.instance.queryRecords());
 //                          print(all);
                             print('--');
                           },
-                          child: Text('dial date'),
+                          child: Text('query db'),
                         ),
                       ],
                     ),

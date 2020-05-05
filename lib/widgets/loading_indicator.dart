@@ -33,7 +33,7 @@ class _LoadingIndicatorState extends State<LoadingIndicator>
       })
       ..addStatusListener((status) {
         if (status == AnimationStatus.dismissed) {
-          rotationController.stop();
+          rotationController.stop(); // todo check if it stops, it probably doesn't stop
         }
       });
     ballSizeController.forward();

@@ -24,9 +24,17 @@ class _DisplayChartState extends State<DisplayChart>
   var dataFromDB = [];
   List<CardModel> dataFromDBtoCardModelList = [];
 
-  Future<dynamic> getDBInfo(String date) async {
-    dataFromDB = await DB.instance.queryModelsWithDate(date);
-//    x = await DB.instance.queryDatesWithModel('Flutter'); // works
+  Future<dynamic> getDBInfo(DisplayChartItemType displayChartItemType,
+      String name, String date) async {
+    switch (displayChartItemType) {
+      case DisplayChartItemType.MaxScore:
+      case DisplayChartItemType.ScoreOverGoal:
+        dataFromDB = await DB.instance.queryModelsWithDate(date);
+        break;
+      case DisplayChartItemType.ByName:
+        dataFromDB = await DB.instance.queryDatesWithModel(name); // works
+        break;
+    }
     dataFromDBtoCardModelList.clear(); // todo: not super efficient perhaps
     for (int i = 0; i < dataFromDB.length; i++) {
       setState(() {
@@ -50,7 +58,8 @@ class _DisplayChartState extends State<DisplayChart>
       alignment: Alignment.center,
       children: <Widget>[
         Container(
-          padding: EdgeInsets.all(10.0),
+          margin: const EdgeInsets.all(5.0),
+          padding: const EdgeInsets.all(5.0),
           decoration: BoxDecoration(
             color: grey2,
             borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -61,7 +70,8 @@ class _DisplayChartState extends State<DisplayChart>
               SizedBox(
                 height: sectionHeight * 0.5,
                 child: FutureBuilder(
-                    future: getDBInfo(cardState.getDateFromDial()),
+                    future: getDBInfo(widget.displayChartType, cardState.getNameFromX(),
+                        cardState.getDateFromDial()),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) return Center();
                       var displayChartItemList = List.generate(
@@ -86,7 +96,7 @@ class _DisplayChartState extends State<DisplayChart>
         Positioned(
           bottom: 50,
           child: Offstage(
-            // todo make it show after indicator fades away
+            // todo make it show after indicator fades away, currently not very nice
             offstage: dataFromDBtoCardModelList.length != 0,
             child: Text(
               'No data to display',

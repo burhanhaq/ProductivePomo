@@ -35,12 +35,14 @@ class _DisplayChartItemState extends State<DisplayChartItem>
     var sectionWidth =
         MediaQuery.of(context).size.width * (kGreyAreaMul - 0.02);
     var sectionHeight = MediaQuery.of(context).size.height;
-    var barLength = sectionWidth * 0.4;
-    var coloredBarLength = sectionWidth * 0.4;
+    var barLength = sectionWidth * 0.5;
+    var coloredBarLength = sectionWidth * 0.5;
+    var textToShow;
     double barEndCircleSize = 5;
     Color barEndCircleColor = grey;
     switch (widget.chartItemType) {
       case DisplayChartItemType.MaxScore:
+        textToShow = widget.cardModel.title;
         var maxScore = 0;
         cardState.cardModels.forEach((element) {
           if (element.score > maxScore) maxScore = element.score;
@@ -56,6 +58,21 @@ class _DisplayChartItemState extends State<DisplayChartItem>
         }
         break;
       case DisplayChartItemType.ScoreOverGoal:
+        textToShow = widget.cardModel.title;
+        if (widget.cardModel.score == 0) {
+          coloredBarLength = 0.0;
+        } else if (widget.cardModel.score > widget.cardModel.goal) {
+          // do nothing
+        } else {
+          coloredBarLength *= widget.cardModel.score / widget.cardModel.goal;
+        }
+        if (widget.cardModel.score / widget.cardModel.goal >= 1) {
+          barEndCircleSize = 10;
+          barEndCircleColor = yellow;
+        }
+        break;
+      case DisplayChartItemType.ByName:
+        textToShow = widget.cardModel.date.substring(5);
         if (widget.cardModel.score == 0) {
           coloredBarLength = 0.0;
         } else if (widget.cardModel.score > widget.cardModel.goal) {
@@ -75,16 +92,16 @@ class _DisplayChartItemState extends State<DisplayChartItem>
         children: <Widget>[
           Container(
             alignment: Alignment.centerRight,
-            width: sectionWidth * 0.3,
+            width: sectionWidth * 0.2,
             height: sectionHeight * 0.05,
-            child: Text(widget.cardModel.title,
+            child: Text(textToShow,
                 textAlign: TextAlign.end,
                 maxLines: 1,
-                style: kMonthsTextStyle.copyWith(fontSize: 20)),
+                style: kMonthsTextStyle.copyWith(fontSize: 15)),
           ),
           SizedBox(width: 20),
           Container(
-            width: sectionWidth * 0.5,
+            width: sectionWidth * 0.6,
             child: Row(
               children: <Widget>[
                 Container(

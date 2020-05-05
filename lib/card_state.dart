@@ -337,6 +337,10 @@ class CardState with ChangeNotifier {
     return '${yearList[year]}-${month.toString().padLeft(2, '0')}-${day.toString().padLeft(2, '0')}';
   }
 
+  String getNameFromX() {
+    return 'Work';
+  }
+
   // *************************************************************************************************** SECOND SCREEN
   void onTapReplaySecond(var timerDurationController,
       var playPauseIconController, var replayIconRotationController) {

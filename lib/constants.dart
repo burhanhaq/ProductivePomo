@@ -102,7 +102,7 @@ var monthList = [
 ];
 var yearList = [2019, 2020, 2021, 2022];
 
-enum DisplayChartItemType { ScoreOverGoal, MaxScore }
+enum DisplayChartItemType { MaxScore, ScoreOverGoal, ByName }
 
 // Second Screen Constants
 const kMainRadius = 40.0;
