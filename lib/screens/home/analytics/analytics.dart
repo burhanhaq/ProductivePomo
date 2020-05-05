@@ -53,11 +53,11 @@ class _AnalyticsState extends State<Analytics> {
                 children: <Widget>[
                   DisplayChart(
                     title: 'MaxScore',
-                    displayChartItem: DisplayChartItemType.MaxScore,
+                    displayChartType: DisplayChartItemType.MaxScore,
                   ),
                   DisplayChart(
                     title: 'Score/Goal',
-                    displayChartItem: DisplayChartItemType.ScoreOverGoal,
+                    displayChartType: DisplayChartItemType.ScoreOverGoal,
                   ),
                 ],
               ),

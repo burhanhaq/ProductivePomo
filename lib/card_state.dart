@@ -310,25 +310,26 @@ class CardState with ChangeNotifier {
     notifyListeners();
   }
 
-  int day = DateTime.now().day;
-  int month = DateTime.now().month;
-  int year = yearList.indexOf(DateTime.now().year);
+  int _day = DateTime.now().day;
+  int _month = DateTime.now().month;
+  int _year = yearList.indexOf(DateTime.now().year);
+
+  get day => _day;
+  get month => _month;
+  get year => _year;
 
   void onDayChange(int index) {
-    day = index + 1;
-    callDB = true;
+    _day = index + 1;
     notifyListeners();
   }
 
   void onMonthChange(int index) {
-    month = index + 1;
-    callDB = true;
+    _month = index + 1;
     notifyListeners();
   }
 
   void onYearChange(int index) {
-    year = index;
-    callDB = true;
+    _year = index;
     notifyListeners();
   }
 
@@ -336,14 +337,6 @@ class CardState with ChangeNotifier {
     return '${yearList[year]}-${month.toString().padLeft(2, '0')}-${day.toString().padLeft(2, '0')}';
   }
 
-  bool callDB = true;
-
-//  get callDB => _callDB;
-
-//  set callDB(bool val) {
-//    _callDB = val;
-//    notifyListeners();
-//  }
 
   // *************************************************************************************************** SECOND SCREEN
   void onTapReplaySecond(var timerDurationController,
