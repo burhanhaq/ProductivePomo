@@ -290,7 +290,7 @@ class CardState with ChangeNotifier {
 
   // *************************************************************************************************** ANALYTICS
 
-  bool _showAnalytics = false;
+  bool _showAnalytics = true;
 
   get showAnalytics => _showAnalytics;
 

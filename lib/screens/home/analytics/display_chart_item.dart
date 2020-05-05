@@ -37,6 +37,8 @@ class _DisplayChartItemState extends State<DisplayChartItem>
     var sectionHeight = MediaQuery.of(context).size.height;
     var barLength = sectionWidth * 0.4;
     var coloredBarLength = sectionWidth * 0.4;
+    double barEndCircleSize = 5;
+    Color barEndCircleColor = grey;
     switch (widget.chartItemType) {
       case DisplayChartItemType.MaxScore:
         var maxScore = 0;
@@ -48,6 +50,10 @@ class _DisplayChartItemState extends State<DisplayChartItem>
         } else {
           coloredBarLength *= widget.cardModel.score / maxScore;
         }
+        if (maxScore == widget.cardModel.score) {
+          barEndCircleSize = 10;
+          barEndCircleColor = yellow;
+        }
         break;
       case DisplayChartItemType.ScoreOverGoal:
         if (widget.cardModel.score == 0) {
@@ -56,6 +62,10 @@ class _DisplayChartItemState extends State<DisplayChartItem>
           // do nothing
         } else {
           coloredBarLength *= widget.cardModel.score / widget.cardModel.goal;
+        }
+        if (widget.cardModel.score / widget.cardModel.goal >= 1) {
+          barEndCircleSize = 10;
+          barEndCircleColor = yellow;
         }
         break;
     }
@@ -112,10 +122,10 @@ class _DisplayChartItemState extends State<DisplayChartItem>
                 Container(
 //                  width: cardState.maxScore == widget.cardModel.score ? 10 : 5,
 //                  height: cardState.maxScore == widget.cardModel.score ? 10 : 5,
-                  width: 5,
-                  height: 5,
+                  width: barEndCircleSize,
+                  height: barEndCircleSize,
                   decoration: BoxDecoration(
-                    color: grey,
+                    color: barEndCircleColor,
                     borderRadius: BorderRadius.all(Radius.circular(3)),
                   ),
                 ),
