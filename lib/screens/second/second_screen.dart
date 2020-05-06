@@ -1,3 +1,4 @@
+import 'package:audioplayers/audio_cache.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
@@ -25,6 +26,7 @@ class _SecondScreenState extends State<SecondScreen>
   var playPauseIconAnimation;
   var replayIconRotationController;
   var replayIconRotationAnimation;
+  var audioCache = AudioCache();
 
   @override
   void initState() {
@@ -56,7 +58,12 @@ class _SecondScreenState extends State<SecondScreen>
     );
   }
 
+  playSound() async {
+    await audioCache.play('sound1.wav');
+  }
+
   bool added = false;
+  bool oneTimeOver = false;
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +72,14 @@ class _SecondScreenState extends State<SecondScreen>
     int cardScore = widget.cardModel.score;
     int cardGoal = widget.cardModel.goal;
     bool timerRunning = timerDurationController.isAnimating;
+    oneTimeOver = timerDurationController.value == 0;
     Wakelock.toggle(on: timerRunning); // todo check if this works
+
+    if (oneTimeOver && !timerRunning) {
+      playSound();
+      oneTimeOver = false;
+    }
+
     return SafeArea(
       child: Container(
         color: grey,
@@ -125,9 +139,12 @@ class _SecondScreenState extends State<SecondScreen>
                         child: Column(
                           children: [
                             GestureDetector(
-                              onTap: () => cardState.onTapPlaySecond(
-                                  playPauseIconController,
-                                  timerDurationController),
+                              onTap: () {
+                                cardState.onTapPlaySecond(
+                                    playPauseIconController,
+                                    timerDurationController);
+                                playSound();
+                              },
                               child: CustomIconButtonStyle(
                                 child: AnimatedIcon(
                                   icon: AnimatedIcons.play_pause,
