@@ -105,5 +105,5 @@ var yearList = [2019, 2020, 2021, 2022];
 enum DisplayChartItemType { MaxScore, ScoreOverGoal, ByName, ByName2 }
 
 // Second Screen Constants
-const kMainRadius = 40.0;
+const kMainRadius = 50.0;
 const kSecondaryRadius = 15.0;

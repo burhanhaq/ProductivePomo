@@ -6,7 +6,7 @@ import 'constants.dart';
 import 'screens/onboarding/onboarding_screen.dart';
 import 'screens/onboarding/onboarding_screen_2.dart';
 import 'card_state.dart';
-import 'screens/second_screen.dart';
+import 'screens/second/second_screen.dart';
 
 
 void main() => runApp(App());

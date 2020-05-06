@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'models/card_model.dart';
 import 'widgets/card_tile.dart';
-import 'screens/second_screen.dart';
+import 'screens/second/second_screen.dart';
 import 'screen_navigation/second_screen_navigation.dart';
 import 'database_helper.dart';
 import 'constants.dart';
@@ -290,7 +290,7 @@ class CardState with ChangeNotifier {
 
   // *************************************************************************************************** ANALYTICS
 
-  bool _showAnalytics = true;
+  bool _showAnalytics = false;
 
   get showAnalytics => _showAnalytics;
 

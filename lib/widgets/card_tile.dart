@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../screens/second_screen.dart';
+import '../screens/second/second_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../constants.dart';
