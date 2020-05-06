@@ -299,7 +299,7 @@ class CardState with ChangeNotifier {
     notifyListeners();
   }
 
-  int _analyticsPage = 0;
+  int _analyticsPage = 2;
 
   get analyticsPage => _analyticsPage;
 

@@ -32,6 +32,7 @@ class _DisplayChartState extends State<DisplayChart>
         dataFromDB = await DB.instance.queryModelsWithDate(date);
         break;
       case DisplayChartItemType.ByName:
+      case DisplayChartItemType.ByName2:
         dataFromDB = await DB.instance.queryDatesWithModel(name); // works
         break;
     }

@@ -44,11 +44,14 @@ class _DisplayChartItemState extends State<DisplayChartItem>
       case DisplayChartItemType.MaxScore:
         textToShow = widget.cardModel.title;
         var maxScore = 0;
-        cardState.cardModels.forEach((element) {
+        cardState.cardModels.forEach((element) { // todo fix this, this doesn't look at dates elements, it looks at current elements
           if (element.score > maxScore) maxScore = element.score;
         });
         if (widget.cardModel.score == 0) {
           coloredBarLength = 0.0;
+        } else if (maxScore == 0) {
+          // do nothing
+          print('Error. Please fix and add elements from date');
         } else {
           coloredBarLength *= widget.cardModel.score / maxScore;
         }
@@ -84,6 +87,9 @@ class _DisplayChartItemState extends State<DisplayChartItem>
           barEndCircleSize = 10;
           barEndCircleColor = yellow;
         }
+        break;
+      case DisplayChartItemType.ByName2:
+        sectionHeight = 0;
         break;
     }
     return Container(

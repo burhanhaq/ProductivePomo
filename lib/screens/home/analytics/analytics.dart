@@ -4,8 +4,9 @@ import 'package:provider/provider.dart';
 import '../../../constants.dart';
 import '../../../card_state.dart';
 import 'display_chart.dart';
-import 'bottom_date_dial.dart';
+import 'date_selector.dart';
 import '../../../database_helper.dart';
+import 'name_selector.dart';
 
 class Analytics extends StatefulWidget {
   @override
@@ -13,6 +14,8 @@ class Analytics extends StatefulWidget {
 }
 
 class _AnalyticsState extends State<Analytics> {
+  List<bool> selectedList = [];
+
   @override
   Widget build(BuildContext context) {
     CardState cardState = Provider.of<CardState>(context);
@@ -22,6 +25,8 @@ class _AnalyticsState extends State<Analytics> {
     var sectionWidth =
         MediaQuery.of(context).size.width * (kGreyAreaMul - 0.02);
     var sectionHeight = MediaQuery.of(context).size.height;
+
+
 
     return GestureDetector(
       onTap: () {
@@ -64,6 +69,10 @@ class _AnalyticsState extends State<Analytics> {
                         title: 'ByName',
                         displayChartType: DisplayChartItemType.ByName,
                       ),
+                      SomethingElse(
+                        title: 'ByName2',
+//                        displayChartType: DisplayChartItemType.ByName2,
+                      ),
                     ],
                   ),
                 ),
@@ -82,95 +91,20 @@ class _AnalyticsState extends State<Analytics> {
                     PageViewAnimationSmallCircle(
                       displayChartType: DisplayChartItemType.ByName,
                     ),
+                    SizedBox(width: 10),
+                    PageViewAnimationSmallCircle(
+                      displayChartType: DisplayChartItemType.ByName2,
+                    ),
                   ],
                 ),
               ],
             ),
             LayoutBuilder(
               builder: (context, constraints) {
-                if (cardState.analyticsPage == 2) {
-                  return FutureBuilder(
-                      future: DB.instance.queryModelNames(),
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData)
-                          return Center(); // todo return loading indicator maybe
-                        List<Map<String, dynamic>> x = snapshot.data;
-                        List<String> y = [];
-                        x.forEach((element) {
-                          y.add(element['title']);
-                        });
-                        return SizedBox(
-                          height: sectionHeight * 0.3,
-                          child: ListView(
-                            children: List.generate(
-                              y.length,
-                              (index) => GestureDetector(
-                                onTap: () {
-                                  cardState.nameX = y[index];
-                                },
-                                child: Text(y[index]),
-                              ),
-                            ),
-                          ),
-                        );
-                      });
+                if (cardState.analyticsPage >= 2) {
+                  return NameSelectorWidget();
                 } else {
-                  return Stack(
-                    alignment: Alignment.center,
-                    children: <Widget>[
-                      Opacity(
-                        opacity: 0.1,
-                        child: Container(
-                          width: 150,
-                          height: sectionHeight * 0.24,
-                          decoration: BoxDecoration(
-                            color: grey2,
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                          ),
-                        ),
-                      ),
-                      Column(
-                        children: <Widget>[
-                          BottomDateDial(
-                            contentList: dayList,
-                            onSelectedItemChanged: (val) =>
-                                cardState.onDayChange(val),
-                            dateInfo: DateTime.now().day,
-                          ),
-                          Container(
-                            height: 1,
-                            width: 20,
-                            decoration: BoxDecoration(
-                              color: yellow,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8)),
-                            ),
-                          ),
-                          BottomDateDial(
-                            contentList: monthList,
-                            onSelectedItemChanged: (val) =>
-                                cardState.onMonthChange(val),
-                            dateInfo: DateTime.now().month,
-                          ),
-                          Container(
-                            height: 1,
-                            width: 20,
-                            decoration: BoxDecoration(
-                              color: yellow,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8)),
-                            ),
-                          ),
-                          BottomDateDial(
-                            contentList: yearList,
-                            onSelectedItemChanged: (val) =>
-                                cardState.onYearChange(val),
-                            dateInfo: yearList.indexOf(DateTime.now().year),
-                          ),
-                        ],
-                      ),
-                    ],
-                  );
+                  return DateSelectorWidget();
                 }
               },
             ),
@@ -185,26 +119,5 @@ class _AnalyticsState extends State<Analytics> {
   void dispose() {
 //    displayAreaPageController.dispose();
     super.dispose();
-  }
-}
-
-class PageViewAnimationSmallCircle extends StatelessWidget {
-  final DisplayChartItemType displayChartType;
-
-  PageViewAnimationSmallCircle({@required this.displayChartType});
-
-  @override
-  Widget build(BuildContext context) {
-    CardState cardState = Provider.of<CardState>(context);
-    return AnimatedContainer(
-      duration: Duration(milliseconds: 350),
-      height: 7,
-      width: cardState.analyticsPage == displayChartType.index ? 30 : 15,
-      decoration: BoxDecoration(
-        color:
-            cardState.analyticsPage == displayChartType.index ? yellow : grey2,
-        borderRadius: BorderRadius.all(Radius.circular(8)),
-      ),
-    );
   }
 }

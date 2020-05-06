@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:wakelock/wakelock.dart';
 
 import '../constants.dart';
 import '../card_state.dart';
@@ -64,6 +65,7 @@ class _SecondScreenState extends State<SecondScreen>
     int cardScore = widget.cardModel.score;
     int cardGoal = widget.cardModel.goal;
     bool timerRunning = timerDurationController.isAnimating;
+    Wakelock.toggle(on: timerRunning); // todo check if this works
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
     return SafeArea(
