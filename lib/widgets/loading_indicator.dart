@@ -8,7 +8,7 @@ class LoadingIndicator extends StatefulWidget {
   int rotationsToDisableAfter;
 
   LoadingIndicator({
-    @required this.showLoadingIndicator,
+    this.showLoadingIndicator = true,
     this.rotationsToDisableAfter = 0,
   });
 

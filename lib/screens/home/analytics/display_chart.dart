@@ -45,68 +45,72 @@ class _DisplayChartState extends State<DisplayChart>
     return dataFromDBtoCardModelList;
   }
 
-  var showLoadingIndicator = true;
-
   @override
   Widget build(BuildContext context) {
     CardState cardState = Provider.of<CardState>(context);
-    showLoadingIndicator = dataFromDBtoCardModelList.length == 0 ? true : false;
     var sectionWidth =
         MediaQuery.of(context).size.width * (kGreyAreaMul - 0.02);
     var sectionHeight = MediaQuery.of(context).size.height;
 
-    return Stack(
-      alignment: Alignment.center,
+    return Container(
+      margin: const EdgeInsets.all(5.0),
+      padding: const EdgeInsets.all(5.0),
+      decoration: BoxDecoration(
+        color: grey2,
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+      ),
+      child: Column(
+        children: <Widget>[
+          Text(widget.title, style: kMonthsTextStyle),
+          SizedBox(
+            height: sectionHeight * 0.5,
+            child: FutureBuilder(
+                future: getDBInfo(widget.displayChartType,
+                    cardState.getNameFromX(), cardState.getDateFromDial()),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return DisplayLoadingWidget();
+                  }
+                  if (snapshot.data.length == 0) {
+                    return DisplayLoadingWidget();
+                  }
+                  var displayChartItemList = List.generate(
+                    snapshot.data.length,
+                    (index) => DisplayChartItem(
+                      cardModel: snapshot.data[index],
+                      chartItemType: widget.displayChartType,
+                    ),
+                  );
+                  return ListView(
+                    children: displayChartItemList,
+                  );
+                }),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class DisplayLoadingWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
       children: <Widget>[
-        Container(
-          margin: const EdgeInsets.all(5.0),
-          padding: const EdgeInsets.all(5.0),
-          decoration: BoxDecoration(
-            color: grey2,
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-          ),
-          child: Column(
-            children: <Widget>[
-              Text(widget.title, style: kMonthsTextStyle),
-              SizedBox(
-                height: sectionHeight * 0.5,
-                child: FutureBuilder(
-                    future: getDBInfo(widget.displayChartType, cardState.getNameFromX(),
-                        cardState.getDateFromDial()),
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) return Center();
-                      var displayChartItemList = List.generate(
-                        snapshot.data.length,
-                        (index) => DisplayChartItem(
-                          cardModel: snapshot.data[index],
-                          chartItemType: widget.displayChartType,
-                        ),
-                      );
-                      return ListView(
-                        children: displayChartItemList,
-                      );
-                    }),
-              ),
-            ],
-          ),
-        ),
+        SizedBox(height: 200),
         LoadingIndicator(
-          showLoadingIndicator: showLoadingIndicator,
           rotationsToDisableAfter: 2,
         ),
-        Positioned(
-          bottom: 50,
-          child: Offstage(
-            // todo make it show after indicator fades away, currently not very nice
-            offstage: dataFromDBtoCardModelList.length != 0,
-            child: Text(
-              'No data to display',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: 20, fontFamily: 'IndieFlower', color: red12),
-            ),
-          ),
+        Spacer(),
+        Text(
+          'No data to display', // todo animate
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontSize: 20,
+              fontFamily: 'IndieFlower',
+              color: red12),
         ),
+        SizedBox(height: 50),
       ],
     );
   }

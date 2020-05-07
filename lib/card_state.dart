@@ -213,8 +213,7 @@ class CardState with ChangeNotifier {
       addToCardModelsList(newItem);
       cardTileList.add(CardTile(cardModel: newItem));
       onAddNewScreen = false;
-      var added = await DB.instance.insertOrUpdateRecord(newItem.toJson());
-      print('DB INSERT -- $added');
+      await DB.instance.insertOrUpdateRecord(newItem.toJson());
       resetNewVariables();
     } else {
       // todo play cant add animation maybe
@@ -290,7 +289,7 @@ class CardState with ChangeNotifier {
 
   // *************************************************************************************************** ANALYTICS
 
-  bool _showAnalytics = false;
+  bool _showAnalytics = true;
 
   get showAnalytics => _showAnalytics;
 
@@ -299,7 +298,7 @@ class CardState with ChangeNotifier {
     notifyListeners();
   }
 
-  int _analyticsPage = 2;
+  int _analyticsPage = 1;
 
   get analyticsPage => _analyticsPage;
 

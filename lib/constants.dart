@@ -102,6 +102,8 @@ var monthList = [
 ];
 var yearList = [2019, 2020, 2021, 2022];
 
+enum BottomDateDialType { Day, Month, Year }
+
 enum DisplayChartItemType { MaxScore, ScoreOverGoal, ByName, ByName2 }
 
 // Second Screen Constants

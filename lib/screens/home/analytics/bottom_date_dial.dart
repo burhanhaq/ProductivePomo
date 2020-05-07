@@ -6,28 +6,50 @@ import '../../../card_state.dart';
 import '../../../database_helper.dart';
 
 class BottomDateDial extends StatefulWidget {
-  final contentList;
   final Function onSelectedItemChanged;
-  final int dateInfo;
+  final BottomDateDialType bottomDataDialType;
 
-  BottomDateDial({@required this.contentList, @required this.onSelectedItemChanged, @required this.dateInfo});
+  BottomDateDial({
+    @required this.onSelectedItemChanged,
+    @required this.bottomDataDialType,
+  });
 
   @override
   _BottomDateDialState createState() => _BottomDateDialState();
 }
 
 class _BottomDateDialState extends State<BottomDateDial> {
-  // todo implement scroll controller
   var itemIndex = 0;
+  var contentList = [];
   bool starting = true;
+  var scrollController;
 
   @override
   Widget build(BuildContext context) {
+    CardState cardState = Provider.of<CardState>(context);
     if (starting && itemIndex == 0) {
-      itemIndex = widget.dateInfo;
+      switch (widget.bottomDataDialType) {
+        case BottomDateDialType.Day:
+          itemIndex = cardState.day - 1;
+          contentList = dayList;
+          scrollController =
+              FixedExtentScrollController(initialItem: itemIndex);
+          break;
+        case BottomDateDialType.Month:
+          itemIndex = cardState.month - 1;
+          contentList = monthList;
+          scrollController =
+              FixedExtentScrollController(initialItem: itemIndex);
+          break;
+        case BottomDateDialType.Year:
+          itemIndex = cardState.year;
+          contentList = yearList;
+          scrollController =
+              FixedExtentScrollController(initialItem: itemIndex);
+          break;
+      }
       starting = false;
     }
-//    CardState cardState = Provider.of<CardState>(context);
     var sectionWidth =
         MediaQuery.of(context).size.width * (kGreyAreaMul - 0.02);
     var sectionHeight = MediaQuery.of(context).size.height;
@@ -39,6 +61,7 @@ class _BottomDateDialState extends State<BottomDateDial> {
         child: RotatedBox(
           quarterTurns: -1,
           child: ListWheelScrollView(
+            controller: scrollController,
             physics: FixedExtentScrollPhysics(),
             diameterRatio: 1.5,
             offAxisFraction: 1.2,
@@ -50,12 +73,12 @@ class _BottomDateDialState extends State<BottomDateDial> {
             },
             itemExtent: 150,
             children: List.generate(
-              widget.contentList.length,
+              contentList.length,
               (index) => RotatedBox(
                 quarterTurns: 1,
                 child: Container(
                   child: Text(
-                    widget.contentList[index].toString(),
+                    contentList[index].toString(),
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontSize: 30,

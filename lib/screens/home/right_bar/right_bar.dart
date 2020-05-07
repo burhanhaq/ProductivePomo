@@ -115,7 +115,7 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                     child: Column(
                       children: [
                         FittedBox(
-                          // todo fix: moves around when score increases
+                          // todo fix: score/goal moves around when score increases
                           fit: BoxFit.fitHeight,
                           child: Text(
                             cardState.firstPageScore == null
@@ -150,9 +150,9 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                         GestureDetector(
                           onTap: () async {
                             print('--');
-                          var all = await DB.instance.queryModelNames();
-//                            cardState.p(await DB.instance.queryRecords());
-                          print(all);
+
+                            cardState.p(await DB.instance.queryRecords());
+//                          print(await DB.instance.queryModelNames());
                             print('--');
                           },
                           child: Text('query db names'),

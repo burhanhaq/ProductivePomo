@@ -67,7 +67,7 @@ class _AnalyticsState extends State<Analytics> {
                         title: 'ByName',
                         displayChartType: DisplayChartItemType.ByName,
                       ),
-                      SomethingElse(
+                      CalendarChart(
                         title: 'ByName2',
 //                        displayChartType: DisplayChartItemType.ByName2,
                       ),
@@ -111,11 +111,5 @@ class _AnalyticsState extends State<Analytics> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-//    displayAreaPageController.dispose();
-    super.dispose();
   }
 }

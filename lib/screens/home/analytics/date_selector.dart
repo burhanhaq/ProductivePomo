@@ -5,7 +5,7 @@ import '../../../constants.dart';
 import '../../../card_state.dart';
 import 'bottom_date_dial.dart';
 
-class DateSelectorWidget extends StatelessWidget { // todo convert to stateful if errors
+class DateSelectorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CardState cardState = Provider.of<CardState>(context);
@@ -26,9 +26,8 @@ class DateSelectorWidget extends StatelessWidget { // todo convert to stateful i
         Column(
           children: <Widget>[
             BottomDateDial(
-              contentList: dayList,
               onSelectedItemChanged: (val) => cardState.onDayChange(val),
-              dateInfo: DateTime.now().day,
+              bottomDataDialType: BottomDateDialType.Day,
             ),
             Container(
               height: 1,
@@ -39,9 +38,8 @@ class DateSelectorWidget extends StatelessWidget { // todo convert to stateful i
               ),
             ),
             BottomDateDial(
-              contentList: monthList,
               onSelectedItemChanged: (val) => cardState.onMonthChange(val),
-              dateInfo: DateTime.now().month,
+              bottomDataDialType: BottomDateDialType.Month,
             ),
             Container(
               height: 1,
@@ -52,9 +50,8 @@ class DateSelectorWidget extends StatelessWidget { // todo convert to stateful i
               ),
             ),
             BottomDateDial(
-              contentList: yearList,
               onSelectedItemChanged: (val) => cardState.onYearChange(val),
-              dateInfo: yearList.indexOf(DateTime.now().year),
+              bottomDataDialType: BottomDateDialType.Year,
             ),
           ],
         ),
@@ -84,10 +81,10 @@ class PageViewAnimationSmallCircle extends StatelessWidget {
   }
 }
 
-class SomethingElse extends StatelessWidget {
+class CalendarChart extends StatelessWidget {
   final title;
 
-  SomethingElse({this.title});
+  CalendarChart({this.title});
 
   @override
   Widget build(BuildContext context) {
