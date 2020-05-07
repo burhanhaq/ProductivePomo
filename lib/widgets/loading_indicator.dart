@@ -24,6 +24,7 @@ class _LoadingIndicatorState extends State<LoadingIndicator>
   @override
   void initState() {
     super.initState();
+    print('Loading...');
     ballSizeController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 500),
@@ -108,6 +109,7 @@ class _LoadingIndicatorState extends State<LoadingIndicator>
 
   @override
   void dispose() {
+    print('...Loading destroyed');
     ballSizeController.dispose();
     rotationController.dispose();
     super.dispose();

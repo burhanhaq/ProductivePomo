@@ -85,7 +85,7 @@ class PageViewAnimationSmallCircle extends StatelessWidget {
 }
 
 class SomethingElse extends StatelessWidget {
-  var title;
+  final title;
 
   SomethingElse({this.title});
 

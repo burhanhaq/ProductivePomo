@@ -26,8 +26,6 @@ class _AnalyticsState extends State<Analytics> {
         MediaQuery.of(context).size.width * (kGreyAreaMul - 0.02);
     var sectionHeight = MediaQuery.of(context).size.height;
 
-
-
     return GestureDetector(
       onTap: () {
         cardState.closeHomeRightBar();

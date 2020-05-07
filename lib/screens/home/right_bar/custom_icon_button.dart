@@ -79,4 +79,9 @@ class _CustomIconButtonState extends State<CustomIconButton>
       ),
     );
   }
+  @override
+  void dispose() {
+    textSizeTransitionController.dispose();
+    super.dispose();
+  }
 }

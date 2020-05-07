@@ -153,8 +153,6 @@ class _OnboardingScreen2State extends State<OnboardingScreen2>
                     onTap: () {
                       print('phew');
                       Navigator.pushNamed(context, Home.id);
-//                      Navigator.push(context, MaterialPageRoute(builder:  (context) => ChangeNotifierProvider(
-//                          create: (context) => CardState()..resetNewVariables(), child: Home())));
                     },
                     child: Opacity(
                       opacity: nextIconOpacityController.value,
@@ -164,41 +162,40 @@ class _OnboardingScreen2State extends State<OnboardingScreen2>
                 ),
               ),
               Transform.translate(
-                  offset: Offset(randomWidth * width * 0.8 - width / 2 * 0.8,
-                      randomHeight * height * 0.8 - height / 2 * 0.8),
-                  child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          randomWidth = randomLoc.nextDouble();
-                          randomHeight = randomLoc.nextDouble();
-
-//                          ++taps;
-                          switch (++taps) {
-                            case 1:
-                              nOff = false;
-                              break;
-                            case 2:
-                              aOff = false;
-                              break;
-                            case 3:
-                              mOff = false;
-                              break;
-                            case 4:
-                              eOff = false;
-                              nextIconOpacityController.forward();
-                              break;
-                            default:
-                              nextIconOpacityController.reverse();
-                              nOff = true;
-                              aOff = true;
-                              mOff = true;
-                              eOff = true;
-                              taps = 0;
-                          }
-                        });
-                        print('tapped crosshair----------------------');
-                      },
-                      child: AnimatingCrosshair())),
+                offset: Offset(randomWidth * width * 0.8 - width / 2 * 0.8,
+                    randomHeight * height * 0.8 - height / 2 * 0.8),
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      randomWidth = randomLoc.nextDouble();
+                      randomHeight = randomLoc.nextDouble();
+                      switch (++taps) {
+                        case 1:
+                          nOff = false;
+                          break;
+                        case 2:
+                          aOff = false;
+                          break;
+                        case 3:
+                          mOff = false;
+                          break;
+                        case 4:
+                          eOff = false;
+                          nextIconOpacityController.forward();
+                          break;
+                        default:
+                          nextIconOpacityController.reverse();
+                          nOff = true;
+                          aOff = true;
+                          mOff = true;
+                          eOff = true;
+                          taps = 0;
+                      }
+                    });
+                  },
+                  child: AnimatingCrosshair(),
+                ),
+              ),
             ],
           ),
         ),

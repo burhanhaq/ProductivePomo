@@ -11,15 +11,10 @@ class AddNewCard extends StatefulWidget {
 }
 
 class _AddNewCardState extends State<AddNewCard> {
-  TextEditingController titleTextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     var cardState = Provider.of<CardState>(context);
-//    if (cardState.isClearTitleTextEditingController) {
-//      titleTextController.clear();
-//      cardState.clearTitleTextEditingControllerSwitch();
-//    }
     var sectionWidth = MediaQuery.of(context).size.width * (kGreyAreaMul - 0.02);
     var sectionHeight = MediaQuery.of(context).size.height;
     return SafeArea(
@@ -52,7 +47,6 @@ class _AddNewCardState extends State<AddNewCard> {
                       keyboardType: TextInputType.text,
                       textCapitalization: TextCapitalization.sentences,
                       enabled: cardState.onAddNewScreen,
-                      controller: titleTextController,
                       autofocus: false,
                       style: TextStyle(
                         color: white,

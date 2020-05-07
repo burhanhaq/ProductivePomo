@@ -30,63 +30,63 @@ class _NameSelectorWidgetState extends State<NameSelectorWidget> {
     var sectionHeight = MediaQuery.of(context).size.height;
 
     return FutureBuilder(
-        future: getModelNames(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return LoadingIndicator(
-              showLoadingIndicator: true,
-              rotationsToDisableAfter: 2,
-            );
-          }
-          List<String> namesList = [];
-          snapshot.data.forEach((element) {
-            namesList.add(element['title']);
-          });
-          return SizedBox(
-            height: sectionHeight * 0.3,
-            child: ListView(
-              physics: BouncingScrollPhysics(),
-              children: <Widget>[
-                RotatedBox(
-                  quarterTurns: 1,
-                  child: ToggleButtons(
-                    isSelected: selectedList,
-                    onPressed: (index) {
-                      cardState.nameX = namesList[index];
-                      for (int k = 0; k < selectedList.length; k++) {
-                        selectedList[k] = k == index ? true : false;
-                      }
-                    },
-                    renderBorder: false,
-                    fillColor: trans,
-                    splashColor: trans,
-                    children: List.generate(
-                      namesList.length,
-                      (index) => RotatedBox(
-                          quarterTurns: -1,
-                          child: Container(
-//                                          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2.0),
-                            width: sectionWidth,
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                              color: selectedList[index]
-                                  ? grey2.withOpacity(0.5)
-                                  : trans,
-                            ),
-                            child: Text(namesList[index],
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  color: selectedList[index] ? yellow : white,
-                                )),
-                          )),
-                    ),
+      future: getModelNames(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return LoadingIndicator(
+            showLoadingIndicator: true,
+            rotationsToDisableAfter: 2,
+          );
+        }
+        List<String> namesList = [];
+        snapshot.data.forEach((element) {
+          namesList.add(element['title']);
+        });
+        return SizedBox(
+          height: sectionHeight * 0.3,
+          child: ListView(
+            physics: BouncingScrollPhysics(),
+            children: <Widget>[
+              RotatedBox(
+                quarterTurns: 1,
+                child: ToggleButtons(
+                  isSelected: selectedList,
+                  onPressed: (index) {
+                    cardState.nameX = namesList[index];
+                    for (int k = 0; k < selectedList.length; k++) {
+                      selectedList[k] = k == index ? true : false;
+                    }
+                  },
+                  renderBorder: false,
+                  fillColor: trans,
+                  splashColor: trans,
+                  children: List.generate(
+                    namesList.length,
+                    (index) => RotatedBox(
+                        quarterTurns: -1,
+                        child: Container(
+                          width: sectionWidth,
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.0)),
+                            color: selectedList[index]
+                                ? grey2.withOpacity(0.5)
+                                : trans,
+                          ),
+                          child: Text(namesList[index],
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 24,
+                                color: selectedList[index] ? yellow : white,
+                              )),
+                        )),
                   ),
                 ),
-              ],
-            ),
-          );
-        });
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }

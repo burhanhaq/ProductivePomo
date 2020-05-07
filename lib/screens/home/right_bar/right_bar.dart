@@ -143,7 +143,6 @@ class _RightBarState extends State<RightBar> with TickerProviderStateMixin {
                       ],
                     ),
                   ),
-//              Spacer(),
                   Offstage(
                     offstage: !kDebugMode,
                     child: Column(
@@ -274,8 +273,6 @@ class YellowUnderlay extends StatelessWidget {
     CardState cardState = Provider.of<CardState>(context);
     return AnimatedContainer(
       duration: Duration(milliseconds: 120),
-//      width: MediaQuery.of(context).size.width *
-//          (kHomeRightBarClosedMul + kHomeYellowDividerMul),
       decoration: BoxDecoration(
         color: yellow,
         borderRadius: BorderRadius.horizontal(

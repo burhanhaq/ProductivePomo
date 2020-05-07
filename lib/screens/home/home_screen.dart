@@ -22,16 +22,13 @@ class Home extends StatefulWidget {
 List<CardTile> cardTileList = [];
 
 class _HomeState extends State<Home> with TickerProviderStateMixin {
-  bool loadingIndicator = true;
+//  bool loadingIndicator = true;
   AnimationController addSectionController;
   Animation addSectionAnimation;
-
-  int loadingIndicatorCount = 0;
 
   @override
   void initState() {
     super.initState();
-//    getCardListFromDB();
 
     addSectionController = AnimationController(
       vsync: this,
@@ -52,7 +49,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   Future<List<CardModel>> getCardListFromDB() async {
     List<dynamic> cardModelListFromDB =
         await DB.instance.queryModelsToday(timeNow);
-//    CardModel.cardModelsX.clear();
     for (int i = 0; i < cardModelListFromDB.length; i++) {
       var newCardModel = CardModel.fromJson(cardModelListFromDB[i]);
       if (!CardModel.cardModelsX.contains(newCardModel))
@@ -64,13 +60,13 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final cardState = Provider.of<CardState>(context);
-    if (loadingIndicator) {
-      if (cardTileList.length > 0) {
-        setState(() {
-          loadingIndicator = false;
-        });
-      }
-    }
+//    if (loadingIndicator) {
+//      if (cardTileList.length > 0) {
+//        setState(() {
+//          loadingIndicator = false;
+//        });
+//      }
+//    }
     if (cardState.onAddNewScreen) {
       addSectionController.forward();
     } else {
@@ -146,8 +142,13 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                           child: FutureBuilder(
                               future: getCardListFromDB(),
                               builder: (context, snapshot) {
-                                if (!snapshot.hasData) return Center();
-                                loadingIndicator = false;
+                                if (!snapshot.hasData) {
+                                  return LoadingIndicator(
+                                    showLoadingIndicator: true,
+                                    rotationsToDisableAfter: 2,
+                                  );
+                                }
+//                                loadingIndicator = false;
                                 cardTileList = List.generate(
                                     snapshot.data.length, (index) {
                                   return CardTile(
@@ -161,16 +162,16 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
-                    Positioned(
-                      top: 150,
-                      left: 0,
-                      right: 0,
-                      child: LoadingIndicator(
-                        // state doesn't update
-                        showLoadingIndicator: loadingIndicator,
-                        rotationsToDisableAfter: 2,
-                      ),
-                    ),
+//                    Positioned(
+//                      top: 150,
+//                      left: 0,
+//                      right: 0,
+//                      child: LoadingIndicator(
+//                        // state doesn't update
+//                        showLoadingIndicator: loadingIndicator,
+//                        rotationsToDisableAfter: 2,
+//                      ),
+//                    ),
                     Positioned(
                       left: 0,
                       child: Transform.translate(

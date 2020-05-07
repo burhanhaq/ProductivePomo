@@ -69,7 +69,6 @@ class _CardTileState extends State<CardTile> with TickerProviderStateMixin {
                 duration: Duration(milliseconds: 200),
                 padding: EdgeInsets.fromLTRB(7, 0, 7, 5),
                 curve: Curves.fastOutSlowIn,
-//          width: double.infinity,
                 height: isCardSelected ? 150 : 100,
                 decoration: BoxDecoration(
                   color: isCardSelected ? red1 : yellow,
@@ -89,19 +88,14 @@ class _CardTileState extends State<CardTile> with TickerProviderStateMixin {
                             ? blue
                             : trans,
                   ),
-//            boxShadow: [
-//             isCardSelected ? BoxShadow(
-//               color: Colors.black,
-//               blurRadius: 10,
-//               spreadRadius: 2,
-//               offset: Offset(7, 7),
-//             ) :
-//             BoxShadow(
-//               blurRadius: 0,
-//               spreadRadius: 0,
-//               offset: Offset(0, 0),
-//             ),
-//            ],
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black,
+                      blurRadius: 10,
+                      spreadRadius: 2,
+                      offset: Offset(7, 7),
+                    ),
+                  ],
                 ),
                 child: Column(
                   children: <Widget>[

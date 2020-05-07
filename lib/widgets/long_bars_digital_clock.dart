@@ -15,8 +15,6 @@ class _LongBarsDigitalClockState extends State<LongBarsDigitalClock>
   AnimationController conTRD;
   Animation aniTRD;
 
-//  AnimationStatus sta = AnimationStatus.dismissed;
-
   @override
   void initState() {
     super.initState();
@@ -125,6 +123,12 @@ class _LongBarsDigitalClockState extends State<LongBarsDigitalClock>
             child: Container(height: 60, width: 60, color: Colors.red)),
       ],
     );
+  }
+  @override
+  void dispose() {
+    conTRD.dispose();
+    conTRU.dispose();
+    super.dispose();
   }
 }
 
