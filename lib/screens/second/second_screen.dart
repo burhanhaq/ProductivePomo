@@ -62,7 +62,7 @@ class _SecondScreenState extends State<SecondScreen>
   Widget build(BuildContext context) {
     CardState cardState = Provider.of<CardState>(context);
     String cardTitle = widget.cardModel.title;
-    int cardScore = widget.cardModel.score;
+    int cardScore = widget.cardModel.score; 
     int cardGoal = widget.cardModel.goal;
     bool timerRunning = timerDurationController.isAnimating;
     Wakelock.toggle(on: timerRunning); // todo check if this works
