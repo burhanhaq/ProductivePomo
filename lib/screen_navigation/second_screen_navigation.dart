@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:pomodoro_app/card_state.dart';
+
+import '../card_state.dart';
 
 class SecondScreenNavigation extends PageRouteBuilder {
   final Widget widget;

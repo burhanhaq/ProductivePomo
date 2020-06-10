@@ -1,4 +1,4 @@
-# pomodoro_app
+# productive_pomo
 
 A new Flutter project.
 

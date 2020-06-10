@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pomodoro_app/screens/onboarding/onboarding_screen.dart';
 import 'dart:math' as math;
 import 'package:provider/provider.dart';
 
+import '../../screens/onboarding/onboarding_screen.dart';
 import '../../constants.dart';
 import '../../widgets/animating_crosshair.dart';
 import '../home/home_screen.dart';

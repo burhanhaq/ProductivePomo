@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:pomodoro_app/constants.dart';
+import '../constants.dart';
 
 class CardModel {
   String title;

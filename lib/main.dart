@@ -15,7 +15,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Pomodoro App',
+      title: 'Productive Pomo',
       theme: Theme.of(context).copyWith(
         primaryColor: yellow,
         accentColor: grey,

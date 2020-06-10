@@ -118,12 +118,12 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 //                          ),
                         ),
                         child: Text(
-                          DateTime.now().toString(),
+                          'Productive Pomo',
                           style: TextStyle(
-                            fontSize: 20,
+                            fontSize: 25,
                             fontWeight: FontWeight.bold,
                             color: white,
-//                            fontFamily: 'IndieFlower',
+                            fontFamily: 'IndieFlower',
                             decoration: TextDecoration.none,
                           ),
                         ),
