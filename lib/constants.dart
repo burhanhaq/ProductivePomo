@@ -109,3 +109,6 @@ enum DisplayChartItemType { MaxScore, ScoreOverGoal, ByName, ByName2 }
 // Second Screen Constants
 const kMainRadius = 50.0;
 const kSecondaryRadius = 15.0;
+const kSound1 = 'audio/sound1.wav';
+const kSound2 = 'audio/sound2.wav';
+const kCombinedSound2 = 'audio/combined_sound2.wav';

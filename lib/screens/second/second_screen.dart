@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
+import 'package:audioplayers/audio_cache.dart';
 
 import '../../constants.dart';
 import '../../card_state.dart';
@@ -57,6 +58,7 @@ class _SecondScreenState extends State<SecondScreen>
   }
 
   bool added = false;
+  static AudioCache player = AudioCache();
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +67,9 @@ class _SecondScreenState extends State<SecondScreen>
     int cardScore = widget.cardModel.score;
     int cardGoal = widget.cardModel.goal;
     bool timerRunning = timerDurationController.isAnimating;
+    if (timerDurationController.status == AnimationStatus.completed) {
+        player.play(kCombinedSound2);
+    }
     Wakelock.toggle(on: timerRunning); // todo check if this works
     return SafeArea(
       child: Container(
