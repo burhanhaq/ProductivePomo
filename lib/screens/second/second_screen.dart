@@ -81,28 +81,45 @@ class _SecondScreenState extends State<SecondScreen>
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(
-                  height: height * 0.2,
-                  width: width,
-                  decoration: BoxDecoration(
-                    color: red1,
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(kMainRadius),
-                      bottomRight: Radius.circular(kMainRadius),
-                    ),
-                  ),
-                  child: FittedBox(
-                    child: Text(
-                      cardTitle == null ? 'null' : cardTitle.toUpperCase(),
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        letterSpacing: 2,
-                        color: grey2,
-                        decoration: TextDecoration.none,
+                Stack(
+                  alignment: Alignment.topCenter,
+                  children: [
+                    Container(
+                      height: height * 0.21,
+                      width: width,
+                      decoration: BoxDecoration(
+                        color: yellow,
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(kMainRadius),
+                          bottomRight: Radius.circular(kMainRadius),
+                        ),
                       ),
                     ),
-                  ),
+                    Container(
+                      height: height * 0.2,
+                      width: width,
+                      decoration: BoxDecoration(
+                        color: red1,
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(kMainRadius),
+                          bottomRight: Radius.circular(kMainRadius),
+                        ),
+                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 15.0),
+                      child: FittedBox(
+                        child: Text(
+                          cardTitle == null ? 'null' : cardTitle.toUpperCase(),
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            letterSpacing: 2,
+                            color: grey2,
+                            decoration: TextDecoration.none,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 Spacer(),
                 BoxesDigitalClock(
@@ -115,51 +132,65 @@ class _SecondScreenState extends State<SecondScreen>
                     Spacer(),
                     Material(
                       color: trans,
-                      child: Container(
-                        margin: const EdgeInsets.all(20.0),
-                        padding: const EdgeInsets.all(25.0),
-                        decoration: BoxDecoration(
-                          color: yellow2,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(kMainRadius),
-                            topRight: Radius.circular(kSecondaryRadius),
-                            bottomLeft: Radius.circular(kSecondaryRadius),
-                            bottomRight: Radius.circular(kSecondaryRadius),
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            GestureDetector(
-                              onTap: () => cardState.onTapPlaySecond(
-                                  playPauseIconController,
-                                  timerDurationController),
-                              child: CustomIconButtonStyle(
-                                child: AnimatedIcon(
-                                  icon: AnimatedIcons.play_pause,
-                                  progress: playPauseIconAnimation,
-                                  size: 100,
-                                  color: timerRunning ? grey : grey,
-                                ),
+                      child: Stack(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.all(20.0),
+                            padding: const EdgeInsets.all(25.0),
+                            decoration: BoxDecoration(
+                              color: red1,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(kSecondaryRadius),
                               ),
                             ),
-                            GestureDetector(
-                              onTap: () => cardState.onTapReplaySecond(
-                                  timerDurationController,
-                                  playPauseIconController,
-                                  replayIconRotationController),
-                              child: CustomIconButtonStyle(
-                                child: RotationTransition(
-                                  turns: replayIconRotationAnimation,
-                                  child: Icon(
-                                    Icons.replay,
-                                    size: 50,
-                                    color: timerRunning ? grey : grey,
+                          ),
+                          Container(
+                            margin: const EdgeInsets.all(20.0),
+                            padding: const EdgeInsets.all(25.0),
+                            decoration: BoxDecoration(
+                              color: yellow2,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(kMainRadius),
+                                topRight: Radius.circular(kSecondaryRadius),
+                                bottomLeft: Radius.circular(kSecondaryRadius),
+                                bottomRight: Radius.circular(kSecondaryRadius),
+                              ),
+                            ),
+                            child: Column(
+                              children: [
+                                GestureDetector(
+                                  onTap: () => cardState.onTapPlaySecond(
+                                      playPauseIconController,
+                                      timerDurationController),
+                                  child: CustomIconButtonStyle(
+                                    child: AnimatedIcon(
+                                      icon: AnimatedIcons.play_pause,
+                                      progress: playPauseIconAnimation,
+                                      size: 100,
+                                      color: timerRunning ? grey : grey,
+                                    ),
                                   ),
                                 ),
-                              ),
+                                GestureDetector(
+                                  onTap: () => cardState.onTapReplaySecond(
+                                      timerDurationController,
+                                      playPauseIconController,
+                                      replayIconRotationController),
+                                  child: CustomIconButtonStyle(
+                                    child: RotationTransition(
+                                      turns: replayIconRotationAnimation,
+                                      child: Icon(
+                                        Icons.replay,
+                                        size: 50,
+                                        color: timerRunning ? grey : grey,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
