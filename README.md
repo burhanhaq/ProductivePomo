@@ -35,6 +35,7 @@ flutter run --release
 ```
 
 ## Features
+Features:
 * Create tasks and assign custom length timers
 * Complete tasks and get the task bar full
 * View your progress in the Analytics section and compare with other tasks/days
